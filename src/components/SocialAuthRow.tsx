@@ -1,13 +1,11 @@
-import { Alert, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { colors } from '../constants/colors';
+import { showInDevelopmentAlert } from '../utils/in-development';
 import { GoogleIcon } from './icons/GoogleIcon';
 import { AppleIcon } from './icons/AppleIcon';
 
 function handleComingSoon(provider: string) {
-  Alert.alert(
-    `${provider} sign-in`,
-    'This is not functional at the moment — still in development.',
-  );
+  showInDevelopmentAlert(undefined, `${provider} sign-in`);
 }
 
 export function SocialAuthRow() {

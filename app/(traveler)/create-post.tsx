@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import {
+  ActivityIndicator,
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -14,7 +16,9 @@ import { ArrowLeft, Image as ImageIcon, MapPin, Tag, X } from 'lucide-react-nati
 import { GradientButton } from '../../src/components/GradientButton';
 import { colors } from '../../src/constants/colors';
 import { useCreatePost, useUpdatePost } from '../../src/hooks/use-feed-mutations';
-import { showInDevelopmentAlert } from '../../src/utils/in-development';
+import { useAuthStore } from '../../src/stores/auth-store';
+import { useToastStore } from '../../src/stores/toast-store';
+import { pickAndUploadFromLibrary } from '../../src/utils/upload-image';
 
 const TEXT_LIMIT = 2200;
 
@@ -24,6 +28,8 @@ export default function CreatePostScreen() {
     editText?: string;
     editLocation?: string;
     editTags?: string;
+    editImageMediaId?: string;
+    editImageUrl?: string;
   }>();
   const isEditing = !!params.editPostId;
 
@@ -33,7 +39,12 @@ export default function CreatePostScreen() {
   const [tags, setTags] = useState<string[]>(
     params.editTags ? params.editTags.split(',').filter(Boolean) : [],
   );
+  const [imageMediaId, setImageMediaId] = useState(params.editImageMediaId || undefined);
+  const [imagePreviewUri, setImagePreviewUri] = useState(params.editImageUrl || undefined);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const showToast = useToastStore((s) => s.show);
   const createPost = useCreatePost();
   const updatePost = useUpdatePost();
   const isPending = createPost.isPending || updatePost.isPending;
@@ -46,10 +57,27 @@ export default function CreatePostScreen() {
     setTagInput('');
   };
 
+  const handleAddPhoto = async () => {
+    if (!accessToken) return;
+    setIsUploadingImage(true);
+    try {
+      const uploaded = await pickAndUploadFromLibrary('post_media', accessToken);
+      if (uploaded) {
+        setImageMediaId(uploaded.mediaId);
+        setImagePreviewUri(uploaded.previewUri);
+      }
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not add that photo.');
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
   const handleSubmit = () => {
     if (!text.trim()) return;
     const input = {
       text: text.trim(),
+      imageMediaId: imageMediaId ?? null,
       location: location.trim() || undefined,
       tags: tags.length > 0 ? tags : undefined,
     };
@@ -160,18 +188,52 @@ export default function CreatePostScreen() {
             </View>
           )}
 
-          <Pressable
-            onPress={() =>
-              showInDevelopmentAlert('Photo uploads aren’t wired up yet.')
-            }
-            className="h-14 rounded-2xl items-center justify-center flex-row gap-2"
-            style={{ borderWidth: 2, borderColor: colors.border, borderStyle: 'dashed' }}
-          >
-            <ImageIcon size={20} color={colors.mutedForeground} />
-            <Text className="font-medium" style={{ color: colors.mutedForeground }}>
-              Add Photo
-            </Text>
-          </Pressable>
+          {imagePreviewUri ? (
+            <View className="mb-4" style={{ position: 'relative' }}>
+              <Image
+                source={{ uri: imagePreviewUri }}
+                style={{ width: '100%', height: 220, borderRadius: 16 }}
+                resizeMode="cover"
+              />
+              <Pressable
+                onPress={() => {
+                  setImageMediaId(undefined);
+                  setImagePreviewUri(undefined);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: 12,
+                  right: 12,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(0,0,0,0.6)',
+                }}
+              >
+                <X size={18} color="#fff" />
+              </Pressable>
+            </View>
+          ) : (
+            <Pressable
+              onPress={handleAddPhoto}
+              disabled={isUploadingImage}
+              className="h-14 rounded-2xl items-center justify-center flex-row gap-2"
+              style={{ borderWidth: 2, borderColor: colors.border, borderStyle: 'dashed' }}
+            >
+              {isUploadingImage ? (
+                <ActivityIndicator color={colors.mutedForeground} />
+              ) : (
+                <>
+                  <ImageIcon size={20} color={colors.mutedForeground} />
+                  <Text className="font-medium" style={{ color: colors.mutedForeground }}>
+                    Add Photo
+                  </Text>
+                </>
+              )}
+            </Pressable>
+          )}
         </ScrollView>
 
         <View className="px-4 pb-4">

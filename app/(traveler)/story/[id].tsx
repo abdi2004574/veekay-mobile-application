@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   Text,
   TextInput,
@@ -129,22 +130,36 @@ export default function StoryViewerScreen() {
     likeStory.mutate(current.id);
   };
 
-  const content = (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {current.text ? (
-        <Text
-          className="text-white font-semibold text-center px-8"
-          style={{
-            fontSize: current.textSize === 'large' ? 32 : current.textSize === 'small' ? 18 : 24,
-          }}
-        >
-          {current.text}
-        </Text>
+  const content = current.imageMediaId ? (
+    <View style={{ flex: 1 }}>
+      {current.imageUrl ? (
+        <Image source={{ uri: current.imageUrl }} style={{ flex: 1 }} resizeMode="contain" />
       ) : (
-        <View className="items-center px-8">
-          <Text className="text-white/70 text-center">Photo story</Text>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text className="text-white/70 text-center">Photo unavailable</Text>
         </View>
       )}
+      {!!current.text && (
+        <View style={{ position: 'absolute', bottom: 100, left: 0, right: 0 }} className="items-center px-8">
+          <Text
+            className="text-white font-semibold text-center px-4 py-2"
+            style={{ backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 12 }}
+          >
+            {current.text}
+          </Text>
+        </View>
+      )}
+    </View>
+  ) : (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text
+        className="text-white font-semibold text-center px-8"
+        style={{
+          fontSize: current.textSize === 'large' ? 32 : current.textSize === 'small' ? 18 : 24,
+        }}
+      >
+        {current.text}
+      </Text>
     </View>
   );
 

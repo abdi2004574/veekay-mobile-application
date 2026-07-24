@@ -205,6 +205,8 @@ export default function UserProfileScreen() {
                   editText: post.text,
                   editLocation: post.location ?? '',
                   editTags: post.tags.join(','),
+                  editImageMediaId: post.imageMediaId ?? '',
+                  editImageUrl: post.imageUrl ?? '',
                 },
               })
             }

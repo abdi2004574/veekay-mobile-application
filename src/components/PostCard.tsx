@@ -1,4 +1,4 @@
-import { Alert, Pressable, Text, View } from 'react-native';
+import { Alert, Image, Pressable, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import {
   Heart,
@@ -121,15 +121,23 @@ export function PostCard({
       )}
 
       {post.imageMediaId && (
-        <View
-          className="rounded-xl items-center justify-center mb-2"
-          style={{ height: 160, backgroundColor: colors.inputBackground }}
-        >
-          <ImageIcon size={28} color={colors.mutedForeground} />
-          <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
-            Photo attached
-          </Text>
-        </View>
+        post.imageUrl ? (
+          <Image
+            source={{ uri: post.imageUrl }}
+            style={{ width: '100%', height: 220, borderRadius: 12, marginBottom: 8 }}
+            resizeMode="cover"
+          />
+        ) : (
+          <View
+            className="rounded-xl items-center justify-center mb-2"
+            style={{ height: 160, backgroundColor: colors.inputBackground }}
+          >
+            <ImageIcon size={28} color={colors.mutedForeground} />
+            <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
+              Photo unavailable
+            </Text>
+          </View>
+        )
       )}
 
       {isReadonly ? (

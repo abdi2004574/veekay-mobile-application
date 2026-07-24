@@ -11,7 +11,7 @@ function withQuery(path: string, params: Record<string, string | number | undefi
 
 export interface CreatePostInput {
   text: string;
-  imageMediaId?: string;
+  imageMediaId?: string | null;
   location?: string;
   tags?: string[];
 }

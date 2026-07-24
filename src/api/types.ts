@@ -58,6 +58,7 @@ export interface Post {
   likesCount: number;
   commentsCount: number;
   isLikedByMe: boolean;
+  imageUrl: string | null;
 }
 
 export interface Comment {
@@ -90,6 +91,7 @@ export interface Story {
   expiresAt: string;
   author: PostAuthor;
   _count: { likes: number; views: number };
+  imageUrl: string | null;
 }
 
 export type FriendRequestStatus = 'pending' | 'accepted' | 'declined';

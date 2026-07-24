@@ -28,7 +28,14 @@
       "expo-secure-store",
       "expo-web-browser",
       "expo-image",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Veakay uses your photos so you can attach them to posts and stories.",
+          "cameraPermission": "Veakay uses your camera so you can take a photo for a post or story."
+        }
+      ]
     ]
   }
 }

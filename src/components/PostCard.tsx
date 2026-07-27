@@ -17,7 +17,6 @@ import type { Post } from '../api/types';
 interface PostCardProps {
   post: Post;
   currentUserId: string;
-  variant?: 'interactive' | 'readonly';
   onLikeToggle?: (post: Post) => void;
   onCommentPress?: (post: Post) => void;
   onSharePress?: (post: Post) => void;
@@ -32,7 +31,6 @@ function authorName(author: Post['author']) {
 export function PostCard({
   post,
   currentUserId,
-  variant = 'interactive',
   onLikeToggle,
   onCommentPress,
   onSharePress,
@@ -40,7 +38,6 @@ export function PostCard({
   onDeletePress,
 }: PostCardProps) {
   const isOwn = post.authorId === currentUserId;
-  const isReadonly = variant === 'readonly';
 
   const openOptions = () => {
     Alert.alert('Post', undefined, [
@@ -76,7 +73,7 @@ export function PostCard({
             </Text>
           </View>
         </Pressable>
-        {isOwn && !isReadonly && (
+        {isOwn && (
           <Pressable onPress={openOptions} hitSlop={8}>
             <MoreVertical size={20} color={colors.mutedForeground} />
           </Pressable>
@@ -140,59 +137,42 @@ export function PostCard({
         )
       )}
 
-      {isReadonly ? (
-        <View className="flex-row items-center gap-6 pt-2" style={{ borderTopWidth: 1, borderTopColor: colors.border }}>
-          <View className="flex-row items-center gap-1.5">
-            <Heart size={18} color={colors.mutedForeground} />
-            <Text className="text-sm" style={{ color: colors.mutedForeground }}>
-              {post.likesCount}
-            </Text>
-          </View>
-          <View className="flex-row items-center gap-1.5">
-            <MessageCircle size={18} color={colors.mutedForeground} />
-            <Text className="text-sm" style={{ color: colors.mutedForeground }}>
-              {post.commentsCount}
-            </Text>
-          </View>
-        </View>
-      ) : (
-        <View className="flex-row items-center gap-6 pt-2" style={{ borderTopWidth: 1, borderTopColor: colors.border }}>
-          <Pressable
-            className="flex-row items-center gap-1.5"
-            onPress={() => onLikeToggle?.(post)}
-            hitSlop={8}
+      <View className="flex-row items-center gap-6 pt-2" style={{ borderTopWidth: 1, borderTopColor: colors.border }}>
+        <Pressable
+          className="flex-row items-center gap-1.5"
+          onPress={() => onLikeToggle?.(post)}
+          hitSlop={8}
+        >
+          <Heart
+            size={18}
+            color={post.isLikedByMe ? colors.vaykaePink : colors.mutedForeground}
+            fill={post.isLikedByMe ? colors.vaykaePink : 'transparent'}
+          />
+          <Text
+            className="text-sm"
+            style={{ color: post.isLikedByMe ? colors.vaykaePink : colors.mutedForeground }}
           >
-            <Heart
-              size={18}
-              color={post.isLikedByMe ? colors.vaykaePink : colors.mutedForeground}
-              fill={post.isLikedByMe ? colors.vaykaePink : 'transparent'}
-            />
-            <Text
-              className="text-sm"
-              style={{ color: post.isLikedByMe ? colors.vaykaePink : colors.mutedForeground }}
-            >
-              {post.likesCount}
-            </Text>
-          </Pressable>
-          <Pressable
-            className="flex-row items-center gap-1.5"
-            onPress={() => onCommentPress?.(post)}
-            hitSlop={8}
-          >
-            <MessageCircle size={18} color={colors.mutedForeground} />
-            <Text className="text-sm" style={{ color: colors.mutedForeground }}>
-              {post.commentsCount}
-            </Text>
-          </Pressable>
-          <Pressable
-            className="flex-row items-center gap-1.5"
-            onPress={() => onSharePress?.(post)}
-            hitSlop={8}
-          >
-            <Share2 size={18} color={colors.mutedForeground} />
-          </Pressable>
-        </View>
-      )}
+            {post.likesCount}
+          </Text>
+        </Pressable>
+        <Pressable
+          className="flex-row items-center gap-1.5"
+          onPress={() => onCommentPress?.(post)}
+          hitSlop={8}
+        >
+          <MessageCircle size={18} color={colors.mutedForeground} />
+          <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+            {post.commentsCount}
+          </Text>
+        </Pressable>
+        <Pressable
+          className="flex-row items-center gap-1.5"
+          onPress={() => onSharePress?.(post)}
+          hitSlop={8}
+        >
+          <Share2 size={18} color={colors.mutedForeground} />
+        </Pressable>
+      </View>
     </View>
   );
 }

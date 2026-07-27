@@ -6,7 +6,9 @@ export type MediaPurpose =
   | 'post_media'
   | 'story_media'
   | 'agency_document'
-  | 'agency_logo';
+  | 'agency_logo'
+  | 'chat_image'
+  | 'chat_document';
 
 export interface UploadUrlResponse {
   uploadUrl: string;

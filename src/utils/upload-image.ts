@@ -1,4 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import { createUploadUrl, confirmUpload, type MediaPurpose } from '../api/storage';
 
 export interface UploadedImage {
@@ -67,4 +68,43 @@ export async function pickAndUploadFromCamera(
   }
 
   return uploadPickedAsset(result.assets[0], purpose, accessToken);
+}
+
+export interface UploadedDocument {
+  mediaId: string;
+  fileName: string;
+}
+
+const DOCUMENT_MIME_TYPES = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+
+/** Returns null if the user cancels — callers should just no-op on null. */
+export async function pickAndUploadDocument(
+  purpose: MediaPurpose,
+  accessToken: string,
+): Promise<UploadedDocument | null> {
+  const result = await DocumentPicker.getDocumentAsync({ type: DOCUMENT_MIME_TYPES });
+  if (result.canceled || !result.assets[0]) {
+    return null;
+  }
+
+  const asset = result.assets[0];
+  const contentType = asset.mimeType ?? 'application/pdf';
+  const { uploadUrl, mediaId } = await createUploadUrl(contentType, purpose, accessToken);
+
+  const fileBlob = await (await fetch(asset.uri)).blob();
+  const putRes = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': contentType },
+    body: fileBlob,
+  });
+  if (!putRes.ok) {
+    throw new Error('Could not upload the file. Please try again.');
+  }
+
+  await confirmUpload(mediaId, accessToken);
+  return { mediaId, fileName: asset.name };
 }

@@ -1,9 +1,9 @@
-import { Alert, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { MessageCircle } from 'lucide-react-native';
 import { Avatar } from './Avatar';
 import { colors } from '../constants/colors';
-import { showInDevelopmentAlert } from '../utils/in-development';
+import { useCreateConversation } from '../hooks/use-chat-mutations';
 import type { FriendUser } from '../api/types';
 
 interface FriendCardProps {
@@ -13,6 +13,7 @@ interface FriendCardProps {
 
 export function FriendCard({ friend, onRemove }: FriendCardProps) {
   const name = friend.displayName ?? `@${friend.username}`;
+  const createConversation = useCreateConversation();
 
   return (
     <View
@@ -33,7 +34,13 @@ export function FriendCard({ friend, onRemove }: FriendCardProps) {
       </Pressable>
       <Pressable
         hitSlop={8}
-        onPress={() => showInDevelopmentAlert('Messaging friends isn’t wired up yet.')}
+        disabled={createConversation.isPending}
+        onPress={() =>
+          createConversation.mutate(
+            { type: 'direct', participantId: friend.id },
+            { onSuccess: (conversation) => router.push(`/(traveler)/chat/${conversation.id}`) },
+          )
+        }
         style={{
           width: 40,
           height: 40,
@@ -43,7 +50,11 @@ export function FriendCard({ friend, onRemove }: FriendCardProps) {
           backgroundColor: colors.inputBackground,
         }}
       >
-        <MessageCircle size={18} color={colors.vaykaePink} />
+        {createConversation.isPending ? (
+          <ActivityIndicator size="small" color={colors.vaykaePink} />
+        ) : (
+          <MessageCircle size={18} color={colors.vaykaePink} />
+        )}
       </Pressable>
       {onRemove && (
         <Pressable

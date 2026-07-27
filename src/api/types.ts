@@ -139,6 +139,53 @@ export interface MeProfile {
   postsCount: number;
 }
 
+export type ConversationType = 'direct' | 'group' | 'agency';
+export type ConversationParticipantRole = 'member' | 'admin';
+export type MessageType = 'text' | 'image' | 'document';
+export type MessageStatus = 'sent' | 'delivered' | 'read';
+
+export interface ConversationSummary {
+  id: string;
+  type: ConversationType;
+  title: string;
+  memberCount?: number;
+  lastMessage: string | null;
+  lastMessageAt: string | null;
+  unreadCount: number;
+}
+
+export interface ConversationMember {
+  id: string;
+  username: string;
+  displayName: string | null;
+  role: ConversationParticipantRole;
+}
+
+export interface ConversationDetail {
+  id: string;
+  type: ConversationType;
+  title: string;
+  members?: ConversationMember[];
+}
+
+export interface MessageSender {
+  id: string;
+  username: string;
+  displayName: string | null;
+}
+
+export interface Message {
+  id: string;
+  conversationId: string;
+  sender: MessageSender;
+  type: MessageType;
+  body: string | null;
+  fileName: string | null;
+  mediaUrl: string | null;
+  createdAt: string;
+  status?: MessageStatus;
+}
+
 export interface PublicProfile {
   id: string;
   username: string;

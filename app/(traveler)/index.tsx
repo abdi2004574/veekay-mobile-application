@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Bell, Plus, Users } from 'lucide-react-native';
 import { PostCard } from '../../src/components/PostCard';
@@ -8,6 +8,8 @@ import { CommentsSheet } from '../../src/components/CommentsSheet';
 import { ShareSheet } from '../../src/components/ShareSheet';
 import { StoryRing } from '../../src/components/StoryRing';
 import { Avatar } from '../../src/components/Avatar';
+import { TravelerBottomNav } from '../../src/components/TravelerBottomNav';
+import { BOTTOM_NAV_HEIGHT } from '../../src/components/BottomNavBar';
 import { colors } from '../../src/constants/colors';
 import { useAuthStore } from '../../src/stores/auth-store';
 import { useFeed, useActiveStories } from '../../src/hooks/use-feed-queries';
@@ -18,6 +20,7 @@ import type { Post } from '../../src/api/types';
 export default function FeedScreen() {
   const user = useAuthStore((s) => s.user);
   const currentUserId = user?.id ?? '';
+  const insets = useSafeAreaInsets();
 
   const feed = useFeed();
   const stories = useActiveStories();
@@ -195,7 +198,7 @@ export default function FeedScreen() {
           style={{
             position: 'absolute',
             right: 20,
-            bottom: 24,
+            bottom: BOTTOM_NAV_HEIGHT + insets.bottom + 16,
             width: 56,
             height: 56,
             borderRadius: 28,
@@ -211,6 +214,8 @@ export default function FeedScreen() {
         >
           <Plus size={26} color={colors.background} />
         </Pressable>
+
+        <TravelerBottomNav active="home" />
       </View>
 
       <CommentsSheet

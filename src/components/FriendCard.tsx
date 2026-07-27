@@ -1,9 +1,10 @@
-import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { MessageCircle } from 'lucide-react-native';
 import { Avatar } from './Avatar';
 import { colors } from '../constants/colors';
 import { useCreateConversation } from '../hooks/use-chat-mutations';
+import { showAlert } from '../utils/show-alert';
 import type { FriendUser } from '../api/types';
 
 interface FriendCardProps {
@@ -61,7 +62,7 @@ export function FriendCard({ friend, onRemove }: FriendCardProps) {
           hitSlop={8}
           className="ml-2"
           onPress={() =>
-            Alert.alert('Remove friend?', `Remove ${name} from your friends?`, [
+            showAlert('Remove friend?', `Remove ${name} from your friends?`, [
               { text: 'Cancel', style: 'cancel' },
               { text: 'Remove', style: 'destructive', onPress: () => onRemove(friend) },
             ])

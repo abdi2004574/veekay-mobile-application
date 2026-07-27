@@ -15,7 +15,7 @@ export function TravelerBottomNav({ active }: { active: TravelerTab }) {
           key: 'explore',
           icon: Compass,
           label: 'Explore',
-          onPress: () => showInDevelopmentAlert('Explore isn’t built yet.'),
+          onPress: () => router.replace('/(traveler)/explore'),
         },
         {
           key: 'campaigns',

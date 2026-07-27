@@ -12,6 +12,7 @@ export const colors = {
   success: '#16a34a',
   vaykaePink: '#D701A8',
   vaykaePurple: '#7700C6',
+  starGold: '#FBBF24',
 } as const;
 
 export const vaykaeGradient = [colors.vaykaePink, colors.vaykaePurple] as const;

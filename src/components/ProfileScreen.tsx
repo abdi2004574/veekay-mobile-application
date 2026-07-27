@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowLeft, MapPin, UserCheck, UserPlus } from 'lucide-react-native';
+import { ArrowLeft, ChevronRight, MapPin, Star, UserCheck, UserPlus } from 'lucide-react-native';
 import { Avatar } from './Avatar';
 import { PostCard } from './PostCard';
 import { CommentsSheet } from './CommentsSheet';
@@ -155,15 +155,31 @@ export function ProfileScreen({
 
               <View className="w-full mt-5 px-4">
                 {isSelf ? (
-                  <GradientButton
-                    variant="outline"
-                    onPress={async () => {
-                      await logout();
-                      router.replace('/(auth)/welcome');
-                    }}
-                  >
-                    Log Out
-                  </GradientButton>
+                  <>
+                    <Pressable
+                      onPress={() => router.push('/(traveler)/my-reviews')}
+                      className="flex-row items-center gap-3 p-4 rounded-2xl mb-3"
+                      style={{ borderWidth: 1, borderColor: colors.border }}
+                    >
+                      <View
+                        className="items-center justify-center rounded-xl"
+                        style={{ width: 40, height: 40, backgroundColor: colors.vaykaePink }}
+                      >
+                        <Star size={18} color={colors.background} />
+                      </View>
+                      <Text className="font-bold text-foreground flex-1">My Reviews</Text>
+                      <ChevronRight size={18} color={colors.mutedForeground} />
+                    </Pressable>
+                    <GradientButton
+                      variant="outline"
+                      onPress={async () => {
+                        await logout();
+                        router.replace('/(auth)/welcome');
+                      }}
+                    >
+                      Log Out
+                    </GradientButton>
+                  </>
                 ) : 'isFriend' in profile && profile.isFriend ? (
                   <Pressable
                     onPress={() =>
@@ -238,6 +254,7 @@ export function ProfileScreen({
             <PostCard
               post={item}
               currentUserId={currentUserId}
+              viewingProfileId={userId}
               onLikeToggle={(post) =>
                 post.isLikedByMe ? unlikePost.mutate(post.id) : likePost.mutate(post.id)
               }

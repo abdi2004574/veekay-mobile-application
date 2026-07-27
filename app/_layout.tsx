@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 import { useAuthStore } from '../src/stores/auth-store';
 import { ToastHost } from '../src/components/Toast';
+import { AlertHost } from '../src/components/AlertHost';
 import { colors } from '../src/constants/colors';
 
 const queryClient = new QueryClient({
@@ -38,6 +39,7 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <Slot />
           <ToastHost />
+          <AlertHost />
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

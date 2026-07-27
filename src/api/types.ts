@@ -204,3 +204,38 @@ export interface PublicProfile {
   isSelf: boolean;
   mutualFriendsCount: number;
 }
+
+export interface AgencyDirectoryEntry {
+  id: string;
+  agencyName: string;
+  description: string | null;
+  reputationScore: number | null;
+  reviewCount: number;
+}
+
+export interface ReviewAuthor {
+  id: string;
+  username: string;
+  displayName: string | null;
+}
+
+export interface AgencyReview {
+  id: string;
+  agencyId: string;
+  rating: number;
+  body: string | null;
+  createdAt: string;
+  updatedAt: string;
+  reviewer: ReviewAuthor;
+}
+
+export interface MyReview {
+  id: string;
+  agencyId: string;
+  agencyName: string;
+  rating: number;
+  body: string | null;
+  createdAt: string;
+  canEdit: boolean;
+  editableUntil: string;
+}

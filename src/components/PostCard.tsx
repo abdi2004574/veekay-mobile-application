@@ -1,4 +1,4 @@
-import { Alert, Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import {
   Heart,
@@ -12,11 +12,16 @@ import {
 import { Avatar } from './Avatar';
 import { colors } from '../constants/colors';
 import { formatTimeAgo } from '../utils/format-time-ago';
+import { showAlert } from '../utils/show-alert';
 import type { Post } from '../api/types';
 
 interface PostCardProps {
   post: Post;
   currentUserId: string;
+  // Set to the profile screen's own :id param when rendering inside a
+  // profile's post list — tapping a post authored by that same id is then a
+  // no-op instead of pushing a duplicate copy of the screen you're already on.
+  viewingProfileId?: string;
   onLikeToggle?: (post: Post) => void;
   onCommentPress?: (post: Post) => void;
   onSharePress?: (post: Post) => void;
@@ -31,6 +36,7 @@ function authorName(author: Post['author']) {
 export function PostCard({
   post,
   currentUserId,
+  viewingProfileId,
   onLikeToggle,
   onCommentPress,
   onSharePress,
@@ -38,15 +44,16 @@ export function PostCard({
   onDeletePress,
 }: PostCardProps) {
   const isOwn = post.authorId === currentUserId;
+  const isAlreadyViewingAuthor = post.authorId === viewingProfileId;
 
   const openOptions = () => {
-    Alert.alert('Post', undefined, [
+    showAlert('Post', undefined, [
       { text: 'Edit Post', onPress: () => onEditPress?.(post) },
       {
         text: 'Delete Post',
         style: 'destructive',
         onPress: () =>
-          Alert.alert('Delete post?', 'This cannot be undone.', [
+          showAlert('Delete post?', 'This cannot be undone.', [
             { text: 'Cancel', style: 'cancel' },
             { text: 'Delete', style: 'destructive', onPress: () => onDeletePress?.(post) },
           ]),
@@ -63,7 +70,11 @@ export function PostCard({
       <View className="flex-row items-center justify-between mb-3">
         <Pressable
           className="flex-row items-center gap-3 flex-1"
-          onPress={() => router.push(`/(traveler)/user/${post.authorId}`)}
+          onPress={
+            isAlreadyViewingAuthor
+              ? undefined
+              : () => router.push(`/(traveler)/user/${post.authorId}`)
+          }
         >
           <Avatar name={authorName(post.author)} size={40} />
           <View>

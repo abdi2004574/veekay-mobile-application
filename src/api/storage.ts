@@ -8,7 +8,9 @@ export type MediaPurpose =
   | 'agency_document'
   | 'agency_logo'
   | 'chat_image'
-  | 'chat_document';
+  | 'chat_document'
+  | 'campaign_photo'
+  | 'campaign_document';
 
 export interface UploadUrlResponse {
   uploadUrl: string;

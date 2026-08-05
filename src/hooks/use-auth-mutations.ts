@@ -1,6 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import * as authApi from '../api/auth';
 import { useAuthStore } from '../stores/auth-store';
+import { requireAccessToken } from '../utils/require-access-token';
+import { useToastStore } from '../stores/toast-store';
+import { friendlyErrorMessage } from '../utils/error-message';
 
 export function useRegisterTraveler() {
   return useMutation({ mutationFn: authApi.registerTraveler });
@@ -44,4 +47,21 @@ export function useForgotPassword() {
 
 export function useResetPassword() {
   return useMutation({ mutationFn: authApi.resetPassword });
+}
+
+export function useChangePassword() {
+  const showToast = useToastStore((s) => s.show);
+  return useMutation({
+    mutationFn: (input: { currentPassword: string; newPassword: string }) =>
+      authApi.changePassword(input, requireAccessToken()),
+    onError: (err) => showToast(friendlyErrorMessage(err)),
+  });
+}
+
+export function useLogoutAll() {
+  const showToast = useToastStore((s) => s.show);
+  return useMutation({
+    mutationFn: () => authApi.logoutAll(requireAccessToken()),
+    onError: (err) => showToast(friendlyErrorMessage(err)),
+  });
 }

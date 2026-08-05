@@ -2,12 +2,19 @@ import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowLeft, ChevronRight, MapPin, Star, UserCheck, UserPlus } from 'lucide-react-native';
+import {
+  ArrowLeft,
+  ChevronRight,
+  MapPin,
+  Settings as SettingsIcon,
+  Star,
+  UserCheck,
+  UserPlus,
+} from 'lucide-react-native';
 import { Avatar } from './Avatar';
 import { PostCard } from './PostCard';
 import { CommentsSheet } from './CommentsSheet';
 import { ShareSheet } from './ShareSheet';
-import { GradientButton } from './GradientButton';
 import { TravelerBottomNav } from './TravelerBottomNav';
 import { colors } from '../constants/colors';
 import { useAuthStore } from '../stores/auth-store';
@@ -33,7 +40,6 @@ export function ProfileScreen({
   showBackButton?: boolean;
 }) {
   const currentUserId = useAuthStore((s) => s.user?.id) ?? '';
-  const logout = useAuthStore((s) => s.logout);
   const isSelf = userId === currentUserId;
 
   const me = useMe();
@@ -144,12 +150,22 @@ export function ProfileScreen({
                   </Text>
                 </View>
                 {'campaignsCount' in profile && (
-                  <View className="items-center">
+                  <Pressable
+                    className="items-center"
+                    onPress={() =>
+                      isSelf
+                        ? router.push('/(traveler)/campaigns')
+                        : router.push({
+                            pathname: '/(traveler)/user-campaigns/[userId]',
+                            params: { userId, creatorName: name },
+                          })
+                    }
+                  >
                     <Text className="font-bold text-foreground">{profile.campaignsCount}</Text>
                     <Text className="text-xs" style={{ color: colors.mutedForeground }}>
                       Campaigns
                     </Text>
-                  </View>
+                  </Pressable>
                 )}
               </View>
 
@@ -170,15 +186,20 @@ export function ProfileScreen({
                       <Text className="font-bold text-foreground flex-1">My Reviews</Text>
                       <ChevronRight size={18} color={colors.mutedForeground} />
                     </Pressable>
-                    <GradientButton
-                      variant="outline"
-                      onPress={async () => {
-                        await logout();
-                        router.replace('/(auth)/welcome');
-                      }}
+                    <Pressable
+                      onPress={() => router.push('/(traveler)/settings')}
+                      className="flex-row items-center gap-3 p-4 rounded-2xl"
+                      style={{ borderWidth: 1, borderColor: colors.border }}
                     >
-                      Log Out
-                    </GradientButton>
+                      <View
+                        className="items-center justify-center rounded-xl"
+                        style={{ width: 40, height: 40, backgroundColor: colors.vaykaePink }}
+                      >
+                        <SettingsIcon size={18} color={colors.background} />
+                      </View>
+                      <Text className="font-bold text-foreground flex-1">Settings</Text>
+                      <ChevronRight size={18} color={colors.mutedForeground} />
+                    </Pressable>
                   </>
                 ) : 'isFriend' in profile && profile.isFriend ? (
                   <Pressable

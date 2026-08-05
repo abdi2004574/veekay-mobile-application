@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
 import { Compass, Heart, Home, MessageCircle, User } from 'lucide-react-native';
 import { BottomNavBar } from './BottomNavBar';
-import { showInDevelopmentAlert } from '../utils/in-development';
 
 export type TravelerTab = 'home' | 'explore' | 'campaigns' | 'chat' | 'profile';
 
@@ -21,7 +20,7 @@ export function TravelerBottomNav({ active }: { active: TravelerTab }) {
           key: 'campaigns',
           icon: Heart,
           label: 'Campaigns',
-          onPress: () => showInDevelopmentAlert('Campaigns aren’t built yet.'),
+          onPress: () => router.replace('/(traveler)/campaigns'),
         },
         {
           key: 'chat',

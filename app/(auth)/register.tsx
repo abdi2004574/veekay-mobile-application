@@ -76,13 +76,17 @@ function TravelerRegister() {
         <Checkbox checked={agreedToTerms} onChange={setAgreedToTerms} />
         <Text className="flex-1 text-sm text-muted-foreground">
           I agree to the{' '}
-          <Text style={{ color: colors.vaykaePink }} className="font-medium">
-            Terms of Service
-          </Text>{' '}
+          <Link href="/terms">
+            <Text style={{ color: colors.vaykaePink }} className="font-medium">
+              Terms of Service
+            </Text>
+          </Link>{' '}
           and{' '}
-          <Text style={{ color: colors.vaykaePink }} className="font-medium">
-            Privacy Policy
-          </Text>
+          <Link href="/privacy-policy">
+            <Text style={{ color: colors.vaykaePink }} className="font-medium">
+              Privacy Policy
+            </Text>
+          </Link>
         </Text>
       </View>
 
@@ -207,13 +211,17 @@ function AgencyRegister() {
         <Checkbox checked={agreedToTerms} onChange={setAgreedToTerms} />
         <Text className="flex-1 text-sm text-muted-foreground">
           I agree to the{' '}
-          <Text style={{ color: colors.vaykaePink }} className="font-medium">
-            Terms & Conditions
-          </Text>{' '}
+          <Link href="/terms">
+            <Text style={{ color: colors.vaykaePink }} className="font-medium">
+              Terms & Conditions
+            </Text>
+          </Link>{' '}
           and{' '}
-          <Text style={{ color: colors.vaykaePink }} className="font-medium">
-            Privacy Policy
-          </Text>
+          <Link href="/privacy-policy">
+            <Text style={{ color: colors.vaykaePink }} className="font-medium">
+              Privacy Policy
+            </Text>
+          </Link>
         </Text>
       </View>
 

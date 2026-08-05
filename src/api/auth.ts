@@ -87,3 +87,18 @@ export function resetPassword(input: {
     body: input,
   });
 }
+
+export function changePassword(
+  input: { currentPassword: string; newPassword: string },
+  accessToken: string,
+) {
+  return apiFetch<{ message: string }>('/auth/change-password', {
+    method: 'POST',
+    body: input,
+    accessToken,
+  });
+}
+
+export function logoutAll(accessToken: string) {
+  return apiFetch<void>('/auth/logout-all', { method: 'POST', accessToken });
+}

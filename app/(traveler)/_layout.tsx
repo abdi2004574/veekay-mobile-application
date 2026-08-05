@@ -10,6 +10,7 @@ export default function TravelerLayout() {
       <Stack.Screen name="chat/index" options={{ animation: 'none' }} />
       <Stack.Screen name="profile/index" options={{ animation: 'none' }} />
       <Stack.Screen name="explore/index" options={{ animation: 'none' }} />
+      <Stack.Screen name="campaigns/index" options={{ animation: 'none' }} />
     </Stack>
   );
 }

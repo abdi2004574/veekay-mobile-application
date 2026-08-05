@@ -1,5 +1,9 @@
 export type UserRole = 'traveler' | 'agency' | 'admin';
 
+export type DestinationType = 'beach' | 'mountain' | 'city' | 'adventure' | 'cruise';
+export type TravelStyle = 'luxury' | 'budget' | 'backpacking' | 'family' | 'solo' | 'group';
+export type Gender = 'male' | 'female' | 'other';
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -133,10 +137,30 @@ export interface MeProfile {
   onboardingComplete: boolean;
   bio: string | null;
   location: string | null;
+  phone: string | null;
   photoMediaId: string | null;
   badge: string | null;
+  gender: Gender | null;
+  dateOfBirth: string | null;
+  destinationTypes: DestinationType[];
+  travelStyles: TravelStyle[];
   friendsCount: number;
   postsCount: number;
+  campaignsCount: number;
+}
+
+export type ProfileVisibility = 'public' | 'friends' | 'private';
+
+export interface NotificationPreferences {
+  donationAlerts: boolean;
+  campaignUpdates: boolean;
+  agencyMessages: boolean;
+}
+
+export interface PrivacySettings {
+  profileVisibility: ProfileVisibility;
+  activityStatusVisible: boolean;
+  readReceiptsEnabled: boolean;
 }
 
 export type ConversationType = 'direct' | 'group' | 'agency';
@@ -238,4 +262,40 @@ export interface MyReview {
   createdAt: string;
   canEdit: boolean;
   editableUntil: string;
+}
+
+export type CampaignPrivacy = 'public' | 'private';
+export type CampaignStatus = 'draft' | 'active' | 'completed';
+
+export interface CampaignPhoto {
+  mediaId: string;
+  position: number;
+  url: string | null;
+}
+
+export interface Campaign {
+  id: string;
+  creatorId: string;
+  title: string;
+  destination: string;
+  goalAmount: number;
+  currency: string;
+  story: string | null;
+  tripStartDate: string;
+  tripEndDate: string | null;
+  status: CampaignStatus;
+  privacy: CampaignPrivacy;
+  giftMode: boolean;
+  giftOccasion: string | null;
+  itineraryMediaId: string | null;
+  agencyQuoteMediaId: string | null;
+  viewsCount: number;
+  createdAt: string;
+  photos: CampaignPhoto[];
+  contributorsCount: number;
+}
+
+export interface CampaignDetail extends Campaign {
+  isCreator: boolean;
+  creator: { id: string; username: string; displayName: string | null };
 }

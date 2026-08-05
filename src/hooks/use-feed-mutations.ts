@@ -1,44 +1,35 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as feedApi from '../api/feed';
-import { useAuthStore } from '../stores/auth-store';
+import { requireAccessToken } from '../utils/require-access-token';
 import { useToastStore } from '../stores/toast-store';
 import { friendlyErrorMessage } from '../utils/error-message';
 
-function useToken() {
-  const accessToken = useAuthStore((s) => s.accessToken);
-  if (!accessToken) throw new Error('Not authenticated');
-  return accessToken;
-}
-
 export function useCreatePost() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: (input: feedApi.CreatePostInput) => feedApi.createPost(input, accessToken),
+    mutationFn: (input: feedApi.CreatePostInput) => feedApi.createPost(input, requireAccessToken()),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feed'] }),
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
 }
 
 export function useUpdatePost() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
     mutationFn: ({ postId, input }: { postId: string; input: Partial<feedApi.CreatePostInput> }) =>
-      feedApi.updatePost(postId, input, accessToken),
+      feedApi.updatePost(postId, input, requireAccessToken()),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feed'] }),
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
 }
 
 export function useDeletePost() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: (postId: string) => feedApi.deletePost(postId, accessToken),
+    mutationFn: (postId: string) => feedApi.deletePost(postId, requireAccessToken()),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feed'] });
       queryClient.invalidateQueries({ queryKey: ['user-posts'] });
@@ -49,11 +40,10 @@ export function useDeletePost() {
 }
 
 export function useLikePost() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: (postId: string) => feedApi.likePost(postId, accessToken),
+    mutationFn: (postId: string) => feedApi.likePost(postId, requireAccessToken()),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feed'] });
       queryClient.invalidateQueries({ queryKey: ['user-posts'] });
@@ -63,11 +53,10 @@ export function useLikePost() {
 }
 
 export function useUnlikePost() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: (postId: string) => feedApi.unlikePost(postId, accessToken),
+    mutationFn: (postId: string) => feedApi.unlikePost(postId, requireAccessToken()),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feed'] });
       queryClient.invalidateQueries({ queryKey: ['user-posts'] });
@@ -77,12 +66,11 @@ export function useUnlikePost() {
 }
 
 export function useSharePost() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
     mutationFn: ({ postId, caption }: { postId: string; caption?: string }) =>
-      feedApi.sharePost(postId, caption, accessToken),
+      feedApi.sharePost(postId, caption, requireAccessToken()),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feed'] });
       queryClient.invalidateQueries({ queryKey: ['user-posts'] });
@@ -93,12 +81,11 @@ export function useSharePost() {
 }
 
 export function useCreateComment() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
     mutationFn: ({ postId, text }: { postId: string; text: string }) =>
-      feedApi.createComment(postId, text, accessToken),
+      feedApi.createComment(postId, text, requireAccessToken()),
     onSuccess: (_, { postId }) => {
       queryClient.invalidateQueries({ queryKey: ['comments', postId] });
       queryClient.invalidateQueries({ queryKey: ['feed'] });
@@ -108,24 +95,22 @@ export function useCreateComment() {
 }
 
 export function useUpdateComment() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
     mutationFn: ({ commentId, text }: { commentId: string; text: string }) =>
-      feedApi.updateComment(commentId, text, accessToken),
+      feedApi.updateComment(commentId, text, requireAccessToken()),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['comments'] }),
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
 }
 
 export function useDeleteComment() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
     mutationFn: ({ commentId }: { commentId: string; postId: string }) =>
-      feedApi.deleteComment(commentId, accessToken),
+      feedApi.deleteComment(commentId, requireAccessToken()),
     onSuccess: (_, { postId }) => {
       queryClient.invalidateQueries({ queryKey: ['comments', postId] });
       queryClient.invalidateQueries({ queryKey: ['feed'] });
@@ -135,12 +120,11 @@ export function useDeleteComment() {
 }
 
 export function useLikeComment() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
     mutationFn: ({ commentId }: { commentId: string; postId: string }) =>
-      feedApi.likeComment(commentId, accessToken),
+      feedApi.likeComment(commentId, requireAccessToken()),
     onSuccess: (_, { postId }) =>
       queryClient.invalidateQueries({ queryKey: ['comments', postId] }),
     onError: (err) => showToast(friendlyErrorMessage(err)),
@@ -148,12 +132,11 @@ export function useLikeComment() {
 }
 
 export function useUnlikeComment() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
     mutationFn: ({ commentId }: { commentId: string; postId: string }) =>
-      feedApi.unlikeComment(commentId, accessToken),
+      feedApi.unlikeComment(commentId, requireAccessToken()),
     onSuccess: (_, { postId }) =>
       queryClient.invalidateQueries({ queryKey: ['comments', postId] }),
     onError: (err) => showToast(friendlyErrorMessage(err)),
@@ -161,11 +144,10 @@ export function useUnlikeComment() {
 }
 
 export function useCreateStory() {
-  const accessToken = useToken();
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: (input: feedApi.CreateStoryInput) => feedApi.createStory(input, accessToken),
+    mutationFn: (input: feedApi.CreateStoryInput) => feedApi.createStory(input, requireAccessToken()),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stories'] });
       showToast('Story posted.');
@@ -175,17 +157,15 @@ export function useCreateStory() {
 }
 
 export function useViewStory() {
-  const accessToken = useToken();
   return useMutation({
-    mutationFn: (storyId: string) => feedApi.viewStory(storyId, accessToken),
+    mutationFn: (storyId: string) => feedApi.viewStory(storyId, requireAccessToken()),
   });
 }
 
 export function useLikeStory() {
-  const accessToken = useToken();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: (storyId: string) => feedApi.likeStory(storyId, accessToken),
+    mutationFn: (storyId: string) => feedApi.likeStory(storyId, requireAccessToken()),
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
 }

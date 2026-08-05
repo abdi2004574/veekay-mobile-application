@@ -1,22 +1,29 @@
 import { useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Building2, Compass, Search, Sparkles, Star } from 'lucide-react-native';
+import { Building2, Compass, Search, Sparkles, Star, TrendingUp } from 'lucide-react-native';
 import { Avatar } from '../../../src/components/Avatar';
+import { CampaignSummaryCard } from '../../../src/components/CampaignSummaryCard';
 import { TravelerBottomNav } from '../../../src/components/TravelerBottomNav';
 import { BOTTOM_NAV_HEIGHT } from '../../../src/components/BottomNavBar';
 import { colors } from '../../../src/constants/colors';
 import { useAgencyDirectory } from '../../../src/hooks/use-agencies-queries';
+import { useCampaignDirectory } from '../../../src/hooks/use-campaigns-queries';
 
 export default function ExploreScreen() {
   const [search, setSearch] = useState('');
   const agencies = useAgencyDirectory(search);
+  const campaigns = useCampaignDirectory('');
   const insets = useSafeAreaInsets();
 
   const items = useMemo(
     () => agencies.data?.pages.flatMap((p) => p.items) ?? [],
     [agencies.data],
+  );
+  const campaignItems = useMemo(
+    () => campaigns.data?.pages.flatMap((p) => p.items) ?? [],
+    [campaigns.data],
   );
 
   return (
@@ -52,15 +59,36 @@ export default function ExploreScreen() {
             if (agencies.hasNextPage && !agencies.isFetchingNextPage) agencies.fetchNextPage();
           }}
           ListHeaderComponent={
-            <View
-              className="p-4 rounded-2xl mb-4 flex-row items-center gap-3"
-              style={{ backgroundColor: colors.inputBackground }}
-            >
-              <Compass size={20} color={colors.vaykaePink} />
-              <Text className="flex-1 text-sm" style={{ color: colors.mutedForeground }}>
-                Campaigns and trip packages are launching soon — for now, browse and message
-                agencies below.
-              </Text>
+            <View>
+              {(campaigns.isLoading || campaignItems.length > 0) && (
+                <View className="mb-4">
+                  <View className="flex-row items-center gap-2 mb-3">
+                    <TrendingUp size={18} color={colors.vaykaePink} />
+                    <Text className="font-bold text-foreground">Campaigns</Text>
+                  </View>
+                  {campaigns.isLoading ? (
+                    <ActivityIndicator color={colors.vaykaePink} />
+                  ) : (
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                      <View className="flex-row gap-3">
+                        {campaignItems.map((c) => (
+                          <CampaignSummaryCard key={c.id} campaign={c} width={220} />
+                        ))}
+                      </View>
+                    </ScrollView>
+                  )}
+                </View>
+              )}
+
+              <View
+                className="p-4 rounded-2xl mb-4 flex-row items-center gap-3"
+                style={{ backgroundColor: colors.inputBackground }}
+              >
+                <Compass size={20} color={colors.vaykaePink} />
+                <Text className="flex-1 text-sm" style={{ color: colors.mutedForeground }}>
+                  Trip packages are launching soon — for now, browse and message agencies below.
+                </Text>
+              </View>
             </View>
           }
           ListFooterComponent={

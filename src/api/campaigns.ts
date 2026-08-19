@@ -22,6 +22,7 @@ export interface CampaignInput {
   photoMediaIds: string[];
   itineraryMediaId?: string;
   agencyQuoteMediaId?: string;
+  isGroup?: boolean;
 }
 
 export function createCampaign(input: CampaignInput, accessToken: string) {

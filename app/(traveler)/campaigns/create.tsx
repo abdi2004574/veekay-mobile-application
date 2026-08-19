@@ -52,6 +52,7 @@ export default function CreateCampaignScreen() {
     editPhotoUrls?: string;
     editItineraryMediaId?: string;
     editAgencyQuoteMediaId?: string;
+    groupMode?: string;
   }>();
   const isEditing = !!params.editCampaignId;
 
@@ -82,6 +83,7 @@ export default function CreateCampaignScreen() {
       : null,
   );
   const [isPublic, setIsPublic] = useState(params.editPrivacy !== 'private');
+  const [isGroup, setIsGroup] = useState(params.groupMode === '1');
   const [giftMode, setGiftMode] = useState(params.editGiftMode === '1');
   const [giftOccasion, setGiftOccasion] = useState(params.editGiftOccasion ?? '');
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
@@ -143,12 +145,15 @@ export default function CreateCampaignScreen() {
       tripStartDate,
       tripEndDate: tripEndDate || undefined,
       story,
+      // Group trips are always forced private server-side regardless of
+      // what's sent — the switch above is hidden once Group Trip is on.
       privacy: (isPublic ? 'public' : 'private') as 'public' | 'private',
       giftMode,
       giftOccasion: giftMode ? giftOccasion || undefined : undefined,
       photoMediaIds: photos.map((p) => p.mediaId),
       itineraryMediaId: itinerary?.mediaId,
       agencyQuoteMediaId: agencyQuote?.mediaId,
+      isGroup,
     };
 
     if (isEditing && params.editCampaignId) {
@@ -158,7 +163,10 @@ export default function CreateCampaignScreen() {
       );
     } else {
       createCampaign.mutate(input, {
-        onSuccess: () => router.replace('/(traveler)/campaigns'),
+        onSuccess: (campaign) =>
+          router.replace(
+            isGroup ? `/(traveler)/group-campaign/${campaign.id}` : '/(traveler)/campaigns',
+          ),
       });
     }
   };
@@ -387,21 +395,38 @@ export default function CreateCampaignScreen() {
 
             <View className="p-4 rounded-2xl" style={{ borderWidth: 2, borderColor: colors.border }}>
               <View className="flex-row items-center justify-between mb-1">
-                <Text className="font-bold text-foreground">
-                  {isPublic ? 'Public Campaign' : 'Private Campaign'}
-                </Text>
+                <Text className="font-bold text-foreground">Group Trip</Text>
                 <Switch
-                  value={isPublic}
-                  onValueChange={setIsPublic}
+                  value={isGroup}
+                  onValueChange={setIsGroup}
                   trackColor={{ true: colors.vaykaePink }}
                 />
               </View>
               <Text className="text-sm" style={{ color: colors.mutedForeground }}>
-                {isPublic
-                  ? 'Anyone can discover and donate to your campaign'
-                  : 'Only you can view this campaign for now'}
+                Pool funds with friends — add members, track contributions and expenses, and share
+                a group chat. Group trips are always private to invited members.
               </Text>
             </View>
+
+            {!isGroup && (
+              <View className="p-4 rounded-2xl" style={{ borderWidth: 2, borderColor: colors.border }}>
+                <View className="flex-row items-center justify-between mb-1">
+                  <Text className="font-bold text-foreground">
+                    {isPublic ? 'Public Campaign' : 'Private Campaign'}
+                  </Text>
+                  <Switch
+                    value={isPublic}
+                    onValueChange={setIsPublic}
+                    trackColor={{ true: colors.vaykaePink }}
+                  />
+                </View>
+                <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+                  {isPublic
+                    ? 'Anyone can discover and donate to your campaign'
+                    : 'Only you can view this campaign for now'}
+                </Text>
+              </View>
+            )}
 
             <View className="p-4 rounded-2xl" style={{ borderWidth: 2, borderColor: colors.border }}>
               <View className="flex-row items-center justify-between mb-1">
@@ -447,7 +472,10 @@ export default function CreateCampaignScreen() {
               <PreviewRow label="Destination" value={destination || '—'} />
               <PreviewRow label="Goal" value={goalAmount ? `$${Number(goalAmount).toLocaleString()}` : '$0'} />
               <PreviewRow label="Trip Date" value={tripStartDate || '—'} />
-              <PreviewRow label="Privacy" value={isPublic ? 'Public' : 'Private'} />
+              <PreviewRow
+                label="Privacy"
+                value={isGroup ? 'Group Trip (Private)' : isPublic ? 'Public' : 'Private'}
+              />
               <PreviewRow label="Gift Mode" value={giftMode ? `Yes (${giftOccasion || 'Not set'})` : 'No'} />
               <PreviewRow label="Photos" value={String(photos.length)} last />
             </View>

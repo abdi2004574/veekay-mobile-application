@@ -5,20 +5,23 @@ import { router } from 'expo-router';
 import { ArrowLeft, UserPlus } from 'lucide-react-native';
 import { FriendCard } from '../../src/components/FriendCard';
 import { Avatar } from '../../src/components/Avatar';
+import { GroupTripCard } from '../../src/components/GroupTripCard';
 import { colors } from '../../src/constants/colors';
 import { useFriends, useIncomingFriendRequests } from '../../src/hooks/use-friends-queries';
+import { useMyGroupTrips } from '../../src/hooks/use-group-campaigns-queries';
 import {
   useAcceptFriendRequest,
   useDeclineFriendRequest,
   useUnfriend,
 } from '../../src/hooks/use-friend-mutations';
 
-type Tab = 'friends' | 'requests';
+type Tab = 'friends' | 'requests' | 'groups';
 
 export default function FriendsScreen() {
   const [tab, setTab] = useState<Tab>('friends');
   const friends = useFriends();
   const requests = useIncomingFriendRequests();
+  const groupTrips = useMyGroupTrips();
   const acceptRequest = useAcceptFriendRequest();
   const declineRequest = useDeclineFriendRequest();
   const unfriend = useUnfriend();
@@ -41,13 +44,17 @@ export default function FriendsScreen() {
       </View>
 
       <View className="flex-row px-4 mt-3 gap-6" style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}>
-        {(['friends', 'requests'] as Tab[]).map((t) => (
+        {(['friends', 'requests', 'groups'] as Tab[]).map((t) => (
           <Pressable key={t} onPress={() => setTab(t)} className="pb-3">
             <Text
               className="font-semibold"
               style={{ color: tab === t ? colors.vaykaePink : colors.mutedForeground }}
             >
-              {t === 'friends' ? `Friends (${friends.data?.length ?? 0})` : `Requests (${requestCount})`}
+              {t === 'friends'
+                ? `Friends (${friends.data?.length ?? 0})`
+                : t === 'requests'
+                  ? `Requests (${requestCount})`
+                  : 'Group Trips'}
             </Text>
             {tab === t && (
               <View
@@ -101,7 +108,8 @@ export default function FriendsScreen() {
             )}
           />
         )
-      ) : requests.isLoading ? (
+      ) : tab === 'requests' ? (
+        requests.isLoading ? (
         <View className="py-16 items-center">
           <ActivityIndicator color={colors.vaykaePink} />
         </View>
@@ -163,6 +171,55 @@ export default function FriendsScreen() {
               </View>
             );
           }}
+        />
+        )
+      ) : groupTrips.isLoading ? (
+        <View className="py-16 items-center">
+          <ActivityIndicator color={colors.vaykaePink} />
+        </View>
+      ) : groupTrips.isError ? (
+        <View className="py-16 items-center px-6">
+          <Text className="text-center mb-3" style={{ color: colors.mutedForeground }}>
+            Couldn&apos;t load group trips.
+          </Text>
+          <Pressable onPress={() => groupTrips.refetch()}>
+            <Text style={{ color: colors.vaykaePink }} className="font-semibold">
+              Try again
+            </Text>
+          </Pressable>
+        </View>
+      ) : (
+        <FlatList
+          data={groupTrips.data ?? []}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ padding: 16 }}
+          ListHeaderComponent={
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: '/(traveler)/campaigns/create',
+                  params: { groupMode: '1' },
+                })
+              }
+              className="h-14 rounded-2xl items-center justify-center mb-4"
+              style={{ borderWidth: 2, borderStyle: 'dashed', borderColor: colors.vaykaePink }}
+            >
+              <Text className="font-bold" style={{ color: colors.vaykaePink }}>
+                + Create Group Trip
+              </Text>
+            </Pressable>
+          }
+          ListEmptyComponent={
+            <View className="py-16 items-center px-6">
+              <Text className="text-center font-semibold text-foreground mb-1">
+                No group trips yet
+              </Text>
+              <Text className="text-center" style={{ color: colors.mutedForeground }}>
+                Start a group trip to pool funds with friends.
+              </Text>
+            </View>
+          }
+          renderItem={({ item }) => <GroupTripCard trip={item} />}
         />
       )}
     </SafeAreaView>

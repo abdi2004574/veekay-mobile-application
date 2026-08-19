@@ -293,9 +293,80 @@ export interface Campaign {
   createdAt: string;
   photos: CampaignPhoto[];
   contributorsCount: number;
+  isGroup: boolean;
 }
 
 export interface CampaignDetail extends Campaign {
   isCreator: boolean;
   creator: { id: string; username: string; displayName: string | null };
+}
+
+export type GroupMemberRole = 'admin' | 'member';
+export type GroupExpenseCategory =
+  | 'transportation'
+  | 'accommodation'
+  | 'activities'
+  | 'food'
+  | 'other';
+
+export interface GroupMember {
+  userId: string;
+  username: string;
+  displayName: string | null;
+  role: GroupMemberRole;
+  isCreator: boolean;
+  contributed: number;
+  percentage: number;
+}
+
+export interface GroupOverview {
+  id: string;
+  title: string;
+  destination: string;
+  goalAmount: number;
+  tripStartDate: string;
+  tripEndDate: string | null;
+  groupConversationId: string | null;
+  totalRaised: number;
+  totalSpent: number;
+  members: GroupMember[];
+}
+
+export interface GroupContributionAuthor {
+  id: string;
+  username: string;
+  displayName: string | null;
+}
+
+export interface GroupContribution {
+  id: string;
+  campaignId: string;
+  memberUserId: string;
+  amount: number;
+  type: 'manual' | 'donation';
+  note: string | null;
+  createdAt: string;
+  member: GroupContributionAuthor;
+}
+
+export interface GroupExpense {
+  id: string;
+  campaignId: string;
+  name: string;
+  amount: number;
+  category: GroupExpenseCategory;
+  paidByUserId: string;
+  spentAt: string;
+  createdAt: string;
+  paidBy: GroupContributionAuthor;
+}
+
+export interface GroupTrip {
+  id: string;
+  title: string;
+  destination: string;
+  goalAmount: number;
+  memberCount: number;
+  raised: number;
+  photoUrl: string | null;
 }

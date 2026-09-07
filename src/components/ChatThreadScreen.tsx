@@ -25,6 +25,7 @@ import {
   Users,
   Video,
   X,
+  Zap,
 } from 'lucide-react-native';
 import { Avatar } from './Avatar';
 import { colors } from '../constants/colors';
@@ -34,6 +35,7 @@ import { useConversation, useMessages } from '../hooks/use-chat-queries';
 import { useMarkConversationRead, useSendMessage } from '../hooks/use-chat-mutations';
 import { showInDevelopmentAlert } from '../utils/in-development';
 import { pickAndUploadDocument, pickAndUploadFromCamera, pickAndUploadFromLibrary } from '../utils/upload-image';
+import { SmartReplyPicker } from './SmartReplyPicker';
 import type { Message } from '../api/types';
 
 function StatusTick({ status }: { status?: Message['status'] }) {
@@ -56,10 +58,10 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
   const [text, setText] = useState('');
   const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [showGroupPanel, setShowGroupPanel] = useState(false);
+  const [showQuickReplies, setShowQuickReplies] = useState(false);
   const [isAttaching, setIsAttaching] = useState(false);
   const lastMessageIdRef = useRef<string | null>(null);
 
-  // newest-first from the API — reverse for a natural oldest-at-top chat view.
   const items = useMemo(
     () => (messages.data?.pages.flatMap((p) => p.items) ?? []).slice().reverse(),
     [messages.data],
@@ -71,7 +73,6 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
       lastMessageIdRef.current = latest;
       markRead.mutate();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items.length]);
 
   const handleSendText = () => {
@@ -173,14 +174,14 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             {isAgency && (
               <>
                 <Pressable
-                  onPress={() => showInDevelopmentAlert('Audio calls aren’t available yet.')}
+                  onPress={() => showInDevelopmentAlert('Audio calls aren'\''t available yet.')}
                   hitSlop={6}
                   className="p-2"
                 >
                   <Phone size={19} color={colors.foreground} />
                 </Pressable>
                 <Pressable
-                  onPress={() => showInDevelopmentAlert('Video calls aren’t available yet.')}
+                  onPress={() => showInDevelopmentAlert('Video calls aren'\''t available yet.')}
                   hitSlop={6}
                   className="p-2"
                 >
@@ -204,7 +205,7 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             <View className="flex-row items-center justify-between mb-2">
               <Text className="text-sm font-semibold text-foreground">Group Members</Text>
               <Pressable
-                onPress={() => showInDevelopmentAlert('Adding members from here isn’t built yet.')}
+                onPress={() => showInDevelopmentAlert('Adding members from here isn'\''t built yet.')}
                 hitSlop={6}
               >
                 <Text className="text-xs font-semibold" style={{ color: colors.vaykaePink }}>
@@ -240,13 +241,13 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
           ) : (
             items.map((message) => {
               const mine = message.sender.id === currentUserId;
-              const senderName = message.sender.displayName ?? `@${message.sender.username}`;
+               const senderName = message.sender.displayName ?? `@${message.sender.username}`;
               return (
                 <View
                   key={message.id}
-                  className={`flex-row ${mine ? 'justify-end' : 'justify-start'}`}
+                   className={`flex-row ${mine ? 'justify-end' : 'justify-start'}`}
                 >
-                  <View className={`flex-row gap-2 ${mine ? 'flex-row-reverse' : ''}`} style={{ maxWidth: '85%' }}>
+                   <View className={`flex-row gap-2 ${mine ? 'flex-row-reverse' : ''}`} style={{ maxWidth: '85%' }}>
                     {isGroup && !mine && <Avatar name={senderName} size={28} />}
                     <View>
                       {isGroup && !mine && (
@@ -378,6 +379,16 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             className="flex-1 h-12 rounded-full px-4 text-foreground"
             style={{ backgroundColor: colors.inputBackground }}
           />
+          {isAgency && (
+            <Pressable
+              onPress={() => setShowQuickReplies((v) => !v)}
+              hitSlop={6}
+              className="items-center justify-center"
+              style={{ width: 36 }}
+            >
+              <Zap size={20} color={colors.mutedForeground} />
+            </Pressable>
+          )}
           <Pressable
             onPress={handleSendText}
             disabled={!text.trim() || sendMessage.isPending}
@@ -391,6 +402,16 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             <Send size={18} color={text.trim() ? colors.background : colors.mutedForeground} />
           </Pressable>
         </View>
+        {isAgency && (
+          <SmartReplyPicker
+            visible={showQuickReplies}
+            onClose={() => setShowQuickReplies(false)}
+            onPick={(template) => {
+              setText((prev) => prev ? prev + ' ' + template.body : template.body);
+              setShowQuickReplies(false);
+            }}
+          />
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

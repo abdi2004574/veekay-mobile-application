@@ -370,3 +370,95 @@ export interface GroupTrip {
   raised: number;
   photoUrl: string | null;
 }
+
+
+export type PackageStatus = 'active' | 'inactive' | 'archived';
+
+export interface PackageMediaEntry {
+  mediaId: string;
+  displayOrder: number;
+  url: string | null;
+}
+
+export interface PackageAgency {
+  id: string;
+  agencyName: string;
+  reputationScore: number | null;
+}
+
+export interface Package {
+  id: string;
+  agencyId: string;
+  title: string;
+  description: string | null;
+  basePrice: number;
+  currency: string;
+  destinationType: DestinationType | null;
+  season: string | null;
+  theme: string | null;
+  itinerary: string | null;
+  status: PackageStatus;
+  createdAt: string;
+  updatedAt: string;
+  media: PackageMediaEntry[];
+  agency: PackageAgency | null;
+}
+
+export type TripRequestStatus =
+  | 'pending'
+  | 'in_discussion'
+  | 'confirmed'
+  | 'completed'
+  | 'declined'
+  | 'cancelled';
+
+export interface TripRequestTraveler {
+  id: string;
+  username: string;
+  displayName: string | null;
+}
+
+export interface TripRequestAgencySummary {
+  id: string;
+  agencyName: string;
+  status: string;
+}
+
+export interface TripRequestPackageRef {
+  id: string;
+  title: string;
+  basePrice: number;
+  currency: string;
+}
+
+export interface TripRequestCampaignRef {
+  id: string;
+  title: string;
+  destination: string;
+}
+
+export interface TripRequest {
+  id: string;
+  travelerId: string;
+  agencyId: string;
+  packageId: string | null;
+  campaignId: string | null;
+  status: TripRequestStatus;
+  initialMessage: string;
+  conversationId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  traveler: TripRequestTraveler;
+  agency: TripRequestAgencySummary;
+  package: TripRequestPackageRef | null;
+  campaign: TripRequestCampaignRef | null;
+}
+
+export interface SmartReplyTemplate {
+  id: string;
+  agencyId: string;
+  title: string;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+}

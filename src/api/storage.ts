@@ -9,6 +9,7 @@ export type MediaPurpose =
   | 'agency_logo'
   | 'chat_image'
   | 'chat_document'
+  | 'package_visual'
   | 'campaign_photo'
   | 'campaign_document';
 

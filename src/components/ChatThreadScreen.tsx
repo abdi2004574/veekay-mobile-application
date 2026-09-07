@@ -174,14 +174,14 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             {isAgency && (
               <>
                 <Pressable
-                  onPress={() => showInDevelopmentAlert('Audio calls aren'\''t available yet.')}
+                  onPress={() => showInDevelopmentAlert(`Audio calls aren't available yet.`)}
                   hitSlop={6}
                   className="p-2"
                 >
                   <Phone size={19} color={colors.foreground} />
                 </Pressable>
                 <Pressable
-                  onPress={() => showInDevelopmentAlert('Video calls aren'\''t available yet.')}
+                  onPress={() => showInDevelopmentAlert(`Video calls aren't available yet.`)}
                   hitSlop={6}
                   className="p-2"
                 >
@@ -205,7 +205,7 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             <View className="flex-row items-center justify-between mb-2">
               <Text className="text-sm font-semibold text-foreground">Group Members</Text>
               <Pressable
-                onPress={() => showInDevelopmentAlert('Adding members from here isn'\''t built yet.')}
+                onPress={() => showInDevelopmentAlert(`Adding members from here isn't built yet.`)}
                 hitSlop={6}
               >
                 <Text className="text-xs font-semibold" style={{ color: colors.vaykaePink }}>

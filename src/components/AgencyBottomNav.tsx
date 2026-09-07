@@ -1,4 +1,4 @@
-﻿import { router } from 'expo-router';
+import { router } from 'expo-router';
 import { Inbox, LayoutDashboard, MessageCircle, Package, User } from 'lucide-react-native';
 import { BottomNavBar } from './BottomNavBar';
 import { showInDevelopmentAlert } from '../utils/in-development';
@@ -38,7 +38,7 @@ export function AgencyBottomNav({ active }: { active: AgencyTab }) {
           key: 'profile',
           icon: User,
           label: 'Profile',
-          onPress: () => showInDevelopmentAlert('Agency profile isn'\''t built yet.'),
+          onPress: () => showInDevelopmentAlert(`Agency profile isn't built yet.`),
         },
       ]}
     />

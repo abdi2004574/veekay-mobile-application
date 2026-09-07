@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -14,7 +14,7 @@ import { ArrowLeft, Package, Search, SlidersHorizontal, X } from 'lucide-react-n
 import { PackageSummaryCard } from '../../../src/components/PackageSummaryCard';
 import { colors } from '../../../src/constants/colors';
 import { usePackageDirectory } from '../../../src/hooks/use-packages-queries';
-import type { DestinationType, Package } from '../../../src/api/types';
+import type { DestinationType, PackageType } from '../../../src/api/types';
 
 const DESTINATION_OPTIONS: { key: DestinationType | 'all'; label: string }[] = [
   { key: 'all', label: 'All' },
@@ -40,7 +40,7 @@ export default function ItineraryScreen() {
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return items;
-    return items.filter((p: Package) => {
+    return items.filter((p: PackageType) => {
       const title = p.title?.toLowerCase() ?? '';
       const agency = p.agency?.agencyName?.toLowerCase() ?? '';
       return title.includes(q) || agency.includes(q);
@@ -202,3 +202,6 @@ export default function ItineraryScreen() {
     </SafeAreaView>
   );
 }
+
+
+

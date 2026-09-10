@@ -17,15 +17,19 @@ interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   body?: unknown;
   accessToken?: string;
+  idempotencyKey?: string;
 }
 
 export async function apiFetch<T>(
   path: string,
-  { method = 'GET', body, accessToken }: RequestOptions = {},
+  { method = 'GET', body, accessToken, idempotencyKey }: RequestOptions = {},
 ): Promise<T> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
+  }
+  if (idempotencyKey) {
+    headers['Idempotency-Key'] = idempotencyKey;
   }
 
   let response: Response;

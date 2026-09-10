@@ -272,7 +272,6 @@ export interface ReviewAuthor {
 }
 
 export interface AgencyReview {
-  id: string;
   agencyId: string;
   rating: number;
   body: string | null;
@@ -367,7 +366,6 @@ export interface GroupContributionAuthor {
 }
 
 export interface GroupContribution {
-  id: string;
   campaignId: string;
   memberUserId: string;
   amount: number;
@@ -378,7 +376,6 @@ export interface GroupContribution {
 }
 
 export interface GroupExpense {
-  id: string;
   campaignId: string;
   name: string;
   amount: number;
@@ -489,4 +486,62 @@ export interface SmartReplyTemplate {
   body: string;
   createdAt: string;
   updatedAt: string;
+}
+export type WalletTransactionDirection = 'credit' | 'debit';
+
+export type WalletTransactionType =
+  | 'donation_received'
+  | 'donation_fee'
+  | 'withdrawal'
+  | 'refund'
+  | 'commission'
+  | 'booking_payment';
+
+export type WithdrawalStatus = 'requested' | 'approved' | 'rejected' | 'paid';
+
+export interface WalletAccount {
+  id: string;
+  currency: string;
+  balance: number;
+  updatedAt: string;
+}
+
+export interface WalletTransaction {
+  id: string;
+  direction: WalletTransactionDirection;
+  amount: number;
+  currency: string;
+  type: WalletTransactionType;
+  referenceType: string | null;
+  referenceId: string | null;
+  description: string | null;
+  createdAt: string;
+}
+
+export interface WalletTransactionsPage {
+  items: WalletTransaction[];
+  nextCursor: string | null;
+}
+
+export interface WithdrawalRequest {
+  id: string;
+  campaignId: string | null;
+  amount: number;
+  currency: string;
+  status: WithdrawalStatus;
+  rejectionReason: string | null;
+  refundNote: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WithdrawalsPage {
+  items: WithdrawalRequest[];
+  nextCursor: string | null;
+}
+
+export interface CreateWithdrawalInput {
+  amount: number;
+  currency: string;
+  campaignId?: string;
 }

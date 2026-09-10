@@ -11,6 +11,7 @@ import {
   Shield,
   Trash2,
   User,
+  Wallet,
 } from 'lucide-react-native';
 import { SettingsRow } from '../../src/components/SettingsRow';
 import { colors } from '../../src/constants/colors';
@@ -111,6 +112,12 @@ export default function SettingsScreen() {
             icon={Shield}
             label="Privacy & Security"
             onPress={() => router.push('/(traveler)/privacy-security')}
+          />
+          <Divider />
+                    <SettingsRow
+            icon={Wallet}
+            label="Wallet"
+            onPress={() => router.push('/(traveler)/wallet')}
           />
           <Divider />
           <SettingsRow

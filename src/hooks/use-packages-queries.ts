@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import type { DestinationType } from '../api/types';
 import * as packagesApi from '../api/packages';
 import { useAuthStore } from '../stores/auth-store';
 
@@ -12,7 +13,7 @@ export function useMyPackages() {
 }
 
 export function usePackageDirectory(params: {
-  destinationType?: string;
+  destinationType?: DestinationType;
   season?: string;
   theme?: string;
 }) {
@@ -28,11 +29,14 @@ export function usePackageDirectory(params: {
   });
 }
 
-export function usePackage(packageId: string) {
+export function usePackage(packageId: string, options?: { enabled?: boolean }) {
   const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: ['package', packageId],
     queryFn: () => packagesApi.getPackage(packageId, accessToken!),
-    enabled: !!accessToken && !!packageId,
+    enabled: (options?.enabled ?? true) && !!accessToken && !!packageId,
   });
 }
+
+
+

@@ -14,7 +14,6 @@ import { colors } from '../../src/constants/colors';
 import { useAuthStore } from '../../src/stores/auth-store';
 import { useFeed, useActiveStories } from '../../src/hooks/use-feed-queries';
 import { useLikePost, useUnlikePost, useDeletePost } from '../../src/hooks/use-feed-mutations';
-import { showInDevelopmentAlert } from '../../src/utils/in-development';
 import type { Post } from '../../src/api/types';
 
 export default function FeedScreen() {
@@ -61,9 +60,7 @@ export default function FeedScreen() {
             </Pressable>
             <Pressable
               hitSlop={8}
-              onPress={() =>
-                showInDevelopmentAlert('Notifications aren’t available yet.')
-              }
+              onPress={() => router.push('/(traveler)/notifications')}
             >
               <Bell size={22} color={colors.foreground} />
             </Pressable>
@@ -167,7 +164,7 @@ export default function FeedScreen() {
                   pathname: '/(traveler)/create-post',
                   params: {
                     editPostId: post.id,
-                    editText: post.text,
+                   EditText: post.text,
                     editLocation: post.location ?? '',
                     editTags: post.tags.join(','),
                     editImageMediaId: post.imageMediaId ?? '',

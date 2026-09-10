@@ -1,4 +1,4 @@
-ï»¿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -18,7 +18,8 @@ import { useToastStore } from '../../../src/stores/toast-store';
 import { useCreatePackage, useUpdatePackage } from '../../../src/hooks/use-packages-mutations';
 import { usePackage } from '../../../src/hooks/use-packages-queries';
 import { pickAndUploadFromLibrary } from '../../../src/utils/upload-image';
-import type { PackageInput, PackageStatus, DestinationType } from '../../../src/api/types';
+import type { PackageStatus, DestinationType } from '../../../src/api/types';
+import type { PackageInput } from '../../../src/api/packages';
 
 const DESTINATION_OPTIONS: { value: DestinationType | null; label: string }[] = [
   { value: null, label: 'All' },
@@ -124,7 +125,7 @@ export default function CreatePackageScreen() {
       description,
       basePrice: Number(basePrice),
       currency,
-      destinationType,
+      destinationType: destinationType ?? undefined,
       season: season || undefined,
       theme: theme || undefined,
       status,
@@ -434,10 +435,10 @@ export default function CreatePackageScreen() {
               <PreviewRow label="Description" value={description.slice(0, 100) + (description.length > 100 ? '...' : '')} />
               <PreviewRow label="Price" value={`${currency} ${Number(basePrice).toLocaleString()}`} />
               <PreviewRow label="Destination" value={destinationType ?? 'All'} />
-              <PreviewRow label="Season" value={season || 'â€”'} />
-              <PreviewRow label="Theme" value={theme || 'â€”'} />
+              <PreviewRow label="Season" value={season || '—'} />
+              <PreviewRow label="Theme" value={theme || '—'} />
               <PreviewRow label="Status" value={STATUS_LABEL[status] ?? status} />
-              <PreviewRow label="Itinerary" value={itinerary.slice(0, 80) + (itinerary.length > 80 ? '...' : '') || 'â€”'} />
+              <PreviewRow label="Itinerary" value={itinerary.slice(0, 80) + (itinerary.length > 80 ? '...' : '') || '—'} />
               <PreviewRow label="Photos" value={`${photos.length} uploaded`} last />
             </View>
           </View>
@@ -510,3 +511,8 @@ const STATUS_LABEL: Record<string, string> = {
   inactive: 'Inactive',
   archived: 'Archived',
 };
+
+
+
+
+

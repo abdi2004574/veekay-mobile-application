@@ -1,4 +1,4 @@
-﻿import { Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 
 export default function AgencyLayout() {
   return (
@@ -11,6 +11,7 @@ export default function AgencyLayout() {
       <Stack.Screen name="packages/edit" />
       <Stack.Screen name="packages/[id]" />
       <Stack.Screen name="requests/index" options={{ animation: 'none' }} />
+      <Stack.Screen name="notifications" options={{ animation: 'none' }} />
       <Stack.Screen name="requests/[id]" />
       <Stack.Screen name="requests/smart-replies" />
     </Stack>

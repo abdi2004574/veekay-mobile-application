@@ -14,7 +14,7 @@ import { ArrowLeft, Package, Search, SlidersHorizontal, X } from 'lucide-react-n
 import { PackageSummaryCard } from '../../../src/components/PackageSummaryCard';
 import { colors } from '../../../src/constants/colors';
 import { usePackageDirectory } from '../../../src/hooks/use-packages-queries';
-import type { DestinationType, PackageType } from '../../../src/api/types';
+import type { DestinationType, Package as PackageType } from '../../../src/api/types';
 
 const DESTINATION_OPTIONS: { key: DestinationType | 'all'; label: string }[] = [
   { key: 'all', label: 'All' },
@@ -202,6 +202,8 @@ export default function ItineraryScreen() {
     </SafeAreaView>
   );
 }
+
+
 
 
 

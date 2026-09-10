@@ -1,8 +1,9 @@
-﻿import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import type { TripRequestStatus } from '../api/types';
 import * as tripRequestsApi from '../api/trip-requests';
 import { useAuthStore } from '../stores/auth-store';
 
-export function useAgencyTripRequests(status?: string) {
+export function useAgencyTripRequests(status?: TripRequestStatus) {
   const accessToken = useAuthStore((s) => s.accessToken);
   const filter = status && status.length > 0 ? status : undefined;
   return useInfiniteQuery({
@@ -15,7 +16,7 @@ export function useAgencyTripRequests(status?: string) {
   });
 }
 
-export function useMyTripRequests(status?: string) {
+export function useMyTripRequests(status?: TripRequestStatus) {
   const accessToken = useAuthStore((s) => s.accessToken);
   const filter = status && status.length > 0 ? status : undefined;
   return useInfiniteQuery({
@@ -45,3 +46,5 @@ export function useSmartReplyTemplates() {
     enabled: !!accessToken,
   });
 }
+
+

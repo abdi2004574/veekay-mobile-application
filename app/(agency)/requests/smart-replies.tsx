@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -39,16 +39,6 @@ export default function AgencySmartRepliesScreen() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
-  useEffect(() => {
-    if (editing) {
-      setTitle(editing.title);
-      setBody(editing.body);
-    } else if (!isCreating) {
-      setTitle('');
-      setBody('');
-    }
-  }, [editing, isCreating]);
-
   const closeModal = () => {
     setEditing(null);
     setIsCreating(false);
@@ -66,6 +56,8 @@ export default function AgencySmartRepliesScreen() {
   const openEdit = (template: SmartReplyTemplate) => {
     setIsCreating(false);
     setEditing(template);
+    setTitle(template.title);
+    setBody(template.body);
   };
 
   const save = () => {

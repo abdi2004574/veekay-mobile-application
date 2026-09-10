@@ -29,15 +29,6 @@ export function useSearchTravelers(query: string) {
   });
 }
 
-export function useNotificationPreferences() {
-  const accessToken = useAuthStore((s) => s.accessToken);
-  return useQuery({
-    queryKey: ['notification-preferences'],
-    queryFn: () => usersApi.getNotificationPreferences(accessToken!),
-    enabled: !!accessToken,
-  });
-}
-
 export function usePrivacySettings() {
   const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({

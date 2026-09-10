@@ -1,52 +1,29 @@
 import { ReactNode } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import {
   ArrowLeft,
   Bell,
   CreditCard,
-  Lock,
   LogOut,
+  MessageCircle,
+  Package,
   Shield,
-  Trash2,
-  User,
+  UserPlus,
+  TrendingUp,
 } from 'lucide-react-native';
 import { SettingsRow } from '../../src/components/SettingsRow';
 import { colors } from '../../src/constants/colors';
 import { useAuthStore } from '../../src/stores/auth-store';
-import { useMe } from '../../src/hooks/use-users-queries';
 import { useNotificationPreferences } from '../../src/hooks/use-notifications-queries';
 import { useUpdateNotificationPreference } from '../../src/hooks/use-notifications-mutations';
-import { useDeactivateAccount } from '../../src/hooks/use-users-mutations';
-import { showInDevelopmentAlert } from '../../src/utils/in-development';
 import { showAlert } from '../../src/utils/show-alert';
 
 export default function SettingsScreen() {
   const logout = useAuthStore((s) => s.logout);
-  const me = useMe();
   const notificationPrefs = useNotificationPreferences();
   const updateNotificationPreference = useUpdateNotificationPreference();
-  const deactivateAccount = useDeactivateAccount();
-
-  const handleEditProfile = () => {
-    const p = me.data;
-    router.push({
-      pathname: '/(traveler)/edit-profile',
-      params: {
-        email: p?.email ?? '',
-        displayName: p?.displayName ?? '',
-        username: p?.username ?? '',
-        bio: p?.bio ?? '',
-        location: p?.location ?? '',
-        phone: p?.phone ?? '',
-        gender: p?.gender ?? '',
-        dateOfBirth: p?.dateOfBirth ? p.dateOfBirth.slice(0, 10) : '',
-        destinationTypes: (p?.destinationTypes ?? []).join(','),
-        travelStyles: (p?.travelStyles ?? []).join(','),
-      },
-    });
-  };
 
   const handleLogout = () => {
     showAlert('Log Out?', 'You can log back in any time.', [
@@ -62,27 +39,7 @@ export default function SettingsScreen() {
     ]);
   };
 
-  const handleDeleteAccount = () => {
-    showAlert(
-      'Delete Account?',
-      'This deactivates your account. This cannot be undone from the app - contact support to reactivate.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            deactivateAccount.mutate(undefined, {
-              onSuccess: async () => {
-                await logout();
-                router.replace('/(auth)/welcome');
-              },
-            });
-          },
-        },
-      ],
-    );
-  };
+  const prefs = notificationPrefs.data;
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -99,25 +56,20 @@ export default function SettingsScreen() {
       <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 32 }}>
         <SectionLabel>Account</SectionLabel>
         <SectionCard>
-          <SettingsRow icon={User} label="Edit Profile" onPress={handleEditProfile} />
+          <SettingsRow icon={UserPlus} label="Business Profile" onPress={() => {}} />
           <Divider />
-          <SettingsRow
-            icon={Lock}
-            label="Change Password"
-            onPress={() => router.push('/(traveler)/change-password')}
-          />
+          <SettingsRow icon={Shield} label="Verification Status" onPress={() => {}} />
           <Divider />
-          <SettingsRow
-            icon={Shield}
-            label="Privacy & Security"
-            onPress={() => router.push('/(traveler)/privacy-security')}
-          />
+          <SettingsRow icon={CreditCard} label="Billing & Subscription" onPress={() => {}} />
+        </SectionCard>
+
+        <SectionLabel>Business</SectionLabel>
+        <SectionCard>
+          <SettingsRow icon={Package} label="Packages" onPress={() => router.replace('/(agency)/packages')} />
           <Divider />
-          <SettingsRow
-            icon={CreditCard}
-            label="Payment Methods"
-            onPress={() => showInDevelopmentAlert('Payment methods aren’t available yet.')}
-          />
+          <SettingsRow icon={MessageCircle} label="Inbox" onPress={() => router.replace('/(agency)/inbox')} />
+          <Divider />
+          <SettingsRow icon={TrendingUp} label="Performance" onPress={() => {}} />
         </SectionCard>
 
         <SectionLabel>Notifications</SectionLabel>
@@ -130,60 +82,69 @@ export default function SettingsScreen() {
             <>
               <SettingsRow
                 icon={Bell}
-                label="Donation Alerts"
-                toggled={notificationPrefs.data?.find((p) => p.type === 'donation')?.inAppEnabled ?? true}
+                label="New Requests"
+                toggled={prefs?.find((p) => p.type === 'new_request')?.pushEnabled ?? true}
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: 'donation', inAppEnabled: value })
-                }
-              />
-              <Divider />
-              <SettingsRow
-                icon={Bell}
-                label="Campaign Updates"
-                toggled={notificationPrefs.data?.find((p) => p.type === 'milestone')?.inAppEnabled ?? true}
-                onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: 'milestone', inAppEnabled: value })
+                  updateNotificationPreference.mutate({ type: 'new_request', pushEnabled: value })
                 }
               />
               <Divider />
               <SettingsRow
                 icon={Bell}
                 label="Messages"
-                toggled={notificationPrefs.data?.find((p) => p.type === 'chat_message')?.inAppEnabled ?? true}
+                toggled={prefs?.find((p) => p.type === 'chat_message')?.pushEnabled ?? true}
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: 'chat_message', inAppEnabled: value })
+                  updateNotificationPreference.mutate({ type: 'chat_message', pushEnabled: value })
+                }
+              />
+              <Divider />
+              <SettingsRow
+                icon={Bell}
+                label="Payment Alerts"
+                toggled={prefs?.find((p) => p.type === 'payment_received')?.pushEnabled ?? true}
+                onToggle={(value) =>
+                  updateNotificationPreference.mutate({ type: 'payment_received', pushEnabled: value })
+                }
+              />
+              <Divider />
+              <SettingsRow
+                icon={Bell}
+                label="Marketing"
+                toggled={prefs?.find((p) => p.type === 'admin_broadcast')?.pushEnabled ?? false}
+                onToggle={(value) =>
+                  updateNotificationPreference.mutate({ type: 'admin_broadcast', pushEnabled: value })
                 }
               />
             </>
           )}
         </SectionCard>
 
+        <SectionLabel>Support</SectionLabel>
+        <SectionCard>
+          <SettingsRow icon={Shield} label="Help & Support" onPress={() => {}} />
+          <Divider />
+          <SettingsRow icon={CreditCard} label="Report an Issue" onPress={() => {}} />
+        </SectionCard>
+
         <SectionLabel destructive>Danger Zone</SectionLabel>
         <SectionCard>
           <SettingsRow icon={LogOut} label="Log Out" destructive onPress={handleLogout} />
-          <Divider />
-          <SettingsRow
-            icon={Trash2}
-            label="Delete Account"
-            destructive
-            onPress={handleDeleteAccount}
-          />
         </SectionCard>
 
         <View className="flex-row items-center justify-center gap-4 mt-2">
-          <Link href="/terms">
+          <Pressable onPress={() => router.push('/terms')}>
             <Text className="text-xs" style={{ color: colors.mutedForeground }}>
               Terms & Conditions
             </Text>
-          </Link>
+          </Pressable>
           <Text className="text-xs" style={{ color: colors.mutedForeground }}>
-            •
+            {' '}
           </Text>
-          <Link href="/privacy-policy">
+          <Pressable onPress={() => router.push('/privacy-policy')}>
             <Text className="text-xs" style={{ color: colors.mutedForeground }}>
               Privacy Policy
             </Text>
-          </Link>
+          </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -215,4 +176,3 @@ function SectionCard({ children }: { children: ReactNode }) {
 function Divider() {
   return <View style={{ height: 1, backgroundColor: colors.border }} />;
 }
-

@@ -151,10 +151,38 @@ export interface MeProfile {
 
 export type ProfileVisibility = 'public' | 'friends' | 'private';
 
-export interface NotificationPreferences {
-  donationAlerts: boolean;
-  campaignUpdates: boolean;
-  agencyMessages: boolean;
+export interface NotificationListItem {
+  id: string;
+  type: string;
+  title: string;
+  body: string;
+  read: boolean;
+  deepLinkTarget: string | null;
+  deepLinkEntityId: string | null;
+  metadata: Record<string, unknown> | null;
+  channel: string;
+  createdAt: string;
+  pushSentAt: string | null;
+}
+
+export interface UnreadCountResponse {
+  count: number;
+}
+
+export interface NotificationPreferenceItem {
+  type: string;
+  inAppEnabled: boolean;
+  pushEnabled: boolean;
+  emailEnabled: boolean;
+}
+
+export interface PushDevice {
+  id: string;
+  userId: string;
+  fcmToken: string;
+  platform: string;
+  lastSeenAt: string | null;
+  createdAt: string;
 }
 
 export interface PrivacySettings {

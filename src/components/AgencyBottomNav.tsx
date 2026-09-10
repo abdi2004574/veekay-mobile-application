@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
-import { Inbox, LayoutDashboard, MessageCircle, Package, User } from 'lucide-react-native';
+import { Bell, Inbox, LayoutDashboard, MessageCircle, Package, User } from 'lucide-react-native';
 import { BottomNavBar } from './BottomNavBar';
 import { showInDevelopmentAlert } from '../utils/in-development';
 
-export type AgencyTab = 'home' | 'packages' | 'requests' | 'chat' | 'profile';
+export type AgencyTab = 'home' | 'packages' | 'requests' | 'chat' | 'notifications' | 'profile';
 
 export function AgencyBottomNav({ active }: { active: AgencyTab }) {
   return (
@@ -33,6 +33,12 @@ export function AgencyBottomNav({ active }: { active: AgencyTab }) {
           icon: MessageCircle,
           label: 'Chat',
           onPress: () => router.replace('/(agency)/inbox'),
+        },
+        {
+          key: 'notifications',
+          icon: Bell,
+          label: 'Alerts',
+          onPress: () => router.replace('/(agency)/notifications'),
         },
         {
           key: 'profile',

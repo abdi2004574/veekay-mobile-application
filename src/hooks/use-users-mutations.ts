@@ -15,17 +15,6 @@ export function useUpdateProfile() {
   });
 }
 
-export function useUpdateNotificationPreferences() {
-  const queryClient = useQueryClient();
-  const showToast = useToastStore((s) => s.show);
-  return useMutation({
-    mutationFn: (input: Parameters<typeof usersApi.updateNotificationPreferences>[0]) =>
-      usersApi.updateNotificationPreferences(input, requireAccessToken()),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notification-preferences'] }),
-    onError: (err) => showToast(friendlyErrorMessage(err)),
-  });
-}
-
 export function useUpdatePrivacySettings() {
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);

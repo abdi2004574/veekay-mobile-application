@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "387566437422",
+    "project_id": "vaykae-31b4d",
+    "storage_bucket": "vaykae-31b4d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387566437422:android:2dd860bb94994a94694bbf",
+        "android_client_info": {
+          "package_name": "com.veakay.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDydoJIWLAEUcotDSAivSW9zv6KbIRjGHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

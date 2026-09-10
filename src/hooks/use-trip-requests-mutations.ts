@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { TripRequestStatus } from '../api/types';
 import * as tripRequestsApi from '../api/trip-requests';
 import { requireAccessToken } from '../utils/require-access-token';
 import { useToastStore } from '../stores/toast-store';
@@ -8,7 +9,7 @@ export function useUpdateTripRequestStatus() {
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: string }) =>
+    mutationFn: ({ id, status }: { id: string; status: TripRequestStatus }) =>
       tripRequestsApi.updateTripRequestStatus(id, status, requireAccessToken()),
     onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['trip-request', id] });
@@ -81,3 +82,4 @@ export function useDeleteSmartReplyTemplate() {
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
 }
+

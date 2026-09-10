@@ -3,7 +3,6 @@ import type {
   DestinationType,
   Gender,
   MeProfile,
-  NotificationPreferences,
   PrivacySettings,
   PublicProfile,
   TravelStyle,
@@ -29,21 +28,6 @@ export interface UpdateProfileInput {
 
 export function updateProfile(input: UpdateProfileInput, accessToken: string) {
   return apiFetch<MeProfile>('/me/profile', { method: 'PATCH', body: input, accessToken });
-}
-
-export function getNotificationPreferences(accessToken: string) {
-  return apiFetch<NotificationPreferences>('/me/notification-preferences', { accessToken });
-}
-
-export function updateNotificationPreferences(
-  input: Partial<NotificationPreferences>,
-  accessToken: string,
-) {
-  return apiFetch<NotificationPreferences>('/me/notification-preferences', {
-    method: 'PATCH',
-    body: input,
-    accessToken,
-  });
 }
 
 export function getPrivacySettings(accessToken: string) {

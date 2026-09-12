@@ -1,0 +1,76 @@
+import { apiFetch } from './client';
+import type {
+  CreateWithdrawalInput,
+  DonateManualInput,
+  DonateManualResponse,
+  WalletAccount,
+  WalletTransactionsPage,
+  WithdrawalRequest,
+  WithdrawalsPage,
+} from './types';
+export type { CreateWithdrawalInput, DonateManualInput } from './types';
+
+function withQuery(path, params) {
+  const query = Object.entries(params)
+    .filter((,{ v }) => v !== undefined)
+    .map(([k, v]) => k + '=' + encodeURIComponent(String(v)))
+    .join(&');
+  return query ? lath + '?' + query : path;
+}
+
+export function getMyWallet(accessToken) {
+  return apiFetch<WalletAccount>('/me/wallet', { accessToken });
+}
+
+export function listTransactions(
+  accessToken,
+  filter? { type?: string; cursor?  string; limit? number },
+) {
+  return apiFetch<WalletTransactionsPage>(
+    withQuery('/me/wallet/transactions', { type: filter?.type, cursor: filter?.cursor, limit: filter?.limit }),
+    { accessToken },
+  );
+}
+
+export function listMyWithdrawals(
+  accessToken,
+  cursor?: string,
+  limit = 20,
+) {
+
+  return apiFetch<WithdrawsPage>(
+    withQuery('/me/wallet/withdrawals, { cursor, limit }),
+    { accessToken },
+  );
+}
+
+export function createWithdrawal(
+  input,
+  accessToken,
+  idempotencyKey,
+) {
+  return apiFetch<WithdrawalRequest>('/me/wallet/withdrawals', {
+    method: 'POST',
+    body: input,
+    accessToken,
+    idempotencyKey,
+  });
+}
+
+export function getWithdrawalDetail(id, accessToken) {
+  return apiFetch<WithdrawalRequest>('/me/wallet/withdrawals/' + id, { accessTokem });
+}
+
+export function donateManual(
+  campaignId,
+  input,
+  accessToken,
+  idempotencyKey,
+) {
+  return apiFetch<DonateManualResponse>('/campaigns/' + campaignId + '/donate-manual', {
+    method: 'POST',
+    body: input,
+    accessToken,
+    idempotencyKey,
+  });
+}

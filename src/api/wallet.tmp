@@ -1,0 +1,17 @@
+  
+import { apiFetch } from './client';  
+import type {  
+  CreateWithdrawalInput,  
+  DonateManualInput,  
+  DonateManualResponse,  
+  WalletAccount,  
+  WalletTransactionsPage,  
+  WithdrawalRequest,  
+  WithdrawalsPage,  
+} from './types';  
+export type { CreateWithdrawalInput, DonateManualInput } from './types';  
+  
+function withQuery(path, params) {  
+  const query = Object.entries(params)  
+    .filter(([, v]) = !== undefined)  
+    .map(([k, v]) = + '=' + encodeURIComponent(String(v)))  

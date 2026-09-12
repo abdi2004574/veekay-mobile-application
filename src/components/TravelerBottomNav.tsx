@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
-import { Bell, Compass, Heart, Home, MessageCircle, User } from 'lucide-react-native';
+import { Bell, Compass, Heart, Home, MessageCircle, User, Wallet } from 'lucide-react-native';
 import { BottomNavBar } from './BottomNavBar';
 
-export type TravelerTab = 'home' | 'explore' | 'campaigns' | 'chat' | 'notifications' | 'profile';
+export type TravelerTab = 'home' | 'explore' | 'campaigns' | 'chat' | 'notifications' | 'wallet' | 'profile';
 
 export function TravelerBottomNav({ active }: { active: TravelerTab }) {
   return (
@@ -33,6 +33,12 @@ export function TravelerBottomNav({ active }: { active: TravelerTab }) {
           icon: Bell,
           label: 'Alerts',
           onPress: () => router.replace('/(traveler)/notifications'),
+        },
+        {
+          key: 'wallet',
+          icon: Wallet,
+          label: 'Wallet',
+          onPress: () => router.replace('/(traveler)/wallet'),
         },
         {
           key: 'profile',

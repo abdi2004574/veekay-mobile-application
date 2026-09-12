@@ -272,6 +272,7 @@ export interface ReviewAuthor {
 }
 
 export interface AgencyReview {
+  id: string;
   agencyId: string;
   rating: number;
   body: string | null;
@@ -320,6 +321,7 @@ export interface Campaign {
   createdAt: string;
   photos: CampaignPhoto[];
   contributorsCount: number;
+  raisedAmount: number;
   isGroup: boolean;
 }
 
@@ -366,6 +368,7 @@ export interface GroupContributionAuthor {
 }
 
 export interface GroupContribution {
+  id: string;
   campaignId: string;
   memberUserId: string;
   amount: number;
@@ -376,6 +379,7 @@ export interface GroupContribution {
 }
 
 export interface GroupExpense {
+  id: string;
   campaignId: string;
   name: string;
   amount: number;
@@ -499,6 +503,8 @@ export type WalletTransactionType =
 
 export type WithdrawalStatus = 'requested' | 'approved' | 'rejected' | 'paid';
 
+export type FundingTrendRange = '7d' | '30d' | '90d';
+
 export interface WalletAccount {
   id: string;
   currency: string;
@@ -544,4 +550,30 @@ export interface CreateWithdrawalInput {
   amount: number;
   currency: string;
   campaignId?: string;
+}
+
+export interface DonateManualInput {
+  amount: number;
+  currency?: string;
+  donorDisplayName?: string;
+  isAnonymous?: boolean;
+  isGift?: boolean;
+  giftMessage?: string;
+}
+
+export interface DonateManualResponse {
+  amount: number;
+  currency: string;
+  raisedAmount: number;
+  walletTransactionId: string;
+}
+
+export type AgencySubscriptionTier = 'basic' | 'premium' | 'featured';
+
+export interface SubscriptionStatusResponse {
+  tier: AgencySubscriptionTier;
+  isActive: boolean;
+  expiresAt: string | null;
+  isSandbox: boolean;
+  managementURL: string | null;
 }

@@ -99,7 +99,7 @@ export default function TransactionsScreen() {
         )}
       </ScrollView>
 
-      <TravelerBottomNav active='profile' />
+      <TravelerBottomNav active='wallet' />
     </SafeAreaView>
   );
 }

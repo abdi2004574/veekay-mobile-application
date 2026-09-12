@@ -1,9 +1,9 @@
-import { router } from 'expo-router';
-import { Bell, Inbox, LayoutDashboard, MessageCircle, Package, User } from 'lucide-react-native';
-import { BottomNavBar } from './BottomNavBar';
-import { showInDevelopmentAlert } from '../utils/in-development';
+import { router } from "expo-router";
+import { Bell, Inbox, LayoutDashboard, MessageCircle, Package, User, DollarSign } from "lucide-react-native";
+import { BottomNavBar } from "./BottomNavBar";
+import { showInDevelopmentAlert } from "../utils/in-development";
 
-export type AgencyTab = 'home' | 'packages' | 'requests' | 'chat' | 'notifications' | 'profile';
+export type AgencyTab = "home" | "packages" | "requests" | "chat" | "notifications" | "profile" | "revenue";
 
 export function AgencyBottomNav({ active }: { active: AgencyTab }) {
   return (
@@ -11,40 +11,46 @@ export function AgencyBottomNav({ active }: { active: AgencyTab }) {
       active={active}
       items={[
         {
-          key: 'home',
+          key: "home",
           icon: LayoutDashboard,
-          label: 'Home',
-          onPress: () => router.replace('/(agency)'),
+          label: "Home",
+          onPress: () => router.replace("/(agency)"),
         },
         {
-          key: 'packages',
+          key: "packages",
           icon: Package,
-          label: 'Packages',
-          onPress: () => router.replace('/(agency)/packages'),
+          label: "Packages",
+          onPress: () => router.replace("/(agency)/packages"),
         },
         {
-          key: 'requests',
+          key: "requests",
           icon: Inbox,
-          label: 'Requests',
-          onPress: () => router.replace('/(agency)/requests'),
+          label: "Requests",
+          onPress: () => router.replace("/(agency)/requests"),
         },
         {
-          key: 'chat',
+          key: "chat",
           icon: MessageCircle,
-          label: 'Chat',
-          onPress: () => router.replace('/(agency)/inbox'),
+          label: "Chat",
+          onPress: () => router.replace("/(agency)/inbox"),
         },
         {
-          key: 'notifications',
+          key: "notifications",
           icon: Bell,
-          label: 'Alerts',
-          onPress: () => router.replace('/(agency)/notifications'),
+          label: "Alerts",
+          onPress: () => router.replace("/(agency)/notifications"),
         },
         {
-          key: 'profile',
+          key: "revenue",
+          icon: DollarSign,
+          label: "Revenue",
+          onPress: () => router.replace("/(agency)/revenue"),
+        },
+        {
+          key: "profile",
           icon: User,
-          label: 'Profile',
-          onPress: () => showInDevelopmentAlert(`Agency profile isn't built yet.`),
+          label: "Profile",
+          onPress: () => showInDevelopmentAlert("Agency profile is not built yet."),
         },
       ]}
     />

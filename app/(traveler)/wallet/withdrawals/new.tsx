@@ -142,7 +142,7 @@ export default function NewWithdrawalScreen() {
         )}
       </ScrollView>
 
-      <TravelerBottomNav active='profile' />
+      <TravelerBottomNav active='wallet' />
     </SafeAreaView>
   );
 }

@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Plus, X } from 'lucide-react-native';
 import { GradientButton } from '../../../src/components/GradientButton';
@@ -42,7 +42,6 @@ const ITINERARY_LIMIT = 5000;
 export default function CreatePackageScreen() {
   const params = useLocalSearchParams<{ editPackageId?: string }>();
   const isEditing = !!params.editPackageId;
-  const insets = useSafeAreaInsets();
 
   const accessToken = useAuthStore((s) => s.accessToken);
   const showToast = useToastStore((s) => s.show);
@@ -433,13 +432,13 @@ export default function CreatePackageScreen() {
             >
               <PreviewRow label="Title" value={title} />
               <PreviewRow label="Description" value={description.slice(0, 100) + (description.length > 100 ? '...' : '')} />
-              <PreviewRow label="Price" value={`${currency} ${Number(basePrice).toLocaleString()}`} />
+              <PreviewRow label="Price" value={currency + " " + Number(basePrice).toLocaleString()} />
               <PreviewRow label="Destination" value={destinationType ?? 'All'} />
-              <PreviewRow label="Season" value={season || '—'} />
-              <PreviewRow label="Theme" value={theme || '—'} />
+              <PreviewRow label="Season" value={season || '&mdash;'} />
+              <PreviewRow label="Theme" value={theme || '&mdash;'} />
               <PreviewRow label="Status" value={STATUS_LABEL[status] ?? status} />
-              <PreviewRow label="Itinerary" value={itinerary.slice(0, 80) + (itinerary.length > 80 ? '...' : '') || '—'} />
-              <PreviewRow label="Photos" value={`${photos.length} uploaded`} last />
+              <PreviewRow label="Itinerary" value={itinerary.slice(0, 80) + (itinerary.length > 80 ? '...' : '') || '&mdash;'} />
+              <PreviewRow label="Photos" value={photos.length + " uploaded"} last />
             </View>
           </View>
         )}
@@ -511,8 +510,3 @@ const STATUS_LABEL: Record<string, string> = {
   inactive: 'Inactive',
   archived: 'Archived',
 };
-
-
-
-
-

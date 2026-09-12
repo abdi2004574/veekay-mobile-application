@@ -20,3 +20,8 @@ export const useToastStore = create<ToastState>((set) => ({
     set({ message: null });
   },
 }));
+
+// Convenience export for one-off toasts without hook
+export function showToast(message: string) {
+  useToastStore.getState().show(message);
+}

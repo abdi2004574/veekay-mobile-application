@@ -9,8 +9,6 @@ export default function TravelerLayout() {
       <Stack.Screen name="explore/index" options={{ animation: 'none' }} />
       <Stack.Screen name="campaigns/index" options={{ animation: 'none' }} />
       <Stack.Screen name="notifications" options={{ animation: 'none' }} />
-      <Stack.Screen name="itinerary/index" options={{ animation: 'none' }} />
-      <Stack.Screen name="package/[id]" />
       <Stack.Screen name="wallet/index" options={{ animation: 'slide_from_right' }} />
       <Stack.Screen name="wallet/transactions" options={{ animation: 'slide_from_right' }} />
       <Stack.Screen name="wallet/withdrawals/index" options={{ animation: 'slide_from_right' }} />

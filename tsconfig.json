@@ -2,5 +2,16 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    ".expo",
+    ".expo-shared",
+    "android",
+    "ios",
+    "coverage",
+    "dist",
+    "build",
+    "web-build"
+  ]
 }

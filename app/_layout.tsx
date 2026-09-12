@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
+import { ErrorBoundary } from '../src/components/ErrorBoundary';
 import { useAuthStore } from '../src/stores/auth-store';
 import { useNotificationStore } from '../src/stores/notification-store';
 import { ToastHost } from '../src/components/Toast';
@@ -20,10 +21,26 @@ import {
   setupTokenRefreshListener,
 } from '../src/services/firebase-messaging';
 
+if (!process.env.EXPO_PUBLIC_API_BASE_URL) {
+  throw new Error(
+    'EXPO_PUBLIC_API_BASE_URL is not defined. Add it to your .env file and restart the dev server.',
+  );
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: 2 },
-    mutations: { retry: false },
+    queries: {
+      retry: (failureCount, error) => {
+        if (failureCount >= 2) return false;
+        if (error instanceof Error && error.name === 'NetworkError') return false;
+        return true;
+      },
+      staleTime: 30_000,
+      gcTime: 5 * 60_000,
+    },
+    mutations: {
+      retry: false,
+    },
   },
 });
 
@@ -92,15 +109,16 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <Slot />
-          <ToastHost />
-          <AlertHost />
-        </QueryClientProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <ErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <QueryClientProvider client={queryClient}>
+            <Slot />
+            <ToastHost />
+            <AlertHost />
+          </QueryClientProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }
-

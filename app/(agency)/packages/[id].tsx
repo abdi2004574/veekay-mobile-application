@@ -1,4 +1,3 @@
-﻿import { useMemo } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, Edit3, Trash2 } from 'lucide-react-native';
@@ -124,9 +123,9 @@ export default function PackageDetailScreen() {
             style={{ backgroundColor: colors.inputBackground, borderWidth: 1, borderColor: colors.border }}
           >
             <View className="flex-row flex-wrap gap-x-4 gap-y-3">
-              <MetaTile label="Destination" value={p.destinationType ?? '—'} />
-              <MetaTile label="Season" value={p.season ?? '—'} />
-              <MetaTile label="Theme" value={p.theme ?? '—'} />
+              <MetaTile label="Destination" value={p.destinationType ?? '&mdash;'} />
+              <MetaTile label="Season" value={p.season ?? '&mdash;'} />
+              <MetaTile label="Theme" value={p.theme ?? '&mdash;'} />
               <MetaTile label="Status" value={label} />
               <MetaTile label="Created" value={new Date(p.createdAt).toLocaleDateString()} />
             </View>

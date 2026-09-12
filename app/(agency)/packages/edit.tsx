@@ -1,4 +1,4 @@
-﻿import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import { useEffect } from 'react';
 
 export default function EditPackageRoute() {

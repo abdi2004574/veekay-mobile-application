@@ -92,7 +92,7 @@ export default function WithdrawalDetailScreen({ id }: { id: string }) {
         </View>
       </ScrollView>
 
-      <TravelerBottomNav active='profile' />
+      <TravelerBottomNav active='wallet' />
     </SafeAreaView>
   );
 }

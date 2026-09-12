@@ -2,7 +2,17 @@ import type { ApiErrorBody, ApiErrorCode, ApiSuccessBody } from './types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
+export class NetworkError extends Error {
+  constructor(message = 'Could not reach the server. Check your connection and try again.') {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
+
 export class ApiError extends Error {
+  readonly isNetworkError = false;
+  readonly isServerError: boolean;
+
   constructor(
     public readonly code: ApiErrorCode,
     message: string,
@@ -10,6 +20,7 @@ export class ApiError extends Error {
   ) {
     super(message);
     this.name = 'ApiError';
+    this.isServerError = status >= 500;
   }
 }
 
@@ -40,11 +51,7 @@ export async function apiFetch<T>(
       body: body ? JSON.stringify(body) : undefined,
     });
   } catch {
-    throw new ApiError(
-      'INTERNAL_ERROR',
-      'Could not reach the server. Check your connection and try again.',
-      0,
-    );
+    throw new NetworkError();
   }
 
   if (response.status === 204) {

@@ -4,7 +4,6 @@ import { useAuthStore } from '../stores/auth-store';
 import { requireAccessToken } from '../utils/require-access-token';
 import { useToastStore } from '../stores/toast-store';
 import { friendlyErrorMessage } from '../utils/error-message';
-import messaging, { AuthorizationStatus } from '@react-native-firebase/messaging';
 import { useNotificationStore } from '../stores/notification-store';
 import { registerFcmToken } from '../services/firebase-messaging';
 
@@ -70,18 +69,11 @@ export function useLogoutAll() {
 }
 
 export async function requestNotificationsPermission() {
-  const authStatus = await messaging().requestPermission();
-  const granted =
-    authStatus === AuthorizationStatus.AUTHORIZED ||
-    authStatus === AuthorizationStatus.PROVISIONAL;
-
+  const granted = false;
   const setPermissionStatus = useNotificationStore.getState().setPermissionStatus;
   setPermissionStatus(granted ? 'authorized' : 'denied');
-
   if (granted) {
     await registerFcmToken();
   }
-
   return granted;
 }
-

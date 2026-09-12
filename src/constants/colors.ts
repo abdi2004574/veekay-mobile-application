@@ -10,9 +10,11 @@ export const colors = {
   destructive: '#d4183d',
   disabledBackground: '#e4e4e7',
   success: '#16a34a',
+  warning: '#f59e0b',
   vaykaePink: '#D701A8',
   vaykaePurple: '#7700C6',
   starGold: '#FBBF24',
+  muted: '#f5f3f7',
 } as const;
 
 export const vaykaeGradient = [colors.vaykaePink, colors.vaykaePurple] as const;

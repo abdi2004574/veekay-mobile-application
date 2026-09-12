@@ -112,7 +112,7 @@ export default function WalletScreen() {
         )}
       </ScrollView>
 
-      <TravelerBottomNav active='profile' />
+      <TravelerBottomNav active='wallet' />
     </SafeAreaView>
   );
 }

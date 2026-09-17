@@ -11,5 +11,6 @@ module.exports = {
     '<rootDir>/dist/',
     '<rootDir>/build/',
     '<rootDir>/web-build/',
+    '<rootDir>/e2e/',
   ],
 };

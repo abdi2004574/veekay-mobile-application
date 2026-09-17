@@ -21,12 +21,6 @@ import {
   setupTokenRefreshListener,
 } from '../src/services/firebase-messaging';
 
-if (!process.env.EXPO_PUBLIC_API_BASE_URL) {
-  throw new Error(
-    'EXPO_PUBLIC_API_BASE_URL is not defined. Add it to your .env file and restart the dev server.',
-  );
-}
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

@@ -1,9 +1,24 @@
 import { router } from "expo-router";
-import { Bell, Inbox, LayoutDashboard, MessageCircle, Package, User, DollarSign } from "lucide-react-native";
+import {
+  Bell,
+  Inbox,
+  LayoutDashboard,
+  MessageCircle,
+  Package,
+  User,
+  DollarSign,
+} from "lucide-react-native";
 import { BottomNavBar } from "./BottomNavBar";
 import { showInDevelopmentAlert } from "../utils/in-development";
 
-export type AgencyTab = "home" | "packages" | "requests" | "chat" | "notifications" | "profile" | "revenue";
+export type AgencyTab =
+  | "home"
+  | "packages"
+  | "requests"
+  | "chat"
+  | "notifications"
+  | "profile"
+  | "revenue";
 
 export function AgencyBottomNav({ active }: { active: AgencyTab }) {
   return (
@@ -50,7 +65,8 @@ export function AgencyBottomNav({ active }: { active: AgencyTab }) {
           key: "profile",
           icon: User,
           label: "Profile",
-          onPress: () => showInDevelopmentAlert("Agency profile is not built yet."),
+          onPress: () =>
+            showInDevelopmentAlert("Agency profile is not built yet."),
         },
       ]}
     />

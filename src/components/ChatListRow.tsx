@@ -1,17 +1,17 @@
-import { Pressable, Text, View } from 'react-native';
-import { Briefcase, Users } from 'lucide-react-native';
-import { Avatar } from './Avatar';
-import { colors } from '../constants/colors';
-import type { ConversationSummary } from '../api/types';
+import { Pressable, Text, View } from "react-native";
+import { Briefcase, Users } from "lucide-react-native";
+import { Avatar } from "./Avatar";
+import { colors } from "../constants/colors";
+import type { ConversationSummary } from "../api/types";
 
 function formatTime(iso: string | null) {
-  if (!iso) return '';
+  if (!iso) return "";
   const date = new Date(iso);
   const now = new Date();
   const sameDay = date.toDateString() === now.toDateString();
   return sameDay
-    ? date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-    : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    ? date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
+    : date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 export function ChatListRow({
@@ -27,37 +27,37 @@ export function ChatListRow({
       className="flex-row items-center gap-3 px-4 py-3"
       style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
     >
-      <View style={{ position: 'relative' }}>
+      <View style={{ position: "relative" }}>
         <Avatar name={conversation.title} size={56} />
-        {conversation.type === 'group' && (
+        {conversation.type === "group" && (
           <View
             style={{
-              position: 'absolute',
+              position: "absolute",
               bottom: -2,
               right: -2,
               width: 22,
               height: 22,
               borderRadius: 11,
               backgroundColor: colors.vaykaePink,
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Users size={11} color={colors.background} />
           </View>
         )}
-        {conversation.type === 'agency' && (
+        {conversation.type === "agency" && (
           <View
             style={{
-              position: 'absolute',
+              position: "absolute",
               bottom: -2,
               right: -2,
               width: 22,
               height: 22,
               borderRadius: 11,
               backgroundColor: colors.vaykaePink,
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Briefcase size={11} color={colors.background} />
@@ -66,7 +66,7 @@ export function ChatListRow({
         {conversation.unreadCount > 0 && (
           <View
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: -4,
               right: -4,
               minWidth: 20,
@@ -74,12 +74,18 @@ export function ChatListRow({
               borderRadius: 10,
               paddingHorizontal: 5,
               backgroundColor: colors.vaykaePink,
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <Text style={{ color: colors.background, fontSize: 11, fontWeight: '600' }}>
-              {conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}
+            <Text
+              style={{
+                color: colors.background,
+                fontSize: 11,
+                fontWeight: "600",
+              }}
+            >
+              {conversation.unreadCount > 99 ? "99+" : conversation.unreadCount}
             </Text>
           </View>
         )}
@@ -91,12 +97,17 @@ export function ChatListRow({
             <Text
               className="font-medium text-foreground flex-1"
               numberOfLines={1}
-              style={{ fontWeight: conversation.unreadCount > 0 ? '700' : '500' }}
+              style={{
+                fontWeight: conversation.unreadCount > 0 ? "700" : "500",
+              }}
             >
               {conversation.title}
             </Text>
-            {conversation.type === 'group' && conversation.memberCount ? (
-              <Text className="text-xs" style={{ color: colors.mutedForeground }}>
+            {conversation.type === "group" && conversation.memberCount ? (
+              <Text
+                className="text-xs"
+                style={{ color: colors.mutedForeground }}
+              >
                 ({conversation.memberCount})
               </Text>
             ) : null}
@@ -109,11 +120,14 @@ export function ChatListRow({
           numberOfLines={1}
           style={{
             fontSize: 13,
-            color: conversation.unreadCount > 0 ? colors.foreground : colors.mutedForeground,
-            fontWeight: conversation.unreadCount > 0 ? '600' : '400',
+            color:
+              conversation.unreadCount > 0
+                ? colors.foreground
+                : colors.mutedForeground,
+            fontWeight: conversation.unreadCount > 0 ? "600" : "400",
           }}
         >
-          {conversation.lastMessage ?? 'No messages yet'}
+          {conversation.lastMessage ?? "No messages yet"}
         </Text>
       </View>
     </Pressable>

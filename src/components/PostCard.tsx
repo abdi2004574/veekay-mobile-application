@@ -1,5 +1,5 @@
-import { Image, Pressable, Text, View } from 'react-native';
-import { router } from 'expo-router';
+import { Image, Pressable, Text, View } from "react-native";
+import { router } from "expo-router";
 import {
   Heart,
   Image as ImageIcon,
@@ -8,12 +8,12 @@ import {
   MoreVertical,
   Repeat2,
   Share2,
-} from 'lucide-react-native';
-import { Avatar } from './Avatar';
-import { colors } from '../constants/colors';
-import { formatTimeAgo } from '../utils/format-time-ago';
-import { showAlert } from '../utils/show-alert';
-import type { Post } from '../api/types';
+} from "lucide-react-native";
+import { Avatar } from "./Avatar";
+import { colors } from "../constants/colors";
+import { formatTimeAgo } from "../utils/format-time-ago";
+import { showAlert } from "../utils/show-alert";
+import type { Post } from "../api/types";
 
 interface PostCardProps {
   post: Post;
@@ -29,7 +29,7 @@ interface PostCardProps {
   onDeletePress?: (post: Post) => void;
 }
 
-function authorName(author: Post['author']) {
+function authorName(author: Post["author"]) {
   return author.displayName ?? `@${author.username}`;
 }
 
@@ -47,18 +47,22 @@ export function PostCard({
   const isAlreadyViewingAuthor = post.authorId === viewingProfileId;
 
   const openOptions = () => {
-    showAlert('Post', undefined, [
-      { text: 'Edit Post', onPress: () => onEditPress?.(post) },
+    showAlert("Post", undefined, [
+      { text: "Edit Post", onPress: () => onEditPress?.(post) },
       {
-        text: 'Delete Post',
-        style: 'destructive',
+        text: "Delete Post",
+        style: "destructive",
         onPress: () =>
-          showAlert('Delete post?', 'This cannot be undone.', [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Delete', style: 'destructive', onPress: () => onDeletePress?.(post) },
+          showAlert("Delete post?", "This cannot be undone.", [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Delete",
+              style: "destructive",
+              onPress: () => onDeletePress?.(post),
+            },
           ]),
       },
-      { text: 'Cancel', style: 'cancel' },
+      { text: "Cancel", style: "cancel" },
     ]);
   };
 
@@ -78,7 +82,9 @@ export function PostCard({
         >
           <Avatar name={authorName(post.author)} size={40} />
           <View>
-            <Text className="font-semibold text-foreground">{authorName(post.author)}</Text>
+            <Text className="font-semibold text-foreground">
+              {authorName(post.author)}
+            </Text>
             <Text className="text-xs" style={{ color: colors.mutedForeground }}>
               {formatTimeAgo(post.createdAt)}
             </Text>
@@ -97,8 +103,13 @@ export function PostCard({
           style={{ backgroundColor: colors.inputBackground }}
         >
           <Repeat2 size={16} color={colors.mutedForeground} />
-          <Text className="text-xs flex-1" style={{ color: colors.mutedForeground }} numberOfLines={2}>
-            Reposted from {authorName(post.repostOf.author)}: {post.repostOf.text}
+          <Text
+            className="text-xs flex-1"
+            style={{ color: colors.mutedForeground }}
+            numberOfLines={2}
+          >
+            Reposted from {authorName(post.repostOf.author)}:{" "}
+            {post.repostOf.text}
           </Text>
         </View>
       )}
@@ -122,17 +133,24 @@ export function PostCard({
               className="rounded-full px-3 py-1"
               style={{ backgroundColor: colors.inputBackground }}
             >
-              <Text className="text-xs font-medium text-foreground">#{tag}</Text>
+              <Text className="text-xs font-medium text-foreground">
+                #{tag}
+              </Text>
             </View>
           ))}
         </View>
       )}
 
-      {post.imageMediaId && (
-        post.imageUrl ? (
+      {post.imageMediaId &&
+        (post.imageUrl ? (
           <Image
             source={{ uri: post.imageUrl }}
-            style={{ width: '100%', height: 220, borderRadius: 12, marginBottom: 8 }}
+            style={{
+              width: "100%",
+              height: 220,
+              borderRadius: 12,
+              marginBottom: 8,
+            }}
             resizeMode="cover"
           />
         ) : (
@@ -141,14 +159,19 @@ export function PostCard({
             style={{ height: 160, backgroundColor: colors.inputBackground }}
           >
             <ImageIcon size={28} color={colors.mutedForeground} />
-            <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
+            <Text
+              className="text-xs mt-1"
+              style={{ color: colors.mutedForeground }}
+            >
               Photo unavailable
             </Text>
           </View>
-        )
-      )}
+        ))}
 
-      <View className="flex-row items-center gap-6 pt-2" style={{ borderTopWidth: 1, borderTopColor: colors.border }}>
+      <View
+        className="flex-row items-center gap-6 pt-2"
+        style={{ borderTopWidth: 1, borderTopColor: colors.border }}
+      >
         <Pressable
           className="flex-row items-center gap-1.5"
           onPress={() => onLikeToggle?.(post)}
@@ -156,12 +179,18 @@ export function PostCard({
         >
           <Heart
             size={18}
-            color={post.isLikedByMe ? colors.vaykaePink : colors.mutedForeground}
-            fill={post.isLikedByMe ? colors.vaykaePink : 'transparent'}
+            color={
+              post.isLikedByMe ? colors.vaykaePink : colors.mutedForeground
+            }
+            fill={post.isLikedByMe ? colors.vaykaePink : "transparent"}
           />
           <Text
             className="text-sm"
-            style={{ color: post.isLikedByMe ? colors.vaykaePink : colors.mutedForeground }}
+            style={{
+              color: post.isLikedByMe
+                ? colors.vaykaePink
+                : colors.mutedForeground,
+            }}
           >
             {post.likesCount}
           </Text>

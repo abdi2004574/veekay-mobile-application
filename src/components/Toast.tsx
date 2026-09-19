@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Animated, Pressable, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useToastStore } from '../stores/toast-store';
-import { colors } from '../constants/colors';
+import { useEffect, useState } from "react";
+import { Animated, Pressable, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useToastStore } from "../stores/toast-store";
+import { colors } from "../constants/colors";
 
 export function ToastHost() {
   const message = useToastStore((s) => s.message);
@@ -23,15 +23,15 @@ export function ToastHost() {
     <SafeAreaView
       pointerEvents="box-none"
       style={{
-        position: 'absolute',
+        position: "absolute",
         top: 0,
         left: 0,
         right: 0,
-        alignItems: 'center',
+        alignItems: "center",
         zIndex: 50,
       }}
     >
-      <Animated.View style={{ opacity, marginTop: 12, maxWidth: '90%' }}>
+      <Animated.View style={{ opacity, marginTop: 12, maxWidth: "90%" }}>
         <Pressable
           onPress={hide}
           className="px-4 py-3 rounded-2xl"

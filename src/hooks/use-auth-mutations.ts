@@ -1,11 +1,9 @@
-import { useMutation } from '@tanstack/react-query';
-import * as authApi from '../api/auth';
-import { useAuthStore } from '../stores/auth-store';
-import { requireAccessToken } from '../utils/require-access-token';
-import { useToastStore } from '../stores/toast-store';
-import { friendlyErrorMessage } from '../utils/error-message';
-import { useNotificationStore } from '../stores/notification-store';
-import { registerFcmToken } from '../services/firebase-messaging';
+import { useMutation } from "@tanstack/react-query";
+import * as authApi from "../api/auth";
+import { useAuthStore } from "../stores/auth-store";
+import { requireAccessToken } from "../utils/require-access-token";
+import { useToastStore } from "../stores/toast-store";
+import { friendlyErrorMessage } from "../utils/error-message";
 
 export function useRegisterTraveler() {
   return useMutation({ mutationFn: authApi.registerTraveler });
@@ -66,14 +64,4 @@ export function useLogoutAll() {
     mutationFn: () => authApi.logoutAll(requireAccessToken()),
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
-}
-
-export async function requestNotificationsPermission() {
-  const granted = false;
-  const setPermissionStatus = useNotificationStore.getState().setPermissionStatus;
-  setPermissionStatus(granted ? 'authorized' : 'denied');
-  if (granted) {
-    await registerFcmToken();
-  }
-  return granted;
 }

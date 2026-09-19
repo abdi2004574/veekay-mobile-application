@@ -1,23 +1,33 @@
-import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft, Edit3, Trash2 } from 'lucide-react-native';
-import { router, useLocalSearchParams } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import { colors, vaykaeGradient } from '../../../src/constants/colors';
-import { usePackage } from '../../../src/hooks/use-packages-queries';
-import { useDeletePackage } from '../../../src/hooks/use-packages-mutations';
-import { showAlert } from '../../../src/utils/show-alert';
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { ArrowLeft, Edit3, Trash2 } from "lucide-react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors, vaykaeGradient } from "../../../src/constants/colors";
+import { usePackage } from "../../../src/hooks/use-packages-queries";
+import { useDeletePackage } from "../../../src/hooks/use-packages-mutations";
+import { showAlert } from "../../../src/utils/show-alert";
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  active: { bg: 'rgba(34,197,94,0.2)', text: '#86efac' },
-  inactive: { bg: 'rgba(234,179,8,0.2)', text: '#fde68a' },
-  archived: { bg: 'rgba(115,115,115,0.2)', text: '#d4d4d8' },
+  active: { bg: "rgba(34,197,94,0.2)", text: "#86efac" },
+  inactive: { bg: "rgba(234,179,8,0.2)", text: "#fde68a" },
+  archived: { bg: "rgba(115,115,115,0.2)", text: "#d4d4d8" },
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  active: 'Active',
-  inactive: 'Inactive',
-  archived: 'Archived',
+  active: "Active",
+  inactive: "Inactive",
+  archived: "Archived",
 };
 
 export default function PackageDetailScreen() {
@@ -27,14 +37,14 @@ export default function PackageDetailScreen() {
   const insets = useSafeAreaInsets();
 
   const confirmDelete = () => {
-    showAlert('Delete package?', 'This action cannot be undone.', [
-      { text: 'Cancel', style: 'cancel' },
+    showAlert("Delete package?", "This action cannot be undone.", [
+      { text: "Cancel", style: "cancel" },
       {
-        text: 'Delete',
-        style: 'destructive',
+        text: "Delete",
+        style: "destructive",
         onPress: () => {
           deletePackage.mutate(id, {
-            onSuccess: () => router.replace('/(agency)/packages'),
+            onSuccess: () => router.replace("/(agency)/packages"),
           });
         },
       },
@@ -52,7 +62,10 @@ export default function PackageDetailScreen() {
   if (pkg.isError || !pkg.data) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center px-6">
-        <Text className="text-center mb-3" style={{ color: colors.mutedForeground }}>
+        <Text
+          className="text-center mb-3"
+          style={{ color: colors.mutedForeground }}
+        >
           Couldn&apos;t load this package.
         </Text>
         <Pressable onPress={() => pkg.refetch()}>
@@ -71,36 +84,53 @@ export default function PackageDetailScreen() {
   const remainingMedia = p.media?.slice(1) ?? [];
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <View style={{ flex: 1 }}>
-        <View style={{ position: 'relative' }}>
+        <View style={{ position: "relative" }}>
           {heroUrl ? (
-            <Image source={{ uri: heroUrl }} style={{ width: '100%', aspectRatio: 4 / 3 }} resizeMode="cover" />
+            <Image
+              source={{ uri: heroUrl }}
+              style={{ width: "100%", aspectRatio: 4 / 3 }}
+              resizeMode="cover"
+            />
           ) : (
-            <View style={{ width: '100%', aspectRatio: 4 / 3, backgroundColor: colors.inputBackground }} />
+            <View
+              style={{
+                width: "100%",
+                aspectRatio: 4 / 3,
+                backgroundColor: colors.inputBackground,
+              }}
+            />
           )}
           <Pressable
             onPress={() => router.back()}
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: 16,
               left: 16,
               width: 40,
               height: 40,
               borderRadius: 20,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,0.5)',
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(0,0,0,0.5)",
             }}
           >
             <ArrowLeft size={20} color="#fff" />
           </Pressable>
-          <View style={{ position: 'absolute', top: 16, right: 16 }}>
+          <View style={{ position: "absolute", top: 16, right: 16 }}>
             <View
               className="px-3 py-1.5 rounded-full"
-              style={{ backgroundColor: statusColor.bg, borderWidth: 1, borderColor: statusColor.bg }}
+              style={{
+                backgroundColor: statusColor.bg,
+                borderWidth: 1,
+                borderColor: statusColor.bg,
+              }}
             >
-              <Text className="text-xs font-bold" style={{ color: statusColor.text }}>
+              <Text
+                className="text-xs font-bold"
+                style={{ color: statusColor.text }}
+              >
                 {label}
               </Text>
             </View>
@@ -108,51 +138,83 @@ export default function PackageDetailScreen() {
         </View>
 
         <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 96 }}>
-          <Text className="text-2xl font-bold text-foreground mb-2">{p.title}</Text>
-          <Text className="text-3xl font-bold mb-3" style={{ color: colors.vaykaePink }}>
+          <Text className="text-2xl font-bold text-foreground mb-2">
+            {p.title}
+          </Text>
+          <Text
+            className="text-3xl font-bold mb-3"
+            style={{ color: colors.vaykaePink }}
+          >
             {p.currency} {p.basePrice.toLocaleString()}
           </Text>
           {p.description ? (
-            <Text className="mb-5" style={{ color: colors.mutedForeground, lineHeight: 22 }}>
+            <Text
+              className="mb-5"
+              style={{ color: colors.mutedForeground, lineHeight: 22 }}
+            >
               {p.description}
             </Text>
           ) : null}
 
           <View
             className="p-4 rounded-2xl mb-5"
-            style={{ backgroundColor: colors.inputBackground, borderWidth: 1, borderColor: colors.border }}
+            style={{
+              backgroundColor: colors.inputBackground,
+              borderWidth: 1,
+              borderColor: colors.border,
+            }}
           >
             <View className="flex-row flex-wrap gap-x-4 gap-y-3">
-              <MetaTile label="Destination" value={p.destinationType ?? '&mdash;'} />
-              <MetaTile label="Season" value={p.season ?? '&mdash;'} />
-              <MetaTile label="Theme" value={p.theme ?? '&mdash;'} />
+              <MetaTile
+                label="Destination"
+                value={p.destinationType ?? "&mdash;"}
+              />
+              <MetaTile label="Season" value={p.season ?? "&mdash;"} />
+              <MetaTile label="Theme" value={p.theme ?? "&mdash;"} />
               <MetaTile label="Status" value={label} />
-              <MetaTile label="Created" value={new Date(p.createdAt).toLocaleDateString()} />
+              <MetaTile
+                label="Created"
+                value={new Date(p.createdAt).toLocaleDateString()}
+              />
             </View>
           </View>
 
           {!!p.itinerary && (
             <View className="mb-5">
-              <Text className="text-lg font-bold text-foreground mb-2">Itinerary</Text>
+              <Text className="text-lg font-bold text-foreground mb-2">
+                Itinerary
+              </Text>
               <View
                 className="p-4 rounded-2xl"
-                style={{ backgroundColor: colors.inputBackground, borderWidth: 1, borderColor: colors.border }}
+                style={{
+                  backgroundColor: colors.inputBackground,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                }}
               >
-                <Text style={{ color: colors.mutedForeground, lineHeight: 22 }}>{p.itinerary}</Text>
+                <Text style={{ color: colors.mutedForeground, lineHeight: 22 }}>
+                  {p.itinerary}
+                </Text>
               </View>
             </View>
           )}
 
           {remainingMedia.length > 0 && (
             <View className="mb-5">
-              <Text className="text-lg font-bold text-foreground mb-2">Gallery</Text>
+              <Text className="text-lg font-bold text-foreground mb-2">
+                Gallery
+              </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View className="flex-row gap-3">
                   {remainingMedia.map((m) => (
                     <Image
                       key={m.mediaId}
                       source={{ uri: m.url! }}
-                      style={{ width: 200, aspectRatio: 4 / 3, borderRadius: 16 }}
+                      style={{
+                        width: 200,
+                        aspectRatio: 4 / 3,
+                        borderRadius: 16,
+                      }}
                       resizeMode="cover"
                     />
                   ))}
@@ -167,7 +229,7 @@ export default function PackageDetailScreen() {
         <View
           className="flex-row gap-3 px-4"
           style={{
-            position: 'absolute',
+            position: "absolute",
             bottom: 0,
             left: 0,
             right: 0,
@@ -181,29 +243,34 @@ export default function PackageDetailScreen() {
         >
           <Pressable
             onPress={() =>
-              router.push({ pathname: '/(agency)/packages/edit', params: { packageId: p.id } })
+              router.push({
+                pathname: "/(agency)/packages/edit",
+                params: { packageId: p.id },
+              })
             }
             className="flex-1 items-center justify-center rounded-2xl"
-            style={{ height: 56, overflow: 'hidden' }}
+            style={{ height: 56, overflow: "hidden" }}
           >
             <LinearGradient
               colors={vaykaeGradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={{
-                position: 'absolute',
+                position: "absolute",
                 top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "row",
                 gap: 8,
               }}
             >
               <Edit3 size={18} color={colors.background} />
-              <Text className="font-bold" style={{ color: colors.background }}>Edit</Text>
+              <Text className="font-bold" style={{ color: colors.background }}>
+                Edit
+              </Text>
             </LinearGradient>
           </Pressable>
           <Pressable
@@ -226,7 +293,7 @@ export default function PackageDetailScreen() {
 
 function MetaTile({ label, value }: { label: string; value: string }) {
   return (
-    <View style={{ minWidth: '45%' }}>
+    <View style={{ minWidth: "45%" }}>
       <Text className="text-xs" style={{ color: colors.mutedForeground }}>
         {label}
       </Text>

@@ -1,6 +1,6 @@
-import { Pressable, View } from 'react-native';
-import { Check } from 'lucide-react-native';
-import { colors } from '../constants/colors';
+import { Pressable, View } from "react-native";
+import { Check } from "lucide-react-native";
+import { colors } from "../constants/colors";
 
 interface CheckboxProps {
   checked: boolean;
@@ -18,7 +18,7 @@ export function Checkbox({ checked, onChange }: CheckboxProps) {
       className="w-5 h-5 rounded border items-center justify-center mt-0.5"
       style={{
         borderColor: checked ? colors.foreground : colors.mutedForeground,
-        backgroundColor: checked ? colors.foreground : 'transparent',
+        backgroundColor: checked ? colors.foreground : "transparent",
       }}
     >
       <View style={{ opacity: checked ? 1 : 0 }}>

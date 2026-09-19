@@ -1,6 +1,6 @@
-import { Component, ReactNode } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { colors } from '../constants/colors';
+import { Component, ReactNode } from "react";
+import { View, Text, Pressable } from "react-native";
+import { colors } from "../constants/colors";
 
 interface Props {
   children: ReactNode;
@@ -22,7 +22,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: { componentStack: string }) {
-    console.error('UI error caught by boundary:', error, info.componentStack);
+    console.error("UI error caught by boundary:", error, info.componentStack);
   }
 
   handleRetry = () => {
@@ -36,7 +36,10 @@ export class ErrorBoundary extends Component<Props, State> {
           <Text className="text-xl font-bold text-foreground mb-2 text-center">
             Something went wrong
           </Text>
-          <Text className="text-sm text-center mb-6" style={{ color: colors.mutedForeground }}>
+          <Text
+            className="text-sm text-center mb-6"
+            style={{ color: colors.mutedForeground }}
+          >
             An unexpected error occurred. Please try again or restart the app.
           </Text>
           <Pressable

@@ -1,11 +1,14 @@
-import { apiFetch } from './client';
-import type { Campaign, CampaignDetail, CampaignPrivacy, Page } from './types';
+import { apiFetch } from "./client";
+import type { Campaign, CampaignDetail, CampaignPrivacy, Page } from "./types";
 
-function withQuery(path: string, params: Record<string, string | number | undefined>) {
+function withQuery(
+  path: string,
+  params: Record<string, string | number | undefined>,
+) {
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
     .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
-    .join('&');
+    .join("&");
   return query ? `${path}?${query}` : path;
 }
 
@@ -26,7 +29,11 @@ export interface CampaignInput {
 }
 
 export function createCampaign(input: CampaignInput, accessToken: string) {
-  return apiFetch<Campaign>('/campaigns', { method: 'POST', body: input, accessToken });
+  return apiFetch<Campaign>("/campaigns", {
+    method: "POST",
+    body: input,
+    accessToken,
+  });
 }
 
 export function updateCampaign(
@@ -35,18 +42,21 @@ export function updateCampaign(
   accessToken: string,
 ) {
   return apiFetch<Campaign>(`/campaigns/${campaignId}`, {
-    method: 'PATCH',
+    method: "PATCH",
     body: input,
     accessToken,
   });
 }
 
 export function deleteCampaign(campaignId: string, accessToken: string) {
-  return apiFetch<void>(`/campaigns/${campaignId}`, { method: 'DELETE', accessToken });
+  return apiFetch<void>(`/campaigns/${campaignId}`, {
+    method: "DELETE",
+    accessToken,
+  });
 }
 
 export function listMyCampaigns(accessToken: string) {
-  return apiFetch<Campaign[]>('/campaigns/mine', { accessToken });
+  return apiFetch<Campaign[]>("/campaigns/mine", { accessToken });
 }
 
 export function listCampaigns(
@@ -56,7 +66,12 @@ export function listCampaigns(
   accessToken: string,
 ) {
   return apiFetch<Page<Campaign>>(
-    withQuery('/campaigns', { cursor, limit: 20, search: search || undefined, creatorId }),
+    withQuery("/campaigns", {
+      cursor,
+      limit: 20,
+      search: search || undefined,
+      creatorId,
+    }),
     { accessToken },
   );
 }
@@ -66,7 +81,10 @@ export function getCampaign(campaignId: string, accessToken: string) {
 }
 
 export function listTopContributors(campaignId: string, accessToken: string) {
-  return apiFetch<{ items: unknown[] }>(`/campaigns/${campaignId}/top-contributors`, {
-    accessToken,
-  });
+  return apiFetch<{ items: unknown[] }>(
+    `/campaigns/${campaignId}/top-contributors`,
+    {
+      accessToken,
+    },
+  );
 }

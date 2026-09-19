@@ -1,5 +1,11 @@
 import { ReactNode } from "react";
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
@@ -63,7 +69,11 @@ export default function SettingsScreen() {
           <SettingsRow
             icon={UserPlus}
             label="Business Profile"
-            onPress={() => showInDevelopmentAlert("Business profile editing is not built yet.")}
+            onPress={() =>
+              showInDevelopmentAlert(
+                "Business profile editing is not built yet.",
+              )
+            }
           />
           <Divider />
           <SettingsRow
@@ -123,36 +133,60 @@ export default function SettingsScreen() {
               <SettingsRow
                 icon={Bell}
                 label="New Requests"
-                toggled={prefs?.find((p) => p.type === "new_request")?.pushEnabled ?? true}
+                toggled={
+                  prefs?.find((p) => p.type === "new_request")?.pushEnabled ??
+                  true
+                }
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: "new_request", pushEnabled: value })
+                  updateNotificationPreference.mutate({
+                    type: "new_request",
+                    pushEnabled: value,
+                  })
                 }
               />
               <Divider />
               <SettingsRow
                 icon={Bell}
                 label="Messages"
-                toggled={prefs?.find((p) => p.type === "chat_message")?.pushEnabled ?? true}
+                toggled={
+                  prefs?.find((p) => p.type === "chat_message")?.pushEnabled ??
+                  true
+                }
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: "chat_message", pushEnabled: value })
+                  updateNotificationPreference.mutate({
+                    type: "chat_message",
+                    pushEnabled: value,
+                  })
                 }
               />
               <Divider />
               <SettingsRow
                 icon={Bell}
                 label="Payment Alerts"
-                toggled={prefs?.find((p) => p.type === "payment_received")?.pushEnabled ?? true}
+                toggled={
+                  prefs?.find((p) => p.type === "payment_received")
+                    ?.pushEnabled ?? true
+                }
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: "payment_received", pushEnabled: value })
+                  updateNotificationPreference.mutate({
+                    type: "payment_received",
+                    pushEnabled: value,
+                  })
                 }
               />
               <Divider />
               <SettingsRow
                 icon={Bell}
                 label="Marketing"
-                toggled={prefs?.find((p) => p.type === "admin_broadcast")?.pushEnabled ?? false}
+                toggled={
+                  prefs?.find((p) => p.type === "admin_broadcast")
+                    ?.pushEnabled ?? false
+                }
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: "admin_broadcast", pushEnabled: value })
+                  updateNotificationPreference.mutate({
+                    type: "admin_broadcast",
+                    pushEnabled: value,
+                  })
                 }
               />
             </>
@@ -161,14 +195,27 @@ export default function SettingsScreen() {
 
         <SectionLabel>Support</SectionLabel>
         <SectionCard>
-          <SettingsRow icon={Shield} label="Help & Support" onPress={() => {}} />
+          <SettingsRow
+            icon={Shield}
+            label="Help & Support"
+            onPress={() => {}}
+          />
           <Divider />
-          <SettingsRow icon={CreditCard} label="Report an Issue" onPress={() => {}} />
+          <SettingsRow
+            icon={CreditCard}
+            label="Report an Issue"
+            onPress={() => {}}
+          />
         </SectionCard>
 
         <SectionLabel destructive>Danger Zone</SectionLabel>
         <SectionCard>
-          <SettingsRow icon={LogOut} label="Log Out" destructive onPress={handleLogout} />
+          <SettingsRow
+            icon={LogOut}
+            label="Log Out"
+            destructive
+            onPress={handleLogout}
+          />
         </SectionCard>
 
         <View className="flex-row items-center justify-center gap-4 mt-2">
@@ -191,11 +238,19 @@ export default function SettingsScreen() {
   );
 }
 
-function SectionLabel({ children, destructive }: { children: ReactNode; destructive?: boolean }) {
+function SectionLabel({
+  children,
+  destructive,
+}: {
+  children: ReactNode;
+  destructive?: boolean;
+}) {
   return (
     <Text
       className="text-xs font-bold mb-3 mt-2"
-      style={{ color: destructive ? colors.destructive : colors.mutedForeground }}
+      style={{
+        color: destructive ? colors.destructive : colors.mutedForeground,
+      }}
     >
       {children}
     </Text>

@@ -16,7 +16,10 @@ export interface AgencyDetail extends AgencyDirectoryEntry {
   stripeAccountId: string | null;
 }
 
-function withQuery(path: string, params: Record<string, string | number | undefined>) {
+function withQuery(
+  path: string,
+  params: Record<string, string | number | undefined>,
+) {
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
     .map(([k, v]) => k + "=" + encodeURIComponent(String(v)))
@@ -36,7 +39,9 @@ export function listAgencies(
 }
 
 export function getAgency(agencyId: string, accessToken: string) {
-  return apiFetch<AgencyDirectoryEntry>("/agencies/" + agencyId, { accessToken });
+  return apiFetch<AgencyDirectoryEntry>("/agencies/" + agencyId, {
+    accessToken,
+  });
 }
 
 export function getMyAgency(accessToken: string) {

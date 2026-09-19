@@ -1,6 +1,6 @@
-import { Pressable, View } from 'react-native';
-import { Star } from 'lucide-react-native';
-import { colors } from '../constants/colors';
+import { Pressable, View } from "react-native";
+import { Star } from "lucide-react-native";
+import { colors } from "../constants/colors";
 
 const SIZES = { sm: 16, md: 22, lg: 32 } as const;
 
@@ -11,7 +11,12 @@ interface StarRatingProps {
   readonly?: boolean;
 }
 
-export function StarRating({ rating, onRatingChange, size = 'md', readonly }: StarRatingProps) {
+export function StarRating({
+  rating,
+  onRatingChange,
+  size = "md",
+  readonly,
+}: StarRatingProps) {
   const starSize = SIZES[size];
   const isInteractive = !readonly && !!onRatingChange;
 
@@ -19,11 +24,15 @@ export function StarRating({ rating, onRatingChange, size = 'md', readonly }: St
     <View className="flex-row" style={{ gap: 4 }}>
       {[1, 2, 3, 4, 5].map((star) =>
         isInteractive ? (
-          <Pressable key={star} onPress={() => onRatingChange(star)} hitSlop={4}>
+          <Pressable
+            key={star}
+            onPress={() => onRatingChange(star)}
+            hitSlop={4}
+          >
             <Star
               size={starSize}
               color={star <= rating ? colors.starGold : colors.mutedForeground}
-              fill={star <= rating ? colors.starGold : 'transparent'}
+              fill={star <= rating ? colors.starGold : "transparent"}
             />
           </Pressable>
         ) : (
@@ -31,7 +40,7 @@ export function StarRating({ rating, onRatingChange, size = 'md', readonly }: St
             key={star}
             size={starSize}
             color={star <= rating ? colors.starGold : colors.mutedForeground}
-            fill={star <= rating ? colors.starGold : 'transparent'}
+            fill={star <= rating ? colors.starGold : "transparent"}
           />
         ),
       )}

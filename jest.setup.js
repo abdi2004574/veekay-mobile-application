@@ -1,11 +1,14 @@
-const { jest: mockJest } = require('@jest/globals');
+const { jest: mockJest } = require("@jest/globals");
 
-mockJest.mock('react-native-reanimated', () => mockJest.requireActual('react-native-reanimated/mock'));
+mockJest.mock("react-native-reanimated", () =>
+  mockJest.requireActual("react-native-reanimated/mock"),
+);
 
-mockJest.mock('expo-router', () => {
-  const React = mockJest.requireActual('react');
+mockJest.mock("expo-router", () => {
+  const React = mockJest.requireActual("react");
   const noop = mockJest.fn();
-  const Link = ({ children }) => React.createElement(React.Fragment, null, children);
+  const Link = ({ children }) =>
+    React.createElement(React.Fragment, null, children);
 
   return {
     Link,
@@ -32,16 +35,16 @@ mockJest.mock('expo-router', () => {
     }),
     useSegments: () => [],
     useParams: () => ({}),
-    usePathname: () => '/',
+    usePathname: () => "/",
     useFocusedRoute: () => null,
-    useRootNavigationState: () => ({ }),
+    useRootNavigationState: () => ({}),
     withLayoutContext: (navigation) => navigation,
   };
 });
 
-mockJest.mock('expo-modules-core', () => {
-  const ReactNative = mockJest.requireActual('react-native');
-  const actual = mockJest.requireActual('expo-modules-core');
+mockJest.mock("expo-modules-core", () => {
+  const ReactNative = mockJest.requireActual("react-native");
+  const actual = mockJest.requireActual("expo-modules-core");
 
   return {
     ...actual,
@@ -52,31 +55,31 @@ mockJest.mock('expo-modules-core', () => {
   };
 });
 
-mockJest.mock('expo-constants', () => {
+mockJest.mock("expo-constants", () => {
   const constants = {
     expoConfig: {
-      name: 'Veakay',
-      slug: 'veakay',
-      scheme: 'veakay',
+      name: "Veakay",
+      slug: "veakay",
+      scheme: "veakay",
     },
     installationTime: 0,
     isHeadless: false,
     linking: {
-      uri: 'veakay://',
+      uri: "veakay://",
       urls: [],
     },
     manifest: {},
     manifest2: {},
-    nativeAppVersion: '1.0.0',
-    nativeBuildVersion: '1',
-    osName: 'iOS',
+    nativeAppVersion: "1.0.0",
+    nativeBuildVersion: "1",
+    osName: "iOS",
     platform: {
       ios: {},
       android: {},
     },
-    systemVersion: '1.0',
-    userAgent: 'Veakay Jest',
-    webExecutionEnvironment: 'jest',
+    systemVersion: "1.0",
+    userAgent: "Veakay Jest",
+    webExecutionEnvironment: "jest",
   };
 
   return {
@@ -86,8 +89,8 @@ mockJest.mock('expo-constants', () => {
   };
 });
 
-mockJest.mock('react-native-safe-area-context', () => {
-  const View = mockJest.requireActual('react-native').View;
+mockJest.mock("react-native-safe-area-context", () => {
+  const View = mockJest.requireActual("react-native").View;
   const insets = {
     top: 0,
     right: 0,
@@ -107,21 +110,24 @@ mockJest.mock('react-native-safe-area-context', () => {
   };
 });
 
-mockJest.mock('expo-linear-gradient', () => ({
-  LinearGradient: mockJest.requireActual('react-native').View,
+mockJest.mock("expo-linear-gradient", () => ({
+  LinearGradient: mockJest.requireActual("react-native").View,
 }));
 
-const ReactNative = mockJest.requireActual('react-native');
+const ReactNative = mockJest.requireActual("react-native");
 
-if (ReactNative.Alert && typeof ReactNative.Alert.alert === 'function') {
+if (ReactNative.Alert && typeof ReactNative.Alert.alert === "function") {
   ReactNative.Alert.alert = mockJest.fn();
 }
 
-if (ReactNative.ToastAndroid && typeof ReactNative.ToastAndroid.show === 'function') {
+if (
+  ReactNative.ToastAndroid &&
+  typeof ReactNative.ToastAndroid.show === "function"
+) {
   ReactNative.ToastAndroid.show = mockJest.fn();
 }
 
-mockJest.mock('react-native-purchases', () => {
+mockJest.mock("react-native-purchases", () => {
   const mockCustomerInfo = {
     entitlements: {
       active: {},
@@ -130,16 +136,16 @@ mockJest.mock('react-native-purchases', () => {
     activeSubscriptions: [],
     allPurchasedProductIdentifiers: [],
     latestExpirationDate: null,
-    originalAppUserId: 'test-user-id',
+    originalAppUserId: "test-user-id",
     managementURL: null,
-    requestDate: '2024-01-01T00:00:00Z',
+    requestDate: "2024-01-01T00:00:00Z",
   };
 
   const mockOfferings = {
     all: {},
     current: {
-      identifier: 'default',
-      serverDescription: 'Agency Subscription',
+      identifier: "default",
+      serverDescription: "Agency Subscription",
       metadata: {},
       availablePackages: [],
       lifetime: null,
@@ -154,15 +160,15 @@ mockJest.mock('react-native-purchases', () => {
   };
 
   const mockPackage = {
-    identifier: 'basic',
-    packageType: 'CUSTOM',
+    identifier: "basic",
+    packageType: "CUSTOM",
     product: {
-      identifier: 'com.veakay.agency.basic',
-      title: 'Basic',
-      description: 'Core package listing and booking requests.',
+      identifier: "com.veakay.agency.basic",
+      title: "Basic",
+      description: "Core package listing and booking requests.",
       price: 0,
-      priceString: 'Free',
-      currencyCode: 'USD',
+      priceString: "Free",
+      currencyCode: "USD",
       pricePerWeek: null,
       pricePerMonth: null,
       pricePerYear: null,
@@ -172,16 +178,16 @@ mockJest.mock('react-native-purchases', () => {
       introPrice: null,
       discounts: null,
       productCategory: null,
-      productType: 'SUBSCRIPTION',
-      subscriptionPeriod: 'P1M',
+      productType: "SUBSCRIPTION",
+      subscriptionPeriod: "P1M",
       defaultOption: null,
       subscriptionOptions: null,
       presentedOfferingIdentifier: null,
       presentedOfferingContext: null,
     },
-    offeringIdentifier: 'default',
+    offeringIdentifier: "default",
     presentedOfferingContext: {
-      offeringIdentifier: 'default',
+      offeringIdentifier: "default",
       placementIdentifier: null,
       targetingContext: null,
     },
@@ -200,17 +206,21 @@ mockJest.mock('react-native-purchases', () => {
     __esModule: true,
     default: {
       configure: mockJest.fn(),
-      getOfferings: mockJest.fn(() => Promise.resolve(mockOfferingsWithPackages)),
+      getOfferings: mockJest.fn(() =>
+        Promise.resolve(mockOfferingsWithPackages),
+      ),
       getCustomerInfo: mockJest.fn(() => Promise.resolve(mockCustomerInfo)),
       purchasePackage: mockJest.fn(() =>
         Promise.resolve({
-          productIdentifier: 'com.veakay.agency.basic',
+          productIdentifier: "com.veakay.agency.basic",
           customerInfo: mockCustomerInfo,
-          transaction: { transactionIdentifier: 'txn_123' },
+          transaction: { transactionIdentifier: "txn_123" },
         }),
       ),
       restorePurchases: mockJest.fn(() => Promise.resolve(mockCustomerInfo)),
-      logIn: mockJest.fn(() => Promise.resolve({ customerInfo: mockCustomerInfo, created: false })),
+      logIn: mockJest.fn(() =>
+        Promise.resolve({ customerInfo: mockCustomerInfo, created: false }),
+      ),
       logOut: mockJest.fn(() => Promise.resolve(mockCustomerInfo)),
       addCustomerInfoUpdateListener: mockJest.fn(),
       removeCustomerInfoUpdateListener: mockJest.fn(),
@@ -219,61 +229,61 @@ mockJest.mock('react-native-purchases', () => {
       setLogLevel: mockJest.fn(() => Promise.resolve()),
       invalidateCustomerInfoCache: mockJest.fn(() => Promise.resolve()),
       PURCHASES_ERROR_CODE: {
-        UNKNOWN_ERROR: '0',
-        PURCHASE_CANCELLED_ERROR: '1',
-        STORE_PROBLEM_ERROR: '2',
-        PURCHASE_NOT_ALLOWED_ERROR: '3',
-        PURCHASE_INVALID_ERROR: '4',
-        PRODUCT_NOT_AVAILABLE_FOR_PURCHASE_ERROR: '5',
-        PRODUCT_ALREADY_PURCHASED_ERROR: '6',
-        NETWORK_ERROR: '10',
-        INVALID_CREDENTIALS_ERROR: '11',
-        UNSUPPORTED_ERROR: '24',
+        UNKNOWN_ERROR: "0",
+        PURCHASE_CANCELLED_ERROR: "1",
+        STORE_PROBLEM_ERROR: "2",
+        PURCHASE_NOT_ALLOWED_ERROR: "3",
+        PURCHASE_INVALID_ERROR: "4",
+        PRODUCT_NOT_AVAILABLE_FOR_PURCHASE_ERROR: "5",
+        PRODUCT_ALREADY_PURCHASED_ERROR: "6",
+        NETWORK_ERROR: "10",
+        INVALID_CREDENTIALS_ERROR: "11",
+        UNSUPPORTED_ERROR: "24",
       },
       PRODUCT_CATEGORY: {
-        NON_SUBSCRIPTION: 'NON_SUBSCRIPTION',
-        SUBSCRIPTION: 'SUBSCRIPTION',
-        UNKNOWN: 'UNKNOWN',
+        NON_SUBSCRIPTION: "NON_SUBSCRIPTION",
+        SUBSCRIPTION: "SUBSCRIPTION",
+        UNKNOWN: "UNKNOWN",
       },
       PACKAGE_TYPE: {
-        UNKNOWN: 'UNKNOWN',
-        CUSTOM: 'CUSTOM',
-        LIFETIME: 'LIFETIME',
-        ANNUAL: 'ANNUAL',
-        SIX_MONTH: 'SIX_MONTH',
-        THREE_MONTH: 'THREE_MONTH',
-        TWO_MONTH: 'TWO_MONTH',
-        MONTHLY: 'MONTHLY',
-        WEEKLY: 'WEEKLY',
+        UNKNOWN: "UNKNOWN",
+        CUSTOM: "CUSTOM",
+        LIFETIME: "LIFETIME",
+        ANNUAL: "ANNUAL",
+        SIX_MONTH: "SIX_MONTH",
+        THREE_MONTH: "THREE_MONTH",
+        TWO_MONTH: "TWO_MONTH",
+        MONTHLY: "MONTHLY",
+        WEEKLY: "WEEKLY",
       },
     },
     PURCHASES_ERROR_CODE: {
-      UNKNOWN_ERROR: '0',
-      PURCHASE_CANCELLED_ERROR: '1',
-      STORE_PROBLEM_ERROR: '2',
-      PURCHASE_NOT_ALLOWED_ERROR: '3',
-      PURCHASE_INVALID_ERROR: '4',
-      PRODUCT_NOT_AVAILABLE_FOR_PURCHASE_ERROR: '5',
-      PRODUCT_ALREADY_PURCHASED_ERROR: '6',
-      NETWORK_ERROR: '10',
-      INVALID_CREDENTIALS_ERROR: '11',
-      UNSUPPORTED_ERROR: '24',
+      UNKNOWN_ERROR: "0",
+      PURCHASE_CANCELLED_ERROR: "1",
+      STORE_PROBLEM_ERROR: "2",
+      PURCHASE_NOT_ALLOWED_ERROR: "3",
+      PURCHASE_INVALID_ERROR: "4",
+      PRODUCT_NOT_AVAILABLE_FOR_PURCHASE_ERROR: "5",
+      PRODUCT_ALREADY_PURCHASED_ERROR: "6",
+      NETWORK_ERROR: "10",
+      INVALID_CREDENTIALS_ERROR: "11",
+      UNSUPPORTED_ERROR: "24",
     },
     PRODUCT_CATEGORY: {
-      NON_SUBSCRIPTION: 'NON_SUBSCRIPTION',
-      SUBSCRIPTION: 'SUBSCRIPTION',
-      UNKNOWN: 'UNKNOWN',
+      NON_SUBSCRIPTION: "NON_SUBSCRIPTION",
+      SUBSCRIPTION: "SUBSCRIPTION",
+      UNKNOWN: "UNKNOWN",
     },
     PACKAGE_TYPE: {
-      UNKNOWN: 'UNKNOWN',
-      CUSTOM: 'CUSTOM',
-      LIFETIME: 'LIFETIME',
-      ANNUAL: 'ANNUAL',
-      SIX_MONTH: 'SIX_MONTH',
-      THREE_MONTH: 'THREE_MONTH',
-      TWO_MONTH: 'TWO_MONTH',
-      MONTHLY: 'MONTHLY',
-      WEEKLY: 'WEEKLY',
+      UNKNOWN: "UNKNOWN",
+      CUSTOM: "CUSTOM",
+      LIFETIME: "LIFETIME",
+      ANNUAL: "ANNUAL",
+      SIX_MONTH: "SIX_MONTH",
+      THREE_MONTH: "THREE_MONTH",
+      TWO_MONTH: "TWO_MONTH",
+      MONTHLY: "MONTHLY",
+      WEEKLY: "WEEKLY",
     },
   };
 });

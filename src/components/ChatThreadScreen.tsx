@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -9,9 +9,9 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
 import {
   ArrowLeft,
   Camera,
@@ -26,27 +26,41 @@ import {
   Video,
   X,
   Zap,
-} from 'lucide-react-native';
-import { Avatar } from './Avatar';
-import { colors } from '../constants/colors';
-import { useAuthStore } from '../stores/auth-store';
-import { useToastStore } from '../stores/toast-store';
-import { useConversation, useMessages } from '../hooks/use-chat-queries';
-import { useMarkConversationRead, useSendMessage } from '../hooks/use-chat-mutations';
-import { showInDevelopmentAlert } from '../utils/in-development';
-import { pickAndUploadDocument, pickAndUploadFromCamera, pickAndUploadFromLibrary } from '../utils/upload-image';
-import { SmartReplyPicker } from './SmartReplyPicker';
-import type { Message } from '../api/types';
+} from "lucide-react-native";
+import { Avatar } from "./Avatar";
+import { colors } from "../constants/colors";
+import { useAuthStore } from "../stores/auth-store";
+import { useToastStore } from "../stores/toast-store";
+import { useConversation, useMessages } from "../hooks/use-chat-queries";
+import {
+  useMarkConversationRead,
+  useSendMessage,
+} from "../hooks/use-chat-mutations";
+import { showInDevelopmentAlert } from "../utils/in-development";
+import {
+  pickAndUploadDocument,
+  pickAndUploadFromCamera,
+  pickAndUploadFromLibrary,
+} from "../utils/upload-image";
+import { SmartReplyPicker } from "./SmartReplyPicker";
+import type { Message } from "../api/types";
 
-function StatusTick({ status }: { status?: Message['status'] }) {
-  if (status === 'read') return <CheckCheck size={13} color={colors.vaykaePink} />;
-  if (status === 'delivered') return <CheckCheck size={13} color="rgba(255,255,255,0.7)" />;
-  if (status === 'sent') return <Check size={13} color="rgba(255,255,255,0.7)" />;
+function StatusTick({ status }: { status?: Message["status"] }) {
+  if (status === "read")
+    return <CheckCheck size={13} color={colors.vaykaePink} />;
+  if (status === "delivered")
+    return <CheckCheck size={13} color="rgba(255,255,255,0.7)" />;
+  if (status === "sent")
+    return <Check size={13} color="rgba(255,255,255,0.7)" />;
   return null;
 }
 
-export function ChatThreadScreen({ conversationId }: { conversationId: string }) {
-  const currentUserId = useAuthStore((s) => s.user?.id) ?? '';
+export function ChatThreadScreen({
+  conversationId,
+}: {
+  conversationId: string;
+}) {
+  const currentUserId = useAuthStore((s) => s.user?.id) ?? "";
   const accessToken = useAuthStore((s) => s.accessToken);
   const showToast = useToastStore((s) => s.show);
 
@@ -55,7 +69,7 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
   const sendMessage = useSendMessage(conversationId);
   const markRead = useMarkConversationRead(conversationId);
 
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [showGroupPanel, setShowGroupPanel] = useState(false);
   const [showQuickReplies, setShowQuickReplies] = useState(false);
@@ -63,7 +77,8 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
   const lastMessageIdRef = useRef<string | null>(null);
 
   const items = useMemo(
-    () => (messages.data?.pages.flatMap((p) => p.items) ?? []).slice().reverse(),
+    () =>
+      (messages.data?.pages.flatMap((p) => p.items) ?? []).slice().reverse(),
     [messages.data],
   );
 
@@ -77,23 +92,25 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
 
   const handleSendText = () => {
     if (!text.trim()) return;
-    sendMessage.mutate({ type: 'text', body: text.trim() });
-    setText('');
+    sendMessage.mutate({ type: "text", body: text.trim() });
+    setText("");
   };
 
-  const handlePickPhoto = async (source: 'camera' | 'library') => {
+  const handlePickPhoto = async (source: "camera" | "library") => {
     if (!accessToken) return;
     setIsAttaching(true);
     setShowMediaPicker(false);
     try {
-      const uploaded = await (source === 'camera'
-        ? pickAndUploadFromCamera('chat_image', accessToken)
-        : pickAndUploadFromLibrary('chat_image', accessToken));
+      const uploaded = await (source === "camera"
+        ? pickAndUploadFromCamera("chat_image", accessToken)
+        : pickAndUploadFromLibrary("chat_image", accessToken));
       if (uploaded) {
-        sendMessage.mutate({ type: 'image', mediaId: uploaded.mediaId });
+        sendMessage.mutate({ type: "image", mediaId: uploaded.mediaId });
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Could not attach that photo.');
+      showToast(
+        err instanceof Error ? err.message : "Could not attach that photo.",
+      );
     } finally {
       setIsAttaching(false);
     }
@@ -104,16 +121,21 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
     setIsAttaching(true);
     setShowMediaPicker(false);
     try {
-      const uploaded = await pickAndUploadDocument('chat_document', accessToken);
+      const uploaded = await pickAndUploadDocument(
+        "chat_document",
+        accessToken,
+      );
       if (uploaded) {
         sendMessage.mutate({
-          type: 'document',
+          type: "document",
           mediaId: uploaded.mediaId,
           fileName: uploaded.fileName,
         });
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Could not attach that file.');
+      showToast(
+        err instanceof Error ? err.message : "Could not attach that file.",
+      );
     } finally {
       setIsAttaching(false);
     }
@@ -130,7 +152,10 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
   if (conversation.isError || !conversation.data) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center px-6">
-        <Text className="text-center mb-3" style={{ color: colors.mutedForeground }}>
+        <Text
+          className="text-center mb-3"
+          style={{ color: colors.mutedForeground }}
+        >
           Couldn&apos;t load this conversation.
         </Text>
         <Pressable onPress={() => conversation.refetch()}>
@@ -143,12 +168,15 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
   }
 
   const convo = conversation.data;
-  const isAgency = convo.type === 'agency';
-  const isGroup = convo.type === 'group';
+  const isAgency = convo.type === "agency";
+  const isGroup = convo.type === "group";
 
   return (
     <SafeAreaView className="flex-1 bg-background">
-      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
         <View
           className="flex-row items-center justify-between px-4 h-14"
           style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
@@ -163,7 +191,10 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
                 {convo.title}
               </Text>
               {isGroup && (
-                <Text className="text-xs" style={{ color: colors.mutedForeground }}>
+                <Text
+                  className="text-xs"
+                  style={{ color: colors.mutedForeground }}
+                >
                   {convo.members?.length ?? 0} members
                 </Text>
               )}
@@ -174,14 +205,18 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             {isAgency && (
               <>
                 <Pressable
-                  onPress={() => showInDevelopmentAlert("Audio calls aren't available yet.")}
+                  onPress={() =>
+                    showInDevelopmentAlert("Audio calls aren't available yet.")
+                  }
                   hitSlop={6}
                   className="p-2"
                 >
                   <Phone size={19} color={colors.foreground} />
                 </Pressable>
                 <Pressable
-                  onPress={() => showInDevelopmentAlert("Video calls aren't available yet.")}
+                  onPress={() =>
+                    showInDevelopmentAlert("Video calls aren't available yet.")
+                  }
                   hitSlop={6}
                   className="p-2"
                 >
@@ -190,7 +225,11 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
               </>
             )}
             {isGroup && (
-              <Pressable onPress={() => setShowGroupPanel((v) => !v)} hitSlop={6} className="p-2">
+              <Pressable
+                onPress={() => setShowGroupPanel((v) => !v)}
+                hitSlop={6}
+                className="p-2"
+              >
                 <Users size={19} color={colors.foreground} />
               </Pressable>
             )}
@@ -200,15 +239,28 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
         {isGroup && showGroupPanel && (
           <View
             className="px-4 py-3"
-            style={{ borderBottomWidth: 1, borderBottomColor: colors.border, backgroundColor: colors.inputBackground }}
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: colors.border,
+              backgroundColor: colors.inputBackground,
+            }}
           >
             <View className="flex-row items-center justify-between mb-2">
-              <Text className="text-sm font-semibold text-foreground">Group Members</Text>
+              <Text className="text-sm font-semibold text-foreground">
+                Group Members
+              </Text>
               <Pressable
-                onPress={() => showInDevelopmentAlert("Adding members from here isn't built yet.")}
+                onPress={() =>
+                  showInDevelopmentAlert(
+                    "Adding members from here isn't built yet.",
+                  )
+                }
                 hitSlop={6}
               >
-                <Text className="text-xs font-semibold" style={{ color: colors.vaykaePink }}>
+                <Text
+                  className="text-xs font-semibold"
+                  style={{ color: colors.vaykaePink }}
+                >
                   + Add
                 </Text>
               </Pressable>
@@ -218,10 +270,17 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
                 {convo.members?.map((m) => {
                   const name = m.displayName ?? "@";
                   return (
-                    <View key={m.id} className="items-center" style={{ width: 56 }}>
+                    <View
+                      key={m.id}
+                      className="items-center"
+                      style={{ width: 56 }}
+                    >
                       <Avatar name={name} size={44} />
-                      <Text className="text-xs mt-1 text-foreground" numberOfLines={1}>
-                        {m.id === currentUserId ? 'You' : name}
+                      <Text
+                        className="text-xs mt-1 text-foreground"
+                        numberOfLines={1}
+                      >
+                        {m.id === currentUserId ? "You" : name}
                       </Text>
                     </View>
                   );
@@ -231,36 +290,62 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
           </View>
         )}
 
-        <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }} className="flex-1">
+        <ScrollView
+          contentContainerStyle={{ padding: 16, gap: 12 }}
+          className="flex-1"
+        >
           {items.length === 0 ? (
             <View className="py-16 items-center px-6">
-              <Text className="text-center" style={{ color: colors.mutedForeground }}>
+              <Text
+                className="text-center"
+                style={{ color: colors.mutedForeground }}
+              >
                 No messages yet. Say hello!
               </Text>
             </View>
           ) : (
             items.map((message) => {
               const mine = message.sender.id === currentUserId;
-               const senderName = message.sender.displayName ?? "@";
+              const senderName = message.sender.displayName ?? "@";
               return (
                 <View
                   key={message.id}
-                   className={"flex-row " + (mine ? "justify-end" : "justify-start")}
+                  className={
+                    "flex-row " + (mine ? "justify-end" : "justify-start")
+                  }
                 >
-                  <View className={"flex-row gap-2 " + (mine ? "flex-row-reverse" : "")} style={{ maxWidth: "85%" }}>
+                  <View
+                    className={
+                      "flex-row gap-2 " + (mine ? "flex-row-reverse" : "")
+                    }
+                    style={{ maxWidth: "85%" }}
+                  >
                     {isGroup && !mine && <Avatar name={senderName} size={28} />}
                     <View>
                       {isGroup && !mine && (
-                        <Text className="text-xs mb-1 px-1" style={{ color: colors.mutedForeground }}>
+                        <Text
+                          className="text-xs mb-1 px-1"
+                          style={{ color: colors.mutedForeground }}
+                        >
                           {senderName}
                         </Text>
                       )}
                       <View
                         className="rounded-2xl px-4 py-2"
-                        style={{ backgroundColor: mine ? colors.vaykaePink : colors.inputBackground }}
+                        style={{
+                          backgroundColor: mine
+                            ? colors.vaykaePink
+                            : colors.inputBackground,
+                        }}
                       >
                         {message.type === "text" && (
-                          <Text style={{ color: mine ? colors.background : colors.foreground }}>
+                          <Text
+                            style={{
+                              color: mine
+                                ? colors.background
+                                : colors.foreground,
+                            }}
+                          >
                             {message.body}
                           </Text>
                         )}
@@ -268,21 +353,43 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
                           (message.mediaUrl ? (
                             <Image
                               source={{ uri: message.mediaUrl }}
-                              style={{ width: 192, height: 192, borderRadius: 12 }}
+                              style={{
+                                width: 192,
+                                height: 192,
+                                borderRadius: 12,
+                              }}
                               resizeMode="cover"
                             />
                           ) : (
-                            <Text style={{ color: mine ? colors.background : colors.foreground }}>
+                            <Text
+                              style={{
+                                color: mine
+                                  ? colors.background
+                                  : colors.foreground,
+                              }}
+                            >
                               Photo unavailable
                             </Text>
                           ))}
                         {message.type === "document" && (
-                          <View className="flex-row items-center gap-2" style={{ minWidth: 180 }}>
-                            <FileText size={20} color={mine ? colors.background : colors.foreground} />
+                          <View
+                            className="flex-row items-center gap-2"
+                            style={{ minWidth: 180 }}
+                          >
+                            <FileText
+                              size={20}
+                              color={
+                                mine ? colors.background : colors.foreground
+                              }
+                            />
                             <Text
                               className="flex-1 text-sm"
                               numberOfLines={1}
-                              style={{ color: mine ? colors.background : colors.foreground }}
+                              style={{
+                                color: mine
+                                  ? colors.background
+                                  : colors.foreground,
+                              }}
                             >
                               {message.fileName ?? "Document"}
                             </Text>
@@ -292,13 +399,18 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
                           <Text
                             style={{
                               fontSize: 11,
-                              color: mine ? "rgba(255,255,255,0.7)" : colors.mutedForeground,
+                              color: mine
+                                ? "rgba(255,255,255,0.7)"
+                                : colors.mutedForeground,
                             }}
                           >
-                            {new Date(message.createdAt).toLocaleTimeString("en-US", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
+                            {new Date(message.createdAt).toLocaleTimeString(
+                              "en-US",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              },
+                            )}
                           </Text>
                           {mine && <StatusTick status={message.status} />}
                         </View>
@@ -314,50 +426,93 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
         {showMediaPicker && (
           <View
             className="p-4"
-            style={{ borderTopWidth: 1, borderTopColor: colors.border, backgroundColor: colors.background }}
+            style={{
+              borderTopWidth: 1,
+              borderTopColor: colors.border,
+              backgroundColor: colors.background,
+            }}
           >
             <View className="flex-row items-center justify-around">
-              <Pressable onPress={() => handlePickPhoto("library")} className="items-center gap-2">
+              <Pressable
+                onPress={() => handlePickPhoto("library")}
+                className="items-center gap-2"
+              >
                 <View
                   className="items-center justify-center rounded-2xl"
-                  style={{ width: 56, height: 56, backgroundColor: colors.vaykaePink }}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    backgroundColor: colors.vaykaePink,
+                  }}
                 >
                   <ImageIcon size={24} color={colors.background} />
                 </View>
-                <Text className="text-xs font-medium text-foreground">Photo</Text>
+                <Text className="text-xs font-medium text-foreground">
+                  Photo
+                </Text>
               </Pressable>
-              <Pressable onPress={() => handlePickPhoto("camera")} className="items-center gap-2">
+              <Pressable
+                onPress={() => handlePickPhoto("camera")}
+                className="items-center gap-2"
+              >
                 <View
                   className="items-center justify-center rounded-2xl"
-                  style={{ width: 56, height: 56, backgroundColor: colors.vaykaePink }}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    backgroundColor: colors.vaykaePink,
+                  }}
                 >
                   <Camera size={24} color={colors.background} />
                 </View>
-                <Text className="text-xs font-medium text-foreground">Camera</Text>
+                <Text className="text-xs font-medium text-foreground">
+                  Camera
+                </Text>
               </Pressable>
-              <Pressable onPress={handlePickDocument} className="items-center gap-2">
+              <Pressable
+                onPress={handlePickDocument}
+                className="items-center gap-2"
+              >
                 <View
                   className="items-center justify-center rounded-2xl"
-                  style={{ width: 56, height: 56, backgroundColor: colors.vaykaePink }}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    backgroundColor: colors.vaykaePink,
+                  }}
                 >
                   <FileText size={24} color={colors.background} />
                 </View>
-                <Text className="text-xs font-medium text-foreground">Document</Text>
+                <Text className="text-xs font-medium text-foreground">
+                  Document
+                </Text>
               </Pressable>
-              <Pressable onPress={() => setShowMediaPicker(false)} className="items-center gap-2">
+              <Pressable
+                onPress={() => setShowMediaPicker(false)}
+                className="items-center gap-2"
+              >
                 <View
                   className="items-center justify-center rounded-2xl"
-                  style={{ width: 56, height: 56, backgroundColor: colors.disabledBackground }}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    backgroundColor: colors.disabledBackground,
+                  }}
                 >
                   <X size={24} color={colors.foreground} />
                 </View>
-                <Text className="text-xs font-medium text-foreground">Close</Text>
+                <Text className="text-xs font-medium text-foreground">
+                  Close
+                </Text>
               </Pressable>
             </View>
           </View>
         )}
 
-        <View className="flex-row items-center gap-2 px-4 py-3" style={{ borderTopWidth: 1, borderTopColor: colors.border }}>
+        <View
+          className="flex-row items-center gap-2 px-4 py-3"
+          style={{ borderTopWidth: 1, borderTopColor: colors.border }}
+        >
           <Pressable
             onPress={() => setShowMediaPicker((v) => !v)}
             disabled={isAttaching}
@@ -396,10 +551,15 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             style={{
               width: 44,
               height: 44,
-              backgroundColor: text.trim() ? colors.vaykaePink : colors.disabledBackground,
+              backgroundColor: text.trim()
+                ? colors.vaykaePink
+                : colors.disabledBackground,
             }}
           >
-            <Send size={18} color={text.trim() ? colors.background : colors.mutedForeground} />
+            <Send
+              size={18}
+              color={text.trim() ? colors.background : colors.mutedForeground}
+            />
           </Pressable>
         </View>
         {isAgency && (
@@ -407,7 +567,9 @@ export function ChatThreadScreen({ conversationId }: { conversationId: string })
             visible={showQuickReplies}
             onClose={() => setShowQuickReplies(false)}
             onPick={(template) => {
-              setText((prev) => prev ? prev + " " + template.body : template.body);
+              setText((prev) =>
+                prev ? prev + " " + template.body : template.body,
+              );
               setShowQuickReplies(false);
             }}
           />

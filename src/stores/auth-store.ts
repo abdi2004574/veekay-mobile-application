@@ -1,10 +1,10 @@
-import { create } from 'zustand';
-import { refresh as refreshTokens } from '../api/auth';
-import { getMe } from '../api/users';
-import type { AuthResponse, AuthUser } from '../api/types';
-import { secureStorage } from './secure-storage';
+import { create } from "zustand";
+import { refresh as refreshTokens } from "../api/auth";
+import { getMe } from "../api/users";
+import type { AuthResponse, AuthUser } from "../api/types";
+import { secureStorage } from "./secure-storage";
 
-type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
+type AuthStatus = "idle" | "loading" | "authenticated" | "unauthenticated";
 
 interface AuthState {
   status: AuthStatus;
@@ -17,30 +17,30 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  status: 'idle',
+  status: "idle",
   user: null,
   accessToken: null,
 
   setSession: async ({ user, accessToken, refreshToken }) => {
     await secureStorage.setRefreshToken(refreshToken);
-    set({ user, accessToken, status: 'authenticated' });
+    set({ user, accessToken, status: "authenticated" });
   },
 
   updateUser: (user) => set({ user }),
 
   hydrate: async () => {
-    set({ status: 'loading' });
+    set({ status: "loading" });
     const storedRefreshToken = await secureStorage.getRefreshToken();
 
     if (!storedRefreshToken) {
-      set({ status: 'unauthenticated' });
+      set({ status: "unauthenticated" });
       return;
     }
 
     try {
       const tokens = await refreshTokens(storedRefreshToken);
       await secureStorage.setRefreshToken(tokens.refreshToken);
-      set({ accessToken: tokens.accessToken, status: 'authenticated' });
+      set({ accessToken: tokens.accessToken, status: "authenticated" });
 
       // The access/refresh token pair alone doesn't carry the user's profile —
       // fetch it explicitly so `user` isn't left null after a relaunch/reload.
@@ -62,12 +62,12 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     } catch {
       await secureStorage.clearRefreshToken();
-      set({ status: 'unauthenticated', accessToken: null, user: null });
+      set({ status: "unauthenticated", accessToken: null, user: null });
     }
   },
 
   logout: async () => {
     await secureStorage.clearRefreshToken();
-    set({ status: 'unauthenticated', accessToken: null, user: null });
+    set({ status: "unauthenticated", accessToken: null, user: null });
   },
 }));

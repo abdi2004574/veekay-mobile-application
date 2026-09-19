@@ -1,16 +1,14 @@
-import { apiFetch } from './client';
-import type {
-  DestinationType,
-  Page,
-  Package,
-  PackageStatus,
-} from './types';
+import { apiFetch } from "./client";
+import type { DestinationType, Page, Package, PackageStatus } from "./types";
 
-function withQuery(path: string, params: Record<string, string | number | undefined>) {
+function withQuery(
+  path: string,
+  params: Record<string, string | number | undefined>,
+) {
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
     .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
-    .join('&');
+    .join("&");
   return query ? `${path}?${query}` : path;
 }
 
@@ -28,7 +26,11 @@ export interface PackageInput {
 }
 
 export function createPackage(input: PackageInput, accessToken: string) {
-  return apiFetch<Package>('/packages', { method: 'POST', body: input, accessToken });
+  return apiFetch<Package>("/packages", {
+    method: "POST",
+    body: input,
+    accessToken,
+  });
 }
 
 export function updatePackage(
@@ -37,18 +39,21 @@ export function updatePackage(
   accessToken: string,
 ) {
   return apiFetch<Package>(`/packages/${packageId}`, {
-    method: 'PATCH',
+    method: "PATCH",
     body: input,
     accessToken,
   });
 }
 
 export function deletePackage(packageId: string, accessToken: string) {
-  return apiFetch<void>(`/packages/${packageId}`, { method: 'DELETE', accessToken });
+  return apiFetch<void>(`/packages/${packageId}`, {
+    method: "DELETE",
+    accessToken,
+  });
 }
 
 export function listMyPackages(accessToken: string) {
-  return apiFetch<Package[]>('/packages/mine', { accessToken });
+  return apiFetch<Package[]>("/packages/mine", { accessToken });
 }
 
 export function listPackages(
@@ -59,7 +64,7 @@ export function listPackages(
   accessToken: string,
 ) {
   return apiFetch<Page<Package>>(
-    withQuery('/packages', {
+    withQuery("/packages", {
       cursor,
       limit: 20,
       destinationType,
@@ -79,10 +84,10 @@ export function linkPackageToCampaign(
   campaignId: string,
   accessToken: string,
 ) {
-  return apiFetch<void>(
-    `/packages/${packageId}/campaigns/${campaignId}/link`,
-    { method: 'POST', accessToken },
-  );
+  return apiFetch<void>(`/packages/${packageId}/campaigns/${campaignId}/link`, {
+    method: "POST",
+    accessToken,
+  });
 }
 
 export function unlinkPackageFromCampaign(
@@ -90,8 +95,8 @@ export function unlinkPackageFromCampaign(
   campaignId: string,
   accessToken: string,
 ) {
-  return apiFetch<void>(
-    `/packages/${packageId}/campaigns/${campaignId}/link`,
-    { method: 'DELETE', accessToken },
-  );
+  return apiFetch<void>(`/packages/${packageId}/campaigns/${campaignId}/link`, {
+    method: "DELETE",
+    accessToken,
+  });
 }

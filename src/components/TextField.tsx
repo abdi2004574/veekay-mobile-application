@@ -1,14 +1,18 @@
-import { useState } from 'react';
-import { TextInput, TextInputProps, View, Pressable } from 'react-native';
-import { Eye, EyeOff, LucideIcon } from 'lucide-react-native';
-import { colors } from '../constants/colors';
+import { useState } from "react";
+import { TextInput, TextInputProps, View, Pressable } from "react-native";
+import { Eye, EyeOff, LucideIcon } from "lucide-react-native";
+import { colors } from "../constants/colors";
 
 interface TextFieldProps extends TextInputProps {
   icon: LucideIcon;
   isPassword?: boolean;
 }
 
-export function TextField({ icon: Icon, isPassword, ...props }: TextFieldProps) {
+export function TextField({
+  icon: Icon,
+  isPassword,
+  ...props
+}: TextFieldProps) {
   const [hidden, setHidden] = useState(isPassword);
 
   return (

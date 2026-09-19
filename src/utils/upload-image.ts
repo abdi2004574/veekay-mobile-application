@@ -1,6 +1,10 @@
-import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
-import { createUploadUrl, confirmUpload, type MediaPurpose } from '../api/storage';
+import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
+import {
+  createUploadUrl,
+  confirmUpload,
+  type MediaPurpose,
+} from "../api/storage";
 
 export interface UploadedImage {
   mediaId: string;
@@ -12,17 +16,21 @@ async function uploadPickedAsset(
   purpose: MediaPurpose,
   accessToken: string,
 ): Promise<UploadedImage> {
-  const contentType = asset.mimeType ?? 'image/jpeg';
-  const { uploadUrl, mediaId } = await createUploadUrl(contentType, purpose, accessToken);
+  const contentType = asset.mimeType ?? "image/jpeg";
+  const { uploadUrl, mediaId } = await createUploadUrl(
+    contentType,
+    purpose,
+    accessToken,
+  );
 
   const fileBlob = await (await fetch(asset.uri)).blob();
   const putRes = await fetch(uploadUrl, {
-    method: 'PUT',
-    headers: { 'Content-Type': contentType },
+    method: "PUT",
+    headers: { "Content-Type": contentType },
     body: fileBlob,
   });
   if (!putRes.ok) {
-    throw new Error('Could not upload the photo. Please try again.');
+    throw new Error("Could not upload the photo. Please try again.");
   }
 
   await confirmUpload(mediaId, accessToken);
@@ -36,11 +44,13 @@ export async function pickAndUploadFromLibrary(
 ): Promise<UploadedImage | null> {
   const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (!permission.granted) {
-    throw new Error('Photo library access was denied. Enable it in Settings to add photos.');
+    throw new Error(
+      "Photo library access was denied. Enable it in Settings to add photos.",
+    );
   }
 
   const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ['images'],
+    mediaTypes: ["images"],
     quality: 0.8,
   });
   if (result.canceled || !result.assets[0]) {
@@ -56,11 +66,13 @@ export async function pickAndUploadFromCamera(
 ): Promise<UploadedImage | null> {
   const permission = await ImagePicker.requestCameraPermissionsAsync();
   if (!permission.granted) {
-    throw new Error('Camera access was denied. Enable it in Settings to take a photo.');
+    throw new Error(
+      "Camera access was denied. Enable it in Settings to take a photo.",
+    );
   }
 
   const result = await ImagePicker.launchCameraAsync({
-    mediaTypes: ['images'],
+    mediaTypes: ["images"],
     quality: 0.8,
   });
   if (result.canceled || !result.assets[0]) {
@@ -76,9 +88,9 @@ export interface UploadedDocument {
 }
 
 const DOCUMENT_MIME_TYPES = [
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
 /** Returns null if the user cancels — callers should just no-op on null. */
@@ -86,23 +98,29 @@ export async function pickAndUploadDocument(
   purpose: MediaPurpose,
   accessToken: string,
 ): Promise<UploadedDocument | null> {
-  const result = await DocumentPicker.getDocumentAsync({ type: DOCUMENT_MIME_TYPES });
+  const result = await DocumentPicker.getDocumentAsync({
+    type: DOCUMENT_MIME_TYPES,
+  });
   if (result.canceled || !result.assets[0]) {
     return null;
   }
 
   const asset = result.assets[0];
-  const contentType = asset.mimeType ?? 'application/pdf';
-  const { uploadUrl, mediaId } = await createUploadUrl(contentType, purpose, accessToken);
+  const contentType = asset.mimeType ?? "application/pdf";
+  const { uploadUrl, mediaId } = await createUploadUrl(
+    contentType,
+    purpose,
+    accessToken,
+  );
 
   const fileBlob = await (await fetch(asset.uri)).blob();
   const putRes = await fetch(uploadUrl, {
-    method: 'PUT',
-    headers: { 'Content-Type': contentType },
+    method: "PUT",
+    headers: { "Content-Type": contentType },
     body: fileBlob,
   });
   if (!putRes.ok) {
-    throw new Error('Could not upload the file. Please try again.');
+    throw new Error("Could not upload the file. Please try again.");
   }
 
   await confirmUpload(mediaId, accessToken);

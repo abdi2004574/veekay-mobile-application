@@ -1,5 +1,5 @@
-import { apiFetch } from './client';
-import type { FundingTrendRange } from './types';
+import { apiFetch } from "./client";
+import type { FundingTrendRange } from "./types";
 
 export interface KpiResponse {
   totalRequests: number;
@@ -40,31 +40,83 @@ export interface TravelerPreferencesResponse {
   preferences: TravelerPreference[];
 }
 
-function withQuery(path: string, params: Record<string, string | number | undefined>) {
+function withQuery(
+  path: string,
+  params: Record<string, string | number | undefined>,
+) {
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
-    .map(([k, v]) => k + '=' + encodeURIComponent(String(v)))
-    .join('&');
-  return query ? path + '?' + query : path;
+    .map(([k, v]) => k + "=" + encodeURIComponent(String(v)))
+    .join("&");
+  return query ? path + "?" + query : path;
 }
 
 export function getKpis(accessToken: string) {
-  return apiFetch<KpiResponse>('/agency/dashboard/kpis', { accessToken });
+  return apiFetch<KpiResponse>("/agency/dashboard/kpis", { accessToken });
 }
 
-export function getFundingTrends(range: FundingTrendRange, accessToken: string) {
+export function getFundingTrends(
+  range: FundingTrendRange,
+  accessToken: string,
+) {
   return apiFetch<FundingTrendsResponse>(
-    withQuery('/agency/dashboard/funding-trends', { range }),
+    withQuery("/agency/dashboard/funding-trends", { range }),
     { accessToken },
   );
 }
 
 export function getTopDestinations(accessToken: string) {
-  return apiFetch<TopDestinationsResponse>('/agency/dashboard/top-destinations', { accessToken });
+  return apiFetch<TopDestinationsResponse>(
+    "/agency/dashboard/top-destinations",
+    { accessToken },
+  );
 }
 
 export function getTravelerPreferences(accessToken: string) {
-  return apiFetch<TravelerPreferencesResponse>('/agency/dashboard/traveler-preferences', { accessToken });
+  return apiFetch<TravelerPreferencesResponse>(
+    "/agency/dashboard/traveler-preferences",
+    { accessToken },
+  );
 }
 
 export const getDashboardKpis = getKpis;
+
+export interface PopularPackage {
+  packageId: string;
+  title: string;
+  basePrice: number;
+  currency: string;
+  bookingCount: number;
+  totalRevenue: number;
+}
+
+export interface PopularPackagesResponse {
+  packages: PopularPackage[];
+}
+
+export interface CalculatePriceResponse {
+  basePrice: number;
+  effectivePrice: number;
+  discountPercent: number;
+}
+
+export function getPopularPackages(accessToken: string) {
+  return apiFetch<PopularPackagesResponse>(
+    "/agency/dashboard/popular-packages",
+    { accessToken },
+  );
+}
+
+export function getCalculatePrice(
+  accessToken: string,
+  packageId: string,
+  fundraisingPercentage: number,
+) {
+  return apiFetch<CalculatePriceResponse>(
+    withQuery("/agency/dashboard/calculate-price", {
+      packageId,
+      fundraisingPercentage,
+    }),
+    { accessToken },
+  );
+}

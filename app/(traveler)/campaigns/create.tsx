@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -8,20 +8,33 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Camera, FileText, Upload, X } from 'lucide-react-native';
-import { GradientButton } from '../../../src/components/GradientButton';
-import { colors } from '../../../src/constants/colors';
-import { useAuthStore } from '../../../src/stores/auth-store';
-import { useToastStore } from '../../../src/stores/toast-store';
-import { useCreateCampaign, useUpdateCampaign } from '../../../src/hooks/use-campaigns-mutations';
-import { pickAndUploadFromLibrary, pickAndUploadDocument } from '../../../src/utils/upload-image';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router, useLocalSearchParams } from "expo-router";
+import { ArrowLeft, Camera, FileText, Upload, X } from "lucide-react-native";
+import { GradientButton } from "../../../src/components/GradientButton";
+import { colors } from "../../../src/constants/colors";
+import { useAuthStore } from "../../../src/stores/auth-store";
+import { useToastStore } from "../../../src/stores/toast-store";
+import {
+  useCreateCampaign,
+  useUpdateCampaign,
+} from "../../../src/hooks/use-campaigns-mutations";
+import {
+  pickAndUploadFromLibrary,
+  pickAndUploadDocument,
+} from "../../../src/utils/upload-image";
 
 const STORY_LIMIT = 500;
 const MAX_PHOTOS = 5;
-const GIFT_OCCASIONS = ['Birthday', 'Graduation', 'Wedding', 'Anniversary', 'Retirement', 'Other'];
+const GIFT_OCCASIONS = [
+  "Birthday",
+  "Graduation",
+  "Wedding",
+  "Anniversary",
+  "Retirement",
+  "Other",
+];
 
 interface PhotoAsset {
   mediaId: string;
@@ -33,7 +46,7 @@ interface DocAsset {
 }
 
 function splitParam(value: string | undefined): string[] {
-  return value ? value.split(',').filter(Boolean) : [];
+  return value ? value.split(",").filter(Boolean) : [];
 }
 
 export default function CreateCampaignScreen() {
@@ -63,29 +76,35 @@ export default function CreateCampaignScreen() {
   const isPending = createCampaign.isPending || updateCampaign.isPending;
 
   const [step, setStep] = useState(1);
-  const [title, setTitle] = useState(params.editTitle ?? '');
-  const [destination, setDestination] = useState(params.editDestination ?? '');
-  const [goalAmount, setGoalAmount] = useState(params.editGoalAmount ?? '');
-  const [tripStartDate, setTripStartDate] = useState(params.editTripStartDate ?? '');
-  const [tripEndDate, setTripEndDate] = useState(params.editTripEndDate ?? '');
-  const [story, setStory] = useState(params.editStory ?? '');
+  const [title, setTitle] = useState(params.editTitle ?? "");
+  const [destination, setDestination] = useState(params.editDestination ?? "");
+  const [goalAmount, setGoalAmount] = useState(params.editGoalAmount ?? "");
+  const [tripStartDate, setTripStartDate] = useState(
+    params.editTripStartDate ?? "",
+  );
+  const [tripEndDate, setTripEndDate] = useState(params.editTripEndDate ?? "");
+  const [story, setStory] = useState(params.editStory ?? "");
   const [photos, setPhotos] = useState<PhotoAsset[]>(() => {
     const ids = splitParam(params.editPhotoMediaIds);
     const urls = splitParam(params.editPhotoUrls);
-    return ids.map((mediaId, i) => ({ mediaId, previewUri: urls[i] ?? '' }));
+    return ids.map((mediaId, i) => ({ mediaId, previewUri: urls[i] ?? "" }));
   });
   const [itinerary, setItinerary] = useState<DocAsset | null>(
-    params.editItineraryMediaId ? { mediaId: params.editItineraryMediaId, fileName: 'itinerary' } : null,
+    params.editItineraryMediaId
+      ? { mediaId: params.editItineraryMediaId, fileName: "itinerary" }
+      : null,
   );
   const [agencyQuote, setAgencyQuote] = useState<DocAsset | null>(
     params.editAgencyQuoteMediaId
-      ? { mediaId: params.editAgencyQuoteMediaId, fileName: 'quote' }
+      ? { mediaId: params.editAgencyQuoteMediaId, fileName: "quote" }
       : null,
   );
-  const [isPublic, setIsPublic] = useState(params.editPrivacy !== 'private');
-  const [isGroup, setIsGroup] = useState(params.groupMode === '1');
-  const [giftMode, setGiftMode] = useState(params.editGiftMode === '1');
-  const [giftOccasion, setGiftOccasion] = useState(params.editGiftOccasion ?? '');
+  const [isPublic, setIsPublic] = useState(params.editPrivacy !== "private");
+  const [isGroup, setIsGroup] = useState(params.groupMode === "1");
+  const [giftMode, setGiftMode] = useState(params.editGiftMode === "1");
+  const [giftOccasion, setGiftOccasion] = useState(
+    params.editGiftOccasion ?? "",
+  );
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [isUploadingItinerary, setIsUploadingItinerary] = useState(false);
   const [isUploadingQuote, setIsUploadingQuote] = useState(false);
@@ -97,28 +116,42 @@ export default function CreateCampaignScreen() {
     if (!accessToken || photos.length >= MAX_PHOTOS) return;
     setIsUploadingPhoto(true);
     try {
-      const uploaded = await pickAndUploadFromLibrary('campaign_photo', accessToken);
+      const uploaded = await pickAndUploadFromLibrary(
+        "campaign_photo",
+        accessToken,
+      );
       if (uploaded) {
-        setPhotos((prev) => [...prev, { mediaId: uploaded.mediaId, previewUri: uploaded.previewUri }]);
+        setPhotos((prev) => [
+          ...prev,
+          { mediaId: uploaded.mediaId, previewUri: uploaded.previewUri },
+        ]);
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Could not add that photo.');
+      showToast(
+        err instanceof Error ? err.message : "Could not add that photo.",
+      );
     } finally {
       setIsUploadingPhoto(false);
     }
   };
 
-  const handlePickDoc = async (kind: 'itinerary' | 'quote') => {
+  const handlePickDoc = async (kind: "itinerary" | "quote") => {
     if (!accessToken) return;
-    const setUploading = kind === 'itinerary' ? setIsUploadingItinerary : setIsUploadingQuote;
+    const setUploading =
+      kind === "itinerary" ? setIsUploadingItinerary : setIsUploadingQuote;
     setUploading(true);
     try {
-      const uploaded = await pickAndUploadDocument('campaign_document', accessToken);
+      const uploaded = await pickAndUploadDocument(
+        "campaign_document",
+        accessToken,
+      );
       if (uploaded) {
-        (kind === 'itinerary' ? setItinerary : setAgencyQuote)(uploaded);
+        (kind === "itinerary" ? setItinerary : setAgencyQuote)(uploaded);
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Could not add that file.');
+      showToast(
+        err instanceof Error ? err.message : "Could not add that file.",
+      );
     } finally {
       setUploading(false);
     }
@@ -147,7 +180,7 @@ export default function CreateCampaignScreen() {
       story,
       // Group trips are always forced private server-side regardless of
       // what's sent — the switch above is hidden once Group Trip is on.
-      privacy: (isPublic ? 'public' : 'private') as 'public' | 'private',
+      privacy: (isPublic ? "public" : "private") as "public" | "private",
       giftMode,
       giftOccasion: giftMode ? giftOccasion || undefined : undefined,
       photoMediaIds: photos.map((p) => p.mediaId),
@@ -159,27 +192,29 @@ export default function CreateCampaignScreen() {
     if (isEditing && params.editCampaignId) {
       updateCampaign.mutate(
         { campaignId: params.editCampaignId, input },
-        { onSuccess: () => router.replace('/(traveler)/campaigns') },
+        { onSuccess: () => router.replace("/(traveler)/campaigns") },
       );
     } else {
       createCampaign.mutate(input, {
         onSuccess: (campaign) =>
           router.replace(
-            isGroup ? `/(traveler)/group-campaign/${campaign.id}` : '/(traveler)/campaigns',
+            isGroup
+              ? `/(traveler)/group-campaign/${campaign.id}`
+              : "/(traveler)/campaigns",
           ),
       });
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <View style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}>
         <View className="flex-row items-center justify-between px-4 h-14">
           <Pressable onPress={handleBack} hitSlop={8}>
             <ArrowLeft size={20} color={colors.foreground} />
           </Pressable>
           <Text className="font-bold text-foreground">
-            {isEditing ? 'Edit Campaign' : 'Create Campaign'}
+            {isEditing ? "Edit Campaign" : "Create Campaign"}
           </Text>
           <View style={{ width: 20 }} />
         </View>
@@ -192,13 +227,22 @@ export default function CreateCampaignScreen() {
                   flex: 1,
                   height: 4,
                   borderRadius: 4,
-                  backgroundColor: s <= step ? colors.vaykaePink : colors.disabledBackground,
+                  backgroundColor:
+                    s <= step ? colors.vaykaePink : colors.disabledBackground,
                 }}
               />
             ))}
           </View>
-          <Text className="text-xs mt-2" style={{ color: colors.mutedForeground }}>
-            Step {step} of 3 • {step === 1 ? 'Basic Details' : step === 2 ? 'Story & Media' : 'Privacy & Settings'}
+          <Text
+            className="text-xs mt-2"
+            style={{ color: colors.mutedForeground }}
+          >
+            Step {step} of 3 •{" "}
+            {step === 1
+              ? "Basic Details"
+              : step === 2
+                ? "Story & Media"
+                : "Privacy & Settings"}
           </Text>
         </View>
       </View>
@@ -207,8 +251,13 @@ export default function CreateCampaignScreen() {
         {step === 1 && (
           <View style={{ gap: 16 }}>
             <View>
-              <Text className="text-xl font-bold text-foreground mb-1">Trip Details</Text>
-              <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+              <Text className="text-xl font-bold text-foreground mb-1">
+                Trip Details
+              </Text>
+              <Text
+                className="text-sm"
+                style={{ color: colors.mutedForeground }}
+              >
                 Tell us about your dream vacation
               </Text>
             </View>
@@ -224,7 +273,10 @@ export default function CreateCampaignScreen() {
               />
             </Field>
 
-            <Field label="Destination *" hint="City, Country (e.g., Santorini, Greece)">
+            <Field
+              label="Destination *"
+              hint="City, Country (e.g., Santorini, Greece)"
+            >
               <TextInput
                 value={destination}
                 onChangeText={setDestination}
@@ -238,7 +290,7 @@ export default function CreateCampaignScreen() {
             <Field label="Funding Goal *" hint="How much do you need to raise?">
               <TextInput
                 value={goalAmount}
-                onChangeText={(v) => setGoalAmount(v.replace(/[^0-9.]/g, ''))}
+                onChangeText={(v) => setGoalAmount(v.replace(/[^0-9.]/g, ""))}
                 placeholder="0"
                 keyboardType="numeric"
                 placeholderTextColor={colors.mutedForeground}
@@ -279,14 +331,21 @@ export default function CreateCampaignScreen() {
         {step === 2 && (
           <View style={{ gap: 16 }}>
             <View>
-              <Text className="text-xl font-bold text-foreground mb-1">Tell Your Story</Text>
-              <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+              <Text className="text-xl font-bold text-foreground mb-1">
+                Tell Your Story
+              </Text>
+              <Text
+                className="text-sm"
+                style={{ color: colors.mutedForeground }}
+              >
                 Share why this trip is important to you
               </Text>
             </View>
 
             <View>
-              <Text className="text-sm font-bold text-foreground mb-2">Personal Story *</Text>
+              <Text className="text-sm font-bold text-foreground mb-2">
+                Personal Story *
+              </Text>
               <TextInput
                 value={story}
                 onChangeText={(v) => setStory(v.slice(0, STORY_LIMIT))}
@@ -295,9 +354,16 @@ export default function CreateCampaignScreen() {
                 multiline
                 numberOfLines={6}
                 className="rounded-2xl px-4 py-3 text-foreground"
-                style={{ backgroundColor: colors.inputBackground, minHeight: 140, textAlignVertical: 'top' }}
+                style={{
+                  backgroundColor: colors.inputBackground,
+                  minHeight: 140,
+                  textAlignVertical: "top",
+                }}
               />
-              <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
+              <Text
+                className="text-xs mt-1"
+                style={{ color: colors.mutedForeground }}
+              >
                 {story.length}/{STORY_LIMIT} characters
               </Text>
             </View>
@@ -308,23 +374,36 @@ export default function CreateCampaignScreen() {
               </Text>
               <View className="flex-row flex-wrap gap-2">
                 {photos.map((photo, index) => (
-                  <View key={photo.mediaId} style={{ width: '31%', aspectRatio: 1, position: 'relative' }}>
+                  <View
+                    key={photo.mediaId}
+                    style={{
+                      width: "31%",
+                      aspectRatio: 1,
+                      position: "relative",
+                    }}
+                  >
                     <Image
                       source={{ uri: photo.previewUri }}
-                      style={{ width: '100%', height: '100%', borderRadius: 16 }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: 16,
+                      }}
                       resizeMode="cover"
                     />
                     <Pressable
-                      onPress={() => setPhotos((prev) => prev.filter((_, i) => i !== index))}
+                      onPress={() =>
+                        setPhotos((prev) => prev.filter((_, i) => i !== index))
+                      }
                       style={{
-                        position: 'absolute',
+                        position: "absolute",
                         top: 6,
                         right: 6,
                         width: 24,
                         height: 24,
                         borderRadius: 12,
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        alignItems: "center",
+                        justifyContent: "center",
                         backgroundColor: colors.destructive,
                       }}
                     >
@@ -337,15 +416,15 @@ export default function CreateCampaignScreen() {
                     onPress={handleAddPhoto}
                     disabled={isUploadingPhoto}
                     style={{
-                      width: '31%',
+                      width: "31%",
                       aspectRatio: 1,
                       borderRadius: 16,
                       borderWidth: 2,
-                      borderStyle: 'dashed',
+                      borderStyle: "dashed",
                       borderColor: colors.border,
                       backgroundColor: colors.inputBackground,
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      alignItems: "center",
+                      justifyContent: "center",
                       gap: 4,
                     }}
                   >
@@ -354,7 +433,10 @@ export default function CreateCampaignScreen() {
                     ) : (
                       <>
                         <Camera size={22} color={colors.mutedForeground} />
-                        <Text className="text-xs" style={{ color: colors.mutedForeground }}>
+                        <Text
+                          className="text-xs"
+                          style={{ color: colors.mutedForeground }}
+                        >
                           Add Photo
                         </Text>
                       </>
@@ -362,7 +444,10 @@ export default function CreateCampaignScreen() {
                   </Pressable>
                 )}
               </View>
-              <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
+              <Text
+                className="text-xs mt-1"
+                style={{ color: colors.mutedForeground }}
+              >
                 Add photos of your destination or inspiration
               </Text>
             </View>
@@ -372,14 +457,14 @@ export default function CreateCampaignScreen() {
               asset={itinerary}
               uploading={isUploadingItinerary}
               uploadedLabel="Itinerary uploaded"
-              onPress={() => handlePickDoc('itinerary')}
+              onPress={() => handlePickDoc("itinerary")}
             />
             <DocPicker
               label="Agency Quote (Optional)"
               asset={agencyQuote}
               uploading={isUploadingQuote}
               uploadedLabel="Quote uploaded"
-              onPress={() => handlePickDoc('quote')}
+              onPress={() => handlePickDoc("quote")}
             />
           </View>
         )}
@@ -387,13 +472,21 @@ export default function CreateCampaignScreen() {
         {step === 3 && (
           <View style={{ gap: 16 }}>
             <View>
-              <Text className="text-xl font-bold text-foreground mb-1">Privacy & Settings</Text>
-              <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+              <Text className="text-xl font-bold text-foreground mb-1">
+                Privacy & Settings
+              </Text>
+              <Text
+                className="text-sm"
+                style={{ color: colors.mutedForeground }}
+              >
                 Choose who can see and contribute to your campaign
               </Text>
             </View>
 
-            <View className="p-4 rounded-2xl" style={{ borderWidth: 2, borderColor: colors.border }}>
+            <View
+              className="p-4 rounded-2xl"
+              style={{ borderWidth: 2, borderColor: colors.border }}
+            >
               <View className="flex-row items-center justify-between mb-1">
                 <Text className="font-bold text-foreground">Group Trip</Text>
                 <Switch
@@ -402,17 +495,24 @@ export default function CreateCampaignScreen() {
                   trackColor={{ true: colors.vaykaePink }}
                 />
               </View>
-              <Text className="text-sm" style={{ color: colors.mutedForeground }}>
-                Pool funds with friends — add members, track contributions and expenses, and share
-                a group chat. Group trips are always private to invited members.
+              <Text
+                className="text-sm"
+                style={{ color: colors.mutedForeground }}
+              >
+                Pool funds with friends — add members, track contributions and
+                expenses, and share a group chat. Group trips are always private
+                to invited members.
               </Text>
             </View>
 
             {!isGroup && (
-              <View className="p-4 rounded-2xl" style={{ borderWidth: 2, borderColor: colors.border }}>
+              <View
+                className="p-4 rounded-2xl"
+                style={{ borderWidth: 2, borderColor: colors.border }}
+              >
                 <View className="flex-row items-center justify-between mb-1">
                   <Text className="font-bold text-foreground">
-                    {isPublic ? 'Public Campaign' : 'Private Campaign'}
+                    {isPublic ? "Public Campaign" : "Private Campaign"}
                   </Text>
                   <Switch
                     value={isPublic}
@@ -420,15 +520,21 @@ export default function CreateCampaignScreen() {
                     trackColor={{ true: colors.vaykaePink }}
                   />
                 </View>
-                <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+                <Text
+                  className="text-sm"
+                  style={{ color: colors.mutedForeground }}
+                >
                   {isPublic
-                    ? 'Anyone can discover and donate to your campaign'
-                    : 'Only you can view this campaign for now'}
+                    ? "Anyone can discover and donate to your campaign"
+                    : "Only you can view this campaign for now"}
                 </Text>
               </View>
             )}
 
-            <View className="p-4 rounded-2xl" style={{ borderWidth: 2, borderColor: colors.border }}>
+            <View
+              className="p-4 rounded-2xl"
+              style={{ borderWidth: 2, borderColor: colors.border }}
+            >
               <View className="flex-row items-center justify-between mb-1">
                 <Text className="font-bold text-foreground">Gift Mode</Text>
                 <Switch
@@ -437,7 +543,10 @@ export default function CreateCampaignScreen() {
                   trackColor={{ true: colors.vaykaePink }}
                 />
               </View>
-              <Text className="text-sm mb-3" style={{ color: colors.mutedForeground }}>
+              <Text
+                className="text-sm mb-3"
+                style={{ color: colors.mutedForeground }}
+              >
                 Let friends & family gift this trip for special occasions
               </Text>
               {giftMode && (
@@ -448,12 +557,20 @@ export default function CreateCampaignScreen() {
                       onPress={() => setGiftOccasion(occasion)}
                       className="px-3 py-1.5 rounded-full"
                       style={{
-                        backgroundColor: giftOccasion === occasion ? colors.vaykaePink : colors.inputBackground,
+                        backgroundColor:
+                          giftOccasion === occasion
+                            ? colors.vaykaePink
+                            : colors.inputBackground,
                       }}
                     >
                       <Text
                         className="text-sm font-medium"
-                        style={{ color: giftOccasion === occasion ? colors.background : colors.foreground }}
+                        style={{
+                          color:
+                            giftOccasion === occasion
+                              ? colors.background
+                              : colors.foreground,
+                        }}
                       >
                         {occasion}
                       </Text>
@@ -465,25 +582,48 @@ export default function CreateCampaignScreen() {
 
             <View
               className="p-5 rounded-2xl"
-              style={{ backgroundColor: colors.inputBackground, borderWidth: 1, borderColor: colors.border }}
+              style={{
+                backgroundColor: colors.inputBackground,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
             >
-              <Text className="font-bold text-foreground mb-3">Campaign Preview</Text>
-              <PreviewRow label="Title" value={title || '—'} />
-              <PreviewRow label="Destination" value={destination || '—'} />
-              <PreviewRow label="Goal" value={goalAmount ? `$${Number(goalAmount).toLocaleString()}` : '$0'} />
-              <PreviewRow label="Trip Date" value={tripStartDate || '—'} />
+              <Text className="font-bold text-foreground mb-3">
+                Campaign Preview
+              </Text>
+              <PreviewRow label="Title" value={title || "—"} />
+              <PreviewRow label="Destination" value={destination || "—"} />
+              <PreviewRow
+                label="Goal"
+                value={
+                  goalAmount ? `$${Number(goalAmount).toLocaleString()}` : "$0"
+                }
+              />
+              <PreviewRow label="Trip Date" value={tripStartDate || "—"} />
               <PreviewRow
                 label="Privacy"
-                value={isGroup ? 'Group Trip (Private)' : isPublic ? 'Public' : 'Private'}
+                value={
+                  isGroup
+                    ? "Group Trip (Private)"
+                    : isPublic
+                      ? "Public"
+                      : "Private"
+                }
               />
-              <PreviewRow label="Gift Mode" value={giftMode ? `Yes (${giftOccasion || 'Not set'})` : 'No'} />
+              <PreviewRow
+                label="Gift Mode"
+                value={giftMode ? `Yes (${giftOccasion || "Not set"})` : "No"}
+              />
               <PreviewRow label="Photos" value={String(photos.length)} last />
             </View>
           </View>
         )}
       </ScrollView>
 
-      <View className="p-4 flex-row gap-3" style={{ borderTopWidth: 1, borderTopColor: colors.border }}>
+      <View
+        className="p-4 flex-row gap-3"
+        style={{ borderTopWidth: 1, borderTopColor: colors.border }}
+      >
         {step > 1 && (
           <Pressable
             onPress={handleBack}
@@ -493,8 +633,8 @@ export default function CreateCampaignScreen() {
               borderRadius: 16,
               borderWidth: 2,
               borderColor: colors.border,
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Text className="font-bold text-foreground">Back</Text>
@@ -503,10 +643,16 @@ export default function CreateCampaignScreen() {
         <View style={{ flex: step > 1 ? 2 : 1 }}>
           <GradientButton
             onPress={handleNext}
-            disabled={(step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid)}
+            disabled={
+              (step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid)
+            }
             loading={isPending}
           >
-            {step === 3 ? (isEditing ? 'Save Changes' : 'Publish Campaign') : 'Continue'}
+            {step === 3
+              ? isEditing
+                ? "Save Changes"
+                : "Publish Campaign"
+              : "Continue"}
           </GradientButton>
         </View>
       </View>
@@ -514,13 +660,24 @@ export default function CreateCampaignScreen() {
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: ReactNode;
+}) {
   return (
     <View>
       <Text className="text-sm font-bold text-foreground mb-2">{label}</Text>
       {children}
       {hint && (
-        <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
+        <Text
+          className="text-xs mt-1"
+          style={{ color: colors.mutedForeground }}
+        >
           {hint}
         </Text>
       )}
@@ -551,10 +708,10 @@ function DocPicker({
           height: 96,
           borderRadius: 16,
           borderWidth: 2,
-          borderStyle: 'dashed',
+          borderStyle: "dashed",
           borderColor: colors.border,
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: "center",
+          justifyContent: "center",
           gap: 6,
         }}
       >
@@ -563,13 +720,15 @@ function DocPicker({
         ) : asset ? (
           <>
             <FileText size={22} color={colors.vaykaePink} />
-            <Text className="text-sm font-medium text-foreground">{uploadedLabel} ✓</Text>
+            <Text className="text-sm font-medium text-foreground">
+              {uploadedLabel} ✓
+            </Text>
           </>
         ) : (
           <>
             <Upload size={22} color={colors.mutedForeground} />
             <Text className="text-sm" style={{ color: colors.mutedForeground }}>
-              Upload {label.split(' ')[0]}
+              Upload {label.split(" ")[0]}
             </Text>
           </>
         )}
@@ -578,16 +737,32 @@ function DocPicker({
   );
 }
 
-function PreviewRow({ label, value, last }: { label: string; value: string; last?: boolean }) {
+function PreviewRow({
+  label,
+  value,
+  last,
+}: {
+  label: string;
+  value: string;
+  last?: boolean;
+}) {
   return (
     <View
       className="flex-row justify-between py-2"
-      style={!last ? { borderBottomWidth: 1, borderBottomColor: colors.border } : undefined}
+      style={
+        !last
+          ? { borderBottomWidth: 1, borderBottomColor: colors.border }
+          : undefined
+      }
     >
       <Text className="text-sm" style={{ color: colors.mutedForeground }}>
         {label}
       </Text>
-      <Text className="text-sm font-medium text-foreground" numberOfLines={1} style={{ maxWidth: '60%' }}>
+      <Text
+        className="text-sm font-medium text-foreground"
+        numberOfLines={1}
+        style={{ maxWidth: "60%" }}
+      >
         {value}
       </Text>
     </View>

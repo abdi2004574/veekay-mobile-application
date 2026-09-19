@@ -89,12 +89,17 @@ export function useAgencySubscription(): AgencySubscriptionResult {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agency", "me"] });
-      queryClient.invalidateQueries({ queryKey: ["revenuecat", "customer-info", user?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["revenuecat", "customer-info", user?.id],
+      });
       showToast("Subscription updated successfully.");
     },
     onError: (err: unknown) => {
       if (isPurchaseCancelledError(err)) return;
-      const message = err instanceof RevenueCatError ? err.message : friendlyErrorMessage(err);
+      const message =
+        err instanceof RevenueCatError
+          ? err.message
+          : friendlyErrorMessage(err);
       showToast(message);
     },
   });
@@ -103,23 +108,33 @@ export function useAgencySubscription(): AgencySubscriptionResult {
     mutationFn: () => restorePurchases(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agency", "me"] });
-      queryClient.invalidateQueries({ queryKey: ["revenuecat", "customer-info", user?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["revenuecat", "customer-info", user?.id],
+      });
       showToast("Purchases restored.");
     },
     onError: (err: unknown) => {
       if (isPurchaseCancelledError(err)) return;
-      const message = err instanceof RevenueCatError ? err.message : friendlyErrorMessage(err);
+      const message =
+        err instanceof RevenueCatError
+          ? err.message
+          : friendlyErrorMessage(err);
       showToast(message);
     },
   });
 
-  const activeTier = customerInfoQuery.data ? getActiveTierFromCustomerInfo(customerInfoQuery.data) : null;
-  const currentTier = activeTier ?? myAgencyQuery.data?.subscriptionTier ?? "basic";
+  const activeTier = customerInfoQuery.data
+    ? getActiveTierFromCustomerInfo(customerInfoQuery.data)
+    : null;
+  const currentTier =
+    activeTier ?? myAgencyQuery.data?.subscriptionTier ?? "basic";
   const backendTier = myAgencyQuery.data?.subscriptionTier ?? null;
   const isConfiguring = configureQuery.isPending || configureQuery.isLoading;
   const configureError = configureQuery.error;
   const error = configureError ? formatError(configureError) : null;
-  const isLoading = isConfiguring || (enabled && (offeringsQuery.isLoading || customerInfoQuery.isLoading));
+  const isLoading =
+    isConfiguring ||
+    (enabled && (offeringsQuery.isLoading || customerInfoQuery.isLoading));
 
   return {
     isAvailable,

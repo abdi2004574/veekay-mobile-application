@@ -1,7 +1,7 @@
-import { Pressable, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Avatar } from './Avatar';
-import { colors, vaykaeGradient } from '../constants/colors';
+import { Pressable, Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Avatar } from "./Avatar";
+import { colors, vaykaeGradient } from "../constants/colors";
 
 interface StoryRingProps {
   name: string;
@@ -19,8 +19,8 @@ export function StoryRing({ name, onPress }: StoryRingProps) {
           width: 64,
           height: 64,
           borderRadius: 32,
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <View
@@ -29,14 +29,17 @@ export function StoryRing({ name, onPress }: StoryRingProps) {
             height: 58,
             borderRadius: 29,
             backgroundColor: colors.background,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Avatar name={name} size={52} />
         </View>
       </LinearGradient>
-      <Text numberOfLines={1} className="text-xs font-medium mt-1.5 text-foreground">
+      <Text
+        numberOfLines={1}
+        className="text-xs font-medium mt-1.5 text-foreground"
+      >
         {name}
       </Text>
     </Pressable>

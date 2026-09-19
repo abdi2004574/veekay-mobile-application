@@ -1,4 +1,4 @@
-import { useAuthStore } from '../stores/auth-store';
+import { useAuthStore } from "../stores/auth-store";
 
 // Reads the token fresh at call time (inside a mutationFn), not at render
 // time. A hook-level `useAuthStore((s) => s.accessToken)` re-evaluates on
@@ -10,7 +10,7 @@ import { useAuthStore } from '../stores/auth-store';
 export function requireAccessToken(): string {
   const accessToken = useAuthStore.getState().accessToken;
   if (!accessToken) {
-    throw new Error('Not authenticated');
+    throw new Error("Not authenticated");
   }
   return accessToken;
 }

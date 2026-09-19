@@ -1,7 +1,7 @@
-import { Image, Pressable, Text, View } from 'react-native';
-import { Star } from 'lucide-react-native';
-import { colors } from '../constants/colors';
-import type { Package } from '../api/types';
+import { Image, Pressable, Text, View } from "react-native";
+import { Star } from "lucide-react-native";
+import { colors } from "../constants/colors";
+import type { Package } from "../api/types";
 
 interface PackageSummaryCardProps {
   pkg: Package;
@@ -9,9 +9,13 @@ interface PackageSummaryCardProps {
   onPress?: () => void;
 }
 
-export function PackageSummaryCard({ pkg, width = 220, onPress }: PackageSummaryCardProps) {
+export function PackageSummaryCard({
+  pkg,
+  width = 220,
+  onPress,
+}: PackageSummaryCardProps) {
   const heroUrl = pkg.media?.[0]?.url;
-  const agencyName = pkg.agency?.agencyName ?? '';
+  const agencyName = pkg.agency?.agencyName ?? "";
   const reputation = pkg.agency?.reputationScore ?? null;
 
   return (
@@ -20,11 +24,21 @@ export function PackageSummaryCard({ pkg, width = 220, onPress }: PackageSummary
       className="rounded-2xl overflow-hidden bg-card"
       style={{ borderWidth: 1, borderColor: colors.border, width }}
     >
-      <View style={{ position: 'relative' }}>
+      <View style={{ position: "relative" }}>
         {heroUrl ? (
-          <Image source={{ uri: heroUrl }} style={{ width: '100%', aspectRatio: 16 / 9 }} resizeMode="cover" />
+          <Image
+            source={{ uri: heroUrl }}
+            style={{ width: "100%", aspectRatio: 16 / 9 }}
+            resizeMode="cover"
+          />
         ) : (
-          <View style={{ width: '100%', aspectRatio: 16 / 9, backgroundColor: colors.inputBackground }} />
+          <View
+            style={{
+              width: "100%",
+              aspectRatio: 16 / 9,
+              backgroundColor: colors.inputBackground,
+            }}
+          />
         )}
       </View>
 
@@ -33,7 +47,11 @@ export function PackageSummaryCard({ pkg, width = 220, onPress }: PackageSummary
           {pkg.title}
         </Text>
         {agencyName ? (
-          <Text className="text-xs" style={{ color: colors.mutedForeground }} numberOfLines={1}>
+          <Text
+            className="text-xs"
+            style={{ color: colors.mutedForeground }}
+            numberOfLines={1}
+          >
             {agencyName}
           </Text>
         ) : null}
@@ -42,13 +60,19 @@ export function PackageSummaryCard({ pkg, width = 220, onPress }: PackageSummary
           {reputation !== null ? (
             <View className="flex-row items-center gap-1">
               <Star size={14} color={colors.starGold} />
-              <Text className="text-xs" style={{ color: colors.mutedForeground }}>
+              <Text
+                className="text-xs"
+                style={{ color: colors.mutedForeground }}
+              >
                 {reputation.toFixed(1)}
               </Text>
             </View>
           ) : null}
 
-          <Text className="text-base font-bold" style={{ color: colors.vaykaePink }}>
+          <Text
+            className="text-base font-bold"
+            style={{ color: colors.vaykaePink }}
+          >
             ${pkg.basePrice.toLocaleString()}
           </Text>
         </View>

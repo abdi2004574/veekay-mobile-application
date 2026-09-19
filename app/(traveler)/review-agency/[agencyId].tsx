@@ -1,25 +1,29 @@
-import { useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react-native';
-import { StarRating } from '../../../src/components/StarRating';
-import { GradientButton } from '../../../src/components/GradientButton';
-import { Avatar } from '../../../src/components/Avatar';
-import { colors } from '../../../src/constants/colors';
-import { useAgency } from '../../../src/hooks/use-agencies-queries';
-import { useCreateReview, useUpdateReview } from '../../../src/hooks/use-reviews-mutations';
+import { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router, useLocalSearchParams } from "expo-router";
+import { ArrowLeft, CheckCircle2 } from "lucide-react-native";
+import { StarRating } from "../../../src/components/StarRating";
+import { GradientButton } from "../../../src/components/GradientButton";
+import { Avatar } from "../../../src/components/Avatar";
+import { colors } from "../../../src/constants/colors";
+import { useAgency } from "../../../src/hooks/use-agencies-queries";
+import {
+  useCreateReview,
+  useUpdateReview,
+} from "../../../src/hooks/use-reviews-mutations";
 
 const BODY_LIMIT = 500;
-const RATING_LABELS = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+const RATING_LABELS = ["", "Poor", "Fair", "Good", "Very Good", "Excellent"];
 
 export default function ReviewAgencyScreen() {
-  const { agencyId, editReviewId, editRating, editBody } = useLocalSearchParams<{
-    agencyId: string;
-    editReviewId?: string;
-    editRating?: string;
-    editBody?: string;
-  }>();
+  const { agencyId, editReviewId, editRating, editBody } =
+    useLocalSearchParams<{
+      agencyId: string;
+      editReviewId?: string;
+      editRating?: string;
+      editBody?: string;
+    }>();
   const isEditing = !!editReviewId;
 
   const agency = useAgency(agencyId);
@@ -28,7 +32,7 @@ export default function ReviewAgencyScreen() {
   const isPending = createReview.isPending || updateReview.isPending;
 
   const [rating, setRating] = useState(editRating ? Number(editRating) : 0);
-  const [body, setBody] = useState(editBody ?? '');
+  const [body, setBody] = useState(editBody ?? "");
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = () => {
@@ -46,7 +50,7 @@ export default function ReviewAgencyScreen() {
     createReview.mutate(input, {
       onSuccess: () => {
         setShowSuccess(true);
-        setTimeout(() => router.replace('/(traveler)/my-reviews'), 1500);
+        setTimeout(() => router.replace("/(traveler)/my-reviews"), 1500);
       },
     });
   };
@@ -60,17 +64,19 @@ export default function ReviewAgencyScreen() {
         >
           <CheckCircle2 size={56} color={colors.background} />
         </View>
-        <Text className="text-2xl font-bold text-foreground mb-2">Review Submitted!</Text>
+        <Text className="text-2xl font-bold text-foreground mb-2">
+          Review Submitted!
+        </Text>
         <Text className="text-center" style={{ color: colors.mutedForeground }}>
-          Thank you for sharing your experience. Your feedback helps other travelers make
-          informed decisions.
+          Thank you for sharing your experience. Your feedback helps other
+          travelers make informed decisions.
         </Text>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <View
         className="flex-row items-center px-4 h-14"
         style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
@@ -79,7 +85,7 @@ export default function ReviewAgencyScreen() {
           <ArrowLeft size={20} color={colors.foreground} />
         </Pressable>
         <Text className="text-lg font-bold text-foreground ml-3">
-          {isEditing ? 'Edit Review' : 'Rate Your Experience'}
+          {isEditing ? "Edit Review" : "Rate Your Experience"}
         </Text>
       </View>
 
@@ -90,7 +96,10 @@ export default function ReviewAgencyScreen() {
             style={{ backgroundColor: colors.inputBackground }}
           >
             <Avatar name={agency.data.agencyName} size={56} />
-            <Text className="font-bold text-lg text-foreground flex-1" numberOfLines={1}>
+            <Text
+              className="font-bold text-lg text-foreground flex-1"
+              numberOfLines={1}
+            >
               {agency.data.agencyName}
             </Text>
           </View>
@@ -105,13 +114,18 @@ export default function ReviewAgencyScreen() {
         >
           <StarRating rating={rating} onRatingChange={setRating} size="lg" />
           {rating > 0 && (
-            <Text className="mt-3 text-lg font-bold" style={{ color: colors.vaykaePink }}>
+            <Text
+              className="mt-3 text-lg font-bold"
+              style={{ color: colors.vaykaePink }}
+            >
               {RATING_LABELS[rating]}
             </Text>
           )}
         </View>
 
-        <Text className="font-bold text-foreground mb-3">Share your experience (Optional)</Text>
+        <Text className="font-bold text-foreground mb-3">
+          Share your experience (Optional)
+        </Text>
         <TextInput
           value={body}
           onChangeText={(v) => setBody(v.slice(0, BODY_LIMIT))}
@@ -125,17 +139,27 @@ export default function ReviewAgencyScreen() {
             borderColor: colors.border,
             backgroundColor: colors.inputBackground,
             minHeight: 120,
-            textAlignVertical: 'top',
+            textAlignVertical: "top",
           }}
         />
-        <Text className="text-xs mb-6 text-right" style={{ color: colors.mutedForeground }}>
+        <Text
+          className="text-xs mb-6 text-right"
+          style={{ color: colors.mutedForeground }}
+        >
           {body.length}/{BODY_LIMIT}
         </Text>
 
-        <GradientButton onPress={handleSubmit} disabled={rating === 0} loading={isPending}>
-          {isEditing ? 'Save Changes' : 'Submit Review'}
+        <GradientButton
+          onPress={handleSubmit}
+          disabled={rating === 0}
+          loading={isPending}
+        >
+          {isEditing ? "Save Changes" : "Submit Review"}
         </GradientButton>
-        <Text className="text-xs text-center mt-3" style={{ color: colors.mutedForeground }}>
+        <Text
+          className="text-xs text-center mt-3"
+          style={{ color: colors.mutedForeground }}
+        >
           You can edit or delete this review within 7 days
         </Text>
       </View>

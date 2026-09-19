@@ -1,15 +1,22 @@
-import { useState } from 'react';
-import { ActivityIndicator, Image, Pressable, Text, TextInput, View } from 'react-native';
-import { router } from 'expo-router';
-import { Camera, Minus, Plus, X } from 'lucide-react-native';
-import { AuthScreenLayout } from '../../src/components/AuthScreenLayout';
-import { OnboardingStepper } from '../../src/components/OnboardingStepper';
-import { GradientButton } from '../../src/components/GradientButton';
-import { colors } from '../../src/constants/colors';
-import { useAuthStore } from '../../src/stores/auth-store';
-import { useOnboardingWizardStore } from '../../src/stores/onboarding-wizard-store';
-import { useToastStore } from '../../src/stores/toast-store';
-import { pickAndUploadFromLibrary } from '../../src/utils/upload-image';
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { router } from "expo-router";
+import { Camera, Minus, Plus, X } from "lucide-react-native";
+import { AuthScreenLayout } from "../../src/components/AuthScreenLayout";
+import { OnboardingStepper } from "../../src/components/OnboardingStepper";
+import { GradientButton } from "../../src/components/GradientButton";
+import { colors } from "../../src/constants/colors";
+import { useAuthStore } from "../../src/stores/auth-store";
+import { useOnboardingWizardStore } from "../../src/stores/onboarding-wizard-store";
+import { useToastStore } from "../../src/stores/toast-store";
+import { pickAndUploadFromLibrary } from "../../src/utils/upload-image";
 
 const DESCRIPTION_LIMIT = 150;
 
@@ -23,25 +30,31 @@ export default function AddTripsScreen() {
   const [showForm, setShowForm] = useState(false);
   const [photoMediaId, setPhotoMediaId] = useState<string>();
   const [photoUrl, setPhotoUrl] = useState<string>();
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [travelerCount, setTravelerCount] = useState(1);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
-  const isFormValid = !!(photoMediaId && name && location && startDate && endDate);
+  const isFormValid = !!(
+    photoMediaId &&
+    name &&
+    location &&
+    startDate &&
+    endDate
+  );
 
   const resetForm = () => {
     setPhotoMediaId(undefined);
     setPhotoUrl(undefined);
-    setName('');
-    setLocation('');
-    setStartDate('');
-    setEndDate('');
+    setName("");
+    setLocation("");
+    setStartDate("");
+    setEndDate("");
     setTravelerCount(1);
-    setDescription('');
+    setDescription("");
     setShowForm(false);
   };
 
@@ -49,13 +62,18 @@ export default function AddTripsScreen() {
     if (!accessToken) return;
     setIsUploadingPhoto(true);
     try {
-      const uploaded = await pickAndUploadFromLibrary('previous_trip_photo', accessToken);
+      const uploaded = await pickAndUploadFromLibrary(
+        "previous_trip_photo",
+        accessToken,
+      );
       if (uploaded) {
         setPhotoMediaId(uploaded.mediaId);
         setPhotoUrl(uploaded.previewUri);
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Could not add that photo.');
+      showToast(
+        err instanceof Error ? err.message : "Could not add that photo.",
+      );
     } finally {
       setIsUploadingPhoto(false);
     }
@@ -79,7 +97,9 @@ export default function AddTripsScreen() {
   return (
     <AuthScreenLayout>
       <OnboardingStepper step={3} label="Previous Trips" />
-      <Text className="text-xl font-bold text-foreground mb-1">Previous Trips</Text>
+      <Text className="text-xl font-bold text-foreground mb-1">
+        Previous Trips
+      </Text>
       <Text className="text-sm mb-6" style={{ color: colors.mutedForeground }}>
         Share your travel memories (optional)
       </Text>
@@ -99,17 +119,29 @@ export default function AddTripsScreen() {
               />
             ) : (
               <View
-                style={{ width: 56, height: 56, borderRadius: 12, backgroundColor: colors.disabledBackground }}
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 12,
+                  backgroundColor: colors.disabledBackground,
+                }}
               />
             )}
             <View style={{ flex: 1 }}>
               <Text className="font-bold text-foreground">{trip.name}</Text>
-              <Text className="text-xs" style={{ color: colors.mutedForeground }}>
+              <Text
+                className="text-xs"
+                style={{ color: colors.mutedForeground }}
+              >
                 {trip.location}
               </Text>
-              <Text className="text-xs" style={{ color: colors.mutedForeground }}>
-                {trip.startDate} – {trip.endDate} • {trip.travelerCount} traveler
-                {trip.travelerCount > 1 ? 's' : ''}
+              <Text
+                className="text-xs"
+                style={{ color: colors.mutedForeground }}
+              >
+                {trip.startDate} – {trip.endDate} • {trip.travelerCount}{" "}
+                traveler
+                {trip.travelerCount > 1 ? "s" : ""}
               </Text>
             </View>
             <Pressable onPress={() => removeTrip(index)} hitSlop={8}>
@@ -130,22 +162,29 @@ export default function AddTripsScreen() {
                 height: 96,
                 borderRadius: 16,
                 borderWidth: 2,
-                borderStyle: 'dashed',
+                borderStyle: "dashed",
                 borderColor: colors.border,
-                alignItems: 'center',
-                justifyContent: 'center',
+                alignItems: "center",
+                justifyContent: "center",
                 gap: 6,
-                overflow: 'hidden',
+                overflow: "hidden",
               }}
             >
               {isUploadingPhoto ? (
                 <ActivityIndicator color={colors.mutedForeground} />
               ) : photoUrl ? (
-                <Image source={{ uri: photoUrl }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                <Image
+                  source={{ uri: photoUrl }}
+                  style={{ width: "100%", height: "100%" }}
+                  resizeMode="cover"
+                />
               ) : (
                 <>
                   <Camera size={22} color={colors.mutedForeground} />
-                  <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+                  <Text
+                    className="text-sm"
+                    style={{ color: colors.mutedForeground }}
+                  >
                     Trip Photo *
                   </Text>
                 </>
@@ -188,7 +227,9 @@ export default function AddTripsScreen() {
             </View>
 
             <View className="flex-row items-center justify-between">
-              <Text className="text-sm font-bold text-foreground">Travelers</Text>
+              <Text className="text-sm font-bold text-foreground">
+                Travelers
+              </Text>
               <View className="flex-row items-center gap-4">
                 <Pressable
                   onPress={() => setTravelerCount((c) => Math.max(1, c - 1))}
@@ -196,8 +237,13 @@ export default function AddTripsScreen() {
                 >
                   <Minus size={18} color={colors.foreground} />
                 </Pressable>
-                <Text className="font-bold text-foreground">{travelerCount}</Text>
-                <Pressable onPress={() => setTravelerCount((c) => c + 1)} hitSlop={8}>
+                <Text className="font-bold text-foreground">
+                  {travelerCount}
+                </Text>
+                <Pressable
+                  onPress={() => setTravelerCount((c) => c + 1)}
+                  hitSlop={8}
+                >
                   <Plus size={18} color={colors.foreground} />
                 </Pressable>
               </View>
@@ -205,13 +251,19 @@ export default function AddTripsScreen() {
 
             <TextInput
               value={description}
-              onChangeText={(v) => setDescription(v.slice(0, DESCRIPTION_LIMIT))}
+              onChangeText={(v) =>
+                setDescription(v.slice(0, DESCRIPTION_LIMIT))
+              }
               placeholder="Description (optional)"
               placeholderTextColor={colors.mutedForeground}
               multiline
               numberOfLines={3}
               className="rounded-2xl px-4 py-3 text-foreground"
-              style={{ backgroundColor: colors.inputBackground, minHeight: 72, textAlignVertical: 'top' }}
+              style={{
+                backgroundColor: colors.inputBackground,
+                minHeight: 72,
+                textAlignVertical: "top",
+              }}
             />
 
             <View className="flex-row gap-3">
@@ -223,8 +275,8 @@ export default function AddTripsScreen() {
                   borderRadius: 12,
                   borderWidth: 2,
                   borderColor: colors.border,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 <Text className="font-bold text-foreground">Cancel</Text>
@@ -236,14 +288,20 @@ export default function AddTripsScreen() {
                   flex: 1,
                   height: 44,
                   borderRadius: 12,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: isFormValid ? colors.vaykaePink : colors.disabledBackground,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: isFormValid
+                    ? colors.vaykaePink
+                    : colors.disabledBackground,
                 }}
               >
                 <Text
                   className="font-bold"
-                  style={{ color: isFormValid ? colors.background : colors.mutedForeground }}
+                  style={{
+                    color: isFormValid
+                      ? colors.background
+                      : colors.mutedForeground,
+                  }}
                 >
                   Add
                 </Text>
@@ -257,10 +315,10 @@ export default function AddTripsScreen() {
               height: 56,
               borderRadius: 16,
               borderWidth: 2,
-              borderStyle: 'dashed',
+              borderStyle: "dashed",
               borderColor: colors.border,
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Text className="font-bold" style={{ color: colors.vaykaePink }}>
@@ -272,13 +330,19 @@ export default function AddTripsScreen() {
 
       <View className="mt-8" style={{ gap: 12 }}>
         <GradientButton
-          onPress={() => router.push('/(onboarding)/payment-setup')}
+          onPress={() => router.push("/(onboarding)/payment-setup")}
           disabled={previousTrips.length === 0}
         >
           Continue
         </GradientButton>
-        <Pressable onPress={() => router.push('/(onboarding)/payment-setup')} className="items-center py-2">
-          <Text className="font-semibold" style={{ color: colors.mutedForeground }}>
+        <Pressable
+          onPress={() => router.push("/(onboarding)/payment-setup")}
+          className="items-center py-2"
+        >
+          <Text
+            className="font-semibold"
+            style={{ color: colors.mutedForeground }}
+          >
             Skip for Now
           </Text>
         </Pressable>

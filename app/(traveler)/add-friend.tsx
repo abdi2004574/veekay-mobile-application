@@ -1,13 +1,20 @@
-import { useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { ArrowLeft, Search, UserCheck, UserPlus } from 'lucide-react-native';
-import { Avatar } from '../../src/components/Avatar';
-import { colors } from '../../src/constants/colors';
-import { useSearchTravelers } from '../../src/hooks/use-users-queries';
-import { useSendFriendRequest } from '../../src/hooks/use-friend-mutations';
-import type { TravelerSearchResult } from '../../src/api/types';
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { ArrowLeft, Search, UserCheck, UserPlus } from "lucide-react-native";
+import { Avatar } from "../../src/components/Avatar";
+import { colors } from "../../src/constants/colors";
+import { useSearchTravelers } from "../../src/hooks/use-users-queries";
+import { useSendFriendRequest } from "../../src/hooks/use-friend-mutations";
+import type { TravelerSearchResult } from "../../src/api/types";
 
 function ResultAction({ result }: { result: TravelerSearchResult }) {
   const sendRequest = useSendFriendRequest();
@@ -19,7 +26,10 @@ function ResultAction({ result }: { result: TravelerSearchResult }) {
         style={{ backgroundColor: colors.inputBackground }}
       >
         <UserCheck size={14} color={colors.mutedForeground} />
-        <Text className="text-xs font-medium" style={{ color: colors.mutedForeground }}>
+        <Text
+          className="text-xs font-medium"
+          style={{ color: colors.mutedForeground }}
+        >
           Friends
         </Text>
       </View>
@@ -32,7 +42,10 @@ function ResultAction({ result }: { result: TravelerSearchResult }) {
         className="px-3 py-2 rounded-full"
         style={{ backgroundColor: colors.inputBackground }}
       >
-        <Text className="text-xs font-medium" style={{ color: colors.mutedForeground }}>
+        <Text
+          className="text-xs font-medium"
+          style={{ color: colors.mutedForeground }}
+        >
           Sent
         </Text>
       </View>
@@ -51,7 +64,10 @@ function ResultAction({ result }: { result: TravelerSearchResult }) {
       ) : (
         <>
           <UserPlus size={14} color={colors.background} />
-          <Text className="text-xs font-medium" style={{ color: colors.background }}>
+          <Text
+            className="text-xs font-medium"
+            style={{ color: colors.background }}
+          >
             Add
           </Text>
         </>
@@ -61,7 +77,7 @@ function ResultAction({ result }: { result: TravelerSearchResult }) {
 }
 
 export default function AddFriendScreen() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const search = useSearchTravelers(query);
 
   return (
@@ -95,7 +111,10 @@ export default function AddFriendScreen() {
 
       {query.trim().length === 0 ? (
         <View className="py-16 items-center px-6">
-          <Text className="text-center" style={{ color: colors.mutedForeground }}>
+          <Text
+            className="text-center"
+            style={{ color: colors.mutedForeground }}
+          >
             Search for other travelers to add as friends.
           </Text>
         </View>
@@ -105,11 +124,17 @@ export default function AddFriendScreen() {
         </View>
       ) : search.isError ? (
         <View className="py-16 items-center px-6">
-          <Text className="text-center mb-3" style={{ color: colors.mutedForeground }}>
+          <Text
+            className="text-center mb-3"
+            style={{ color: colors.mutedForeground }}
+          >
             Search failed.
           </Text>
           <Pressable onPress={() => search.refetch()}>
-            <Text style={{ color: colors.vaykaePink }} className="font-semibold">
+            <Text
+              style={{ color: colors.vaykaePink }}
+              className="font-semibold"
+            >
               Try again
             </Text>
           </Pressable>
@@ -121,7 +146,10 @@ export default function AddFriendScreen() {
           contentContainerStyle={{ padding: 16 }}
           ListEmptyComponent={
             <View className="py-16 items-center px-6">
-              <Text className="text-center" style={{ color: colors.mutedForeground }}>
+              <Text
+                className="text-center"
+                style={{ color: colors.mutedForeground }}
+              >
                 No travelers found for &quot;{query}&quot;.
               </Text>
             </View>
@@ -136,7 +164,10 @@ export default function AddFriendScreen() {
                 <Avatar name={name} size={44} />
                 <View className="flex-1">
                   <Text className="font-semibold text-foreground">{name}</Text>
-                  <Text className="text-xs" style={{ color: colors.mutedForeground }}>
+                  <Text
+                    className="text-xs"
+                    style={{ color: colors.mutedForeground }}
+                  >
                     @{item.username}
                   </Text>
                 </View>

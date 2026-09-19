@@ -26,14 +26,19 @@ export function GradientButton({
       <Pressable
         onPress={onPress}
         disabled={isDisabled}
-        className={"h-14 rounded-2xl border-2 items-center justify-center px-6 " + className}
+        className={
+          "h-14 rounded-2xl border-2 items-center justify-center px-6 " +
+          className
+        }
         style={{
           borderColor: isDisabled ? colors.border : colors.vaykaePink,
           opacity: isDisabled ? 0.6 : 1,
         }}
       >
         <Text
-          style={{ color: isDisabled ? colors.mutedForeground : colors.vaykaePink }}
+          style={{
+            color: isDisabled ? colors.mutedForeground : colors.vaykaePink,
+          }}
           className="font-semibold"
         >
           {children}
@@ -45,7 +50,9 @@ export function GradientButton({
   if (isDisabled) {
     return (
       <View
-        className={"h-14 items-center justify-center px-6 rounded-2xl " + className}
+        className={
+          "h-14 items-center justify-center px-6 rounded-2xl " + className
+        }
         style={{ backgroundColor: colors.disabledBackground }}
       >
         {loading ? (

@@ -1,8 +1,8 @@
-import { Pressable, Text, View } from 'react-native';
-import { X } from 'lucide-react-native';
-import { Avatar } from './Avatar';
-import { colors } from '../constants/colors';
-import type { GroupMember } from '../api/types';
+import { Pressable, Text, View } from "react-native";
+import { X } from "lucide-react-native";
+import { Avatar } from "./Avatar";
+import { colors } from "../constants/colors";
+import type { GroupMember } from "../api/types";
 
 export function GroupMemberRow({
   member,
@@ -27,8 +27,14 @@ export function GroupMemberRow({
         <View className="flex-row items-center gap-2">
           <Text className="font-bold text-sm text-foreground">{name}</Text>
           {isYou && (
-            <View className="px-1.5 py-0.5 rounded-full" style={{ backgroundColor: colors.vaykaePink }}>
-              <Text className="text-xs font-bold" style={{ color: colors.background }}>
+            <View
+              className="px-1.5 py-0.5 rounded-full"
+              style={{ backgroundColor: colors.vaykaePink }}
+            >
+              <Text
+                className="text-xs font-bold"
+                style={{ color: colors.background }}
+              >
                 You
               </Text>
             </View>

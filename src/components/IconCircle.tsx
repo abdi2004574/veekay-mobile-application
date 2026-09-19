@@ -1,7 +1,7 @@
-import { View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { LucideIcon } from 'lucide-react-native';
-import { vaykaeGradient } from '../constants/colors';
+import { View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { LucideIcon } from "lucide-react-native";
+import { vaykaeGradient } from "../constants/colors";
 
 interface IconCircleProps {
   icon: LucideIcon;
@@ -20,7 +20,7 @@ export function IconCircle({ icon: Icon, size = 64 }: IconCircleProps) {
         borderRadius: size / 2,
       }}
     >
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Icon size={size * 0.5} color="#ffffff" />
       </View>
     </LinearGradient>

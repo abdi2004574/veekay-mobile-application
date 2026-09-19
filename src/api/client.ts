@@ -1,11 +1,13 @@
-import type { ApiErrorBody, ApiErrorCode, ApiSuccessBody } from './types';
+import type { ApiErrorBody, ApiErrorCode, ApiSuccessBody } from "./types";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export class NetworkError extends Error {
-  constructor(message = 'Could not reach the server. Check your connection and try again.') {
+  constructor(
+    message = "Could not reach the server. Check your connection and try again.",
+  ) {
     super(message);
-    this.name = 'NetworkError';
+    this.name = "NetworkError";
   }
 }
 
@@ -19,13 +21,13 @@ export class ApiError extends Error {
     public readonly status: number,
   ) {
     super(message);
-    this.name = 'ApiError';
+    this.name = "ApiError";
     this.isServerError = status >= 500;
   }
 }
 
 interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
   accessToken?: string;
   idempotencyKey?: string;
@@ -33,14 +35,16 @@ interface RequestOptions {
 
 export async function apiFetch<T>(
   path: string,
-  { method = 'GET', body, accessToken, idempotencyKey }: RequestOptions = {},
+  { method = "GET", body, accessToken, idempotencyKey }: RequestOptions = {},
 ): Promise<T> {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
   }
   if (idempotencyKey) {
-    headers['Idempotency-Key'] = idempotencyKey;
+    headers["Idempotency-Key"] = idempotencyKey;
   }
 
   let response: Response;

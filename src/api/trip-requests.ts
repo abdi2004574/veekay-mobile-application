@@ -1,11 +1,19 @@
-import { apiFetch } from './client';
-import type { Page, SmartReplyTemplate, TripRequest, TripRequestStatus } from './types';
+import { apiFetch } from "./client";
+import type {
+  Page,
+  SmartReplyTemplate,
+  TripRequest,
+  TripRequestStatus,
+} from "./types";
 
-function withQuery(path: string, params: Record<string, string | number | undefined>) {
+function withQuery(
+  path: string,
+  params: Record<string, string | number | undefined>,
+) {
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
     .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
-    .join('&');
+    .join("&");
   return query ? `${path}?${query}` : path;
 }
 
@@ -21,9 +29,12 @@ export interface SmartReplyTemplateInput {
   body: string;
 }
 
-export function createTripRequest(input: CreateTripRequestInput, accessToken: string) {
-  return apiFetch<TripRequest>('/trip-requests', {
-    method: 'POST',
+export function createTripRequest(
+  input: CreateTripRequestInput,
+  accessToken: string,
+) {
+  return apiFetch<TripRequest>("/trip-requests", {
+    method: "POST",
     body: input,
     accessToken,
   });
@@ -36,7 +47,7 @@ export function listAgencyTripRequests(
   accessToken: string,
 ) {
   return apiFetch<Page<TripRequest>>(
-    withQuery('/trip-requests', { status, cursor, limit: limit ?? 20 }),
+    withQuery("/trip-requests", { status, cursor, limit: limit ?? 20 }),
     { accessToken },
   );
 }
@@ -48,7 +59,7 @@ export function listMyTripRequests(
   accessToken: string,
 ) {
   return apiFetch<Page<TripRequest>>(
-    withQuery('/trip-requests/mine', { status, cursor, limit: limit ?? 20 }),
+    withQuery("/trip-requests/mine", { status, cursor, limit: limit ?? 20 }),
     { accessToken },
   );
 }
@@ -63,7 +74,7 @@ export function updateTripRequestStatus(
   accessToken: string,
 ) {
   return apiFetch<TripRequest>(`/trip-requests/${id}/status`, {
-    method: 'PATCH',
+    method: "PATCH",
     body: { status },
     accessToken,
   });
@@ -71,26 +82,32 @@ export function updateTripRequestStatus(
 
 export function cancelTripRequest(id: string, accessToken: string) {
   return apiFetch<TripRequest>(`/trip-requests/${id}/cancel`, {
-    method: 'POST',
+    method: "POST",
     accessToken,
   });
 }
 
 export function listSmartReplyTemplates(accessToken: string) {
-  return apiFetch<SmartReplyTemplate[]>('/trip-requests/smart-replies/templates', {
-    accessToken,
-  });
+  return apiFetch<SmartReplyTemplate[]>(
+    "/trip-requests/smart-replies/templates",
+    {
+      accessToken,
+    },
+  );
 }
 
 export function createSmartReplyTemplate(
   input: SmartReplyTemplateInput,
   accessToken: string,
 ) {
-  return apiFetch<SmartReplyTemplate>('/trip-requests/smart-replies/templates', {
-    method: 'POST',
-    body: input,
-    accessToken,
-  });
+  return apiFetch<SmartReplyTemplate>(
+    "/trip-requests/smart-replies/templates",
+    {
+      method: "POST",
+      body: input,
+      accessToken,
+    },
+  );
 }
 
 export function updateSmartReplyTemplate(
@@ -98,16 +115,19 @@ export function updateSmartReplyTemplate(
   input: Partial<SmartReplyTemplateInput>,
   accessToken: string,
 ) {
-  return apiFetch<SmartReplyTemplate>(`/trip-requests/smart-replies/templates/${id}`, {
-    method: 'PATCH',
-    body: input,
-    accessToken,
-  });
+  return apiFetch<SmartReplyTemplate>(
+    `/trip-requests/smart-replies/templates/${id}`,
+    {
+      method: "PATCH",
+      body: input,
+      accessToken,
+    },
+  );
 }
 
 export function deleteSmartReplyTemplate(id: string, accessToken: string) {
   return apiFetch<void>(`/trip-requests/smart-replies/templates/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
     accessToken,
   });
 }

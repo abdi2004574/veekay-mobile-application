@@ -12,9 +12,16 @@ import {
   mapPackageToTier,
   mapEntitlementToTier,
   getActiveTierFromCustomerInfo,
+  DONATION_PRODUCTS,
+  setDonationCampaign,
+  purchaseDonation,
 } from "./revenue-cat";
 
 const mockPurchases = Purchases as unknown as Record<string, any>;
+
+// Ensure static methods are mocked
+mockPurchases.setAttributes = jest.fn();
+mockPurchases.purchaseProduct = jest.fn();
 
 describe("isRevenueCatAvailable", () => {
   it("returns true on native platforms (jest default is ios)", () => {
@@ -44,7 +51,9 @@ describe("configureRevenueCat", () => {
       error = err;
     }
     expect(error).toBeInstanceOf(RevenueCatError);
-    expect((error as RevenueCatError).message).toMatch(/API key not configured/);
+    expect((error as RevenueCatError).message).toMatch(
+      /API key not configured/,
+    );
   });
 
   it("calls Purchases.configure with apiKey and appUserID", async () => {
@@ -102,7 +111,10 @@ describe("configureRevenueCat", () => {
   it("throws RevenueCatError when configure fails", async () => {
     process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS = "test-api-key";
     mockPurchases.configure.mockImplementationOnce(() => {
-      throw { code: PURCHASES_ERROR_CODE.INVALID_CREDENTIALS_ERROR, message: "Bad key" };
+      throw {
+        code: PURCHASES_ERROR_CODE.INVALID_CREDENTIALS_ERROR,
+        message: "Bad key",
+      };
     });
     let error: unknown;
     try {
@@ -111,7 +123,9 @@ describe("configureRevenueCat", () => {
       error = err;
     }
     expect(error).toBeInstanceOf(RevenueCatError);
-    expect((error as RevenueCatError).code).toBe(PURCHASES_ERROR_CODE.INVALID_CREDENTIALS_ERROR);
+    expect((error as RevenueCatError).code).toBe(
+      PURCHASES_ERROR_CODE.INVALID_CREDENTIALS_ERROR,
+    );
   });
 });
 
@@ -133,7 +147,7 @@ describe("loadOfferings", () => {
 
   it("returns null when no current offering", async () => {
     mockPurchases.getOfferings.mockImplementationOnce(() =>
-      Promise.resolve({ all: {}, current: null })
+      Promise.resolve({ all: {}, current: null }),
     );
     const result = await loadOfferings();
     expect(result).toBeNull();
@@ -141,7 +155,7 @@ describe("loadOfferings", () => {
 
   it("throws RevenueCatError on failure", async () => {
     mockPurchases.getOfferings.mockImplementationOnce(() =>
-      Promise.reject(new Error("Network failure"))
+      Promise.reject(new Error("Network failure")),
     );
     let error: unknown;
     try {
@@ -168,7 +182,7 @@ describe("purchasePackage", () => {
 
   it("throws RevenueCatError when offering is not found", async () => {
     mockPurchases.getOfferings.mockImplementationOnce(() =>
-      Promise.resolve({ all: {}, current: null })
+      Promise.resolve({ all: {}, current: null }),
     );
     let error: unknown;
     try {
@@ -182,7 +196,7 @@ describe("purchasePackage", () => {
 
   it("throws RevenueCatError when package is not found", async () => {
     mockPurchases.getOfferings.mockImplementationOnce(() =>
-      Promise.resolve({ all: {}, current: { availablePackages: [] } })
+      Promise.resolve({ all: {}, current: { availablePackages: [] } }),
     );
     let error: unknown;
     try {
@@ -199,7 +213,7 @@ describe("purchasePackage", () => {
       Promise.reject({
         code: PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR,
         message: "Purchase cancelled by user",
-      })
+      }),
     );
     let error: unknown;
     try {
@@ -212,13 +226,16 @@ describe("purchasePackage", () => {
 
   it("wraps RevenueCat entitlement expired errors", async () => {
     mockPurchases.getOfferings.mockImplementationOnce(() =>
-      Promise.resolve({ all: {}, current: { availablePackages: [{ identifier: "premium" }] } })
+      Promise.resolve({
+        all: {},
+        current: { availablePackages: [{ identifier: "premium" }] },
+      }),
     );
     mockPurchases.purchasePackage.mockImplementationOnce(() =>
       Promise.reject({
         code: PURCHASES_ERROR_CODE.PURCHASE_NOT_ALLOWED_ERROR,
         message: "Entitlement expired",
-      })
+      }),
     );
     let error: unknown;
     try {
@@ -232,10 +249,13 @@ describe("purchasePackage", () => {
 
   it("throws RevenueCatError on unexpected errors", async () => {
     mockPurchases.getOfferings.mockImplementationOnce(() =>
-      Promise.resolve({ all: {}, current: { availablePackages: [{ identifier: "basic" }] } })
+      Promise.resolve({
+        all: {},
+        current: { availablePackages: [{ identifier: "basic" }] },
+      }),
     );
     mockPurchases.purchasePackage.mockImplementationOnce(() =>
-      Promise.reject(new Error("Unexpected error"))
+      Promise.reject(new Error("Unexpected error")),
     );
     let error: unknown;
     try {
@@ -260,7 +280,7 @@ describe("restorePurchases", () => {
       Promise.reject({
         code: PURCHASES_ERROR_CODE.NETWORK_ERROR,
         message: "Network error",
-      })
+      }),
     );
     let error: unknown;
     try {
@@ -282,7 +302,7 @@ describe("getCustomerInfo", () => {
 
   it("throws RevenueCatError on failure", async () => {
     mockPurchases.getCustomerInfo.mockImplementationOnce(() =>
-      Promise.reject(new Error("Fetch failed"))
+      Promise.reject(new Error("Fetch failed")),
     );
     let error: unknown;
     try {
@@ -391,9 +411,7 @@ describe("mapEntitlementToTier", () => {
 describe("getActiveTierFromCustomerInfo", () => {
   it("returns tier from active entitlement", () => {
     const info = {
-      activeEntitlements: [
-        { identifier: "premium", isActive: true } as any,
-      ],
+      activeEntitlements: [{ identifier: "premium", isActive: true } as any],
     };
     expect(getActiveTierFromCustomerInfo(info as any)).toBe("premium");
   });
@@ -436,10 +454,155 @@ describe("getActiveTierFromCustomerInfo", () => {
 
   it("returns null when active entitlement is inactive and unknown", () => {
     const info = {
-      activeEntitlements: [
-        { identifier: "unknown", isActive: false } as any,
-      ],
+      activeEntitlements: [{ identifier: "unknown", isActive: false } as any],
     };
     expect(getActiveTierFromCustomerInfo(info as any)).toBeNull();
+  });
+});
+
+describe("DONATION_PRODUCTS", () => {
+  it("has 5 donation products", () => {
+    expect(DONATION_PRODUCTS).toHaveLength(5);
+  });
+
+  it("has correct labels, productIds, and amounts", () => {
+    expect(DONATION_PRODUCTS[0]).toEqual({
+      label: "$5",
+      productId: "donation_5",
+      amount: 5,
+    });
+    expect(DONATION_PRODUCTS[1]).toEqual({
+      label: "$10",
+      productId: "donation_10",
+      amount: 10,
+    });
+    expect(DONATION_PRODUCTS[2]).toEqual({
+      label: "$25",
+      productId: "donation_25",
+      amount: 25,
+    });
+    expect(DONATION_PRODUCTS[3]).toEqual({
+      label: "$50",
+      productId: "donation_50",
+      amount: 50,
+    });
+    expect(DONATION_PRODUCTS[4]).toEqual({
+      label: "$100",
+      productId: "donation_100",
+      amount: 100,
+    });
+  });
+});
+
+describe("setDonationCampaign", () => {
+  beforeEach(() => {
+    mockPurchases.setAttributes.mockClear();
+  });
+
+  it("calls setAttributes with campaign_id", async () => {
+    mockPurchases.setAttributes.mockResolvedValue(undefined);
+    await setDonationCampaign("campaign-123");
+    expect(mockPurchases.setAttributes).toHaveBeenCalledWith({
+      campaign_id: "campaign-123",
+    });
+  });
+
+  it("wraps errors in RevenueCatError", async () => {
+    mockPurchases.setAttributes.mockRejectedValueOnce({
+      code: PURCHASES_ERROR_CODE.NETWORK_ERROR,
+      message: "Network error",
+    });
+    let error: unknown;
+    try {
+      await setDonationCampaign("campaign-123");
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toBeInstanceOf(RevenueCatError);
+  });
+});
+
+describe("purchaseDonation", () => {
+  beforeEach(() => {
+    mockPurchases.setAttributes.mockClear();
+    mockPurchases.purchaseProduct.mockClear();
+  });
+
+  it("throws when RevenueCat is not available", async () => {
+    mockPurchases.setAttributes.mockClear();
+    mockPurchases.purchaseProduct.mockClear();
+    // Temporarily override Platform.OS
+    const originalPlatform = (global as any).Platform?.OS;
+    (global as any).Platform = { OS: "web" };
+
+    let error: unknown;
+    try {
+      await purchaseDonation("donation_5", "campaign-123");
+    } catch (err) {
+      error = err;
+    }
+
+    (global as any).Platform = { OS: originalPlatform };
+    expect(error).toBeInstanceOf(RevenueCatError);
+    expect((error as RevenueCatError).message).toMatch(
+      /not available on this platform/,
+    );
+  });
+
+  it("sets campaign attribute and purchases product", async () => {
+    mockPurchases.setAttributes.mockResolvedValue(undefined);
+    mockPurchases.purchaseProduct.mockResolvedValueOnce({
+      productIdentifier: "donation_5",
+      customerInfo: {
+        entitlements: { active: {} },
+        activeSubscriptions: [],
+        allPurchasedProductIdentifiers: [],
+        latestExpirationDate: null,
+        originalAppUserId: "test-user-id",
+        managementURL: null,
+        requestDate: new Date().toISOString(),
+      },
+      transaction: {},
+    });
+
+    const result = await purchaseDonation("donation_5", "campaign-123");
+
+    expect(mockPurchases.setAttributes).toHaveBeenCalledWith({
+      campaign_id: "campaign-123",
+    });
+    expect(mockPurchases.purchaseProduct).toHaveBeenCalledWith("donation_5");
+    expect(result.productIdentifier).toBe("donation_5");
+    expect(result.customerInfo.originalAppUserId).toBe("test-user-id");
+  });
+
+  it("wraps purchase errors in RevenueCatError", async () => {
+    mockPurchases.setAttributes.mockResolvedValue(undefined);
+    mockPurchases.purchaseProduct.mockRejectedValueOnce({
+      code: PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR,
+      message: "User cancelled",
+    });
+
+    let error: unknown;
+    try {
+      await purchaseDonation("donation_5", "campaign-123");
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toBeInstanceOf(RevenueCatError);
+  });
+
+  it("wraps setAttributes errors in RevenueCatError", async () => {
+    mockPurchases.setAttributes.mockRejectedValueOnce({
+      code: PURCHASES_ERROR_CODE.NETWORK_ERROR,
+      message: "Network error",
+    });
+
+    let error: unknown;
+    try {
+      await purchaseDonation("donation_5", "campaign-123");
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toBeInstanceOf(RevenueCatError);
   });
 });

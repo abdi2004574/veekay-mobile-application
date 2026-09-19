@@ -1,32 +1,23 @@
-import '../global.css';
-import { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Slot } from 'expo-router';
-import { ErrorBoundary } from '../src/components/ErrorBoundary';
-import { useAuthStore } from '../src/stores/auth-store';
-import { useNotificationStore } from '../src/stores/notification-store';
-import { ToastHost } from '../src/components/Toast';
-import { AlertHost } from '../src/components/AlertHost';
-import { colors } from '../src/constants/colors';
-import {
-  checkNotificationPermissions,
-  getFcmToken,
-  registerFcmToken,
-  requestNotificationPermissions,
-  setupBackgroundHandlers,
-  setupForegroundHandler,
-  setupTokenRefreshListener,
-} from '../src/services/firebase-messaging';
+import "../global.css";
+import { useEffect } from "react";
+import { ActivityIndicator, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Slot } from "expo-router";
+import { ErrorBoundary } from "../src/components/ErrorBoundary";
+import { useAuthStore } from "../src/stores/auth-store";
+import { ToastHost } from "../src/components/Toast";
+import { AlertHost } from "../src/components/AlertHost";
+import { colors } from "../src/constants/colors";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {
         if (failureCount >= 2) return false;
-        if (error instanceof Error && error.name === 'NetworkError') return false;
+        if (error instanceof Error && error.name === "NetworkError")
+          return false;
         return true;
       },
       staleTime: 30_000,
@@ -41,63 +32,15 @@ const queryClient = new QueryClient({
 export default function RootLayout() {
   const status = useAuthStore((s) => s.status);
   const hydrate = useAuthStore((s) => s.hydrate);
-  const setPermissionStatus = useNotificationStore((s) => s.setPermissionStatus);
-  const setToken = useNotificationStore((s) => s.setToken);
-  const setRegistered = useNotificationStore((s) => s.setRegistered);
 
   useEffect(() => {
     hydrate();
   }, [hydrate]);
 
-  useEffect(() => {
-    if (status !== 'authenticated') return;
-
-    let tokenUnsubscribe: (() => void) | null = null;
-
-    async function initMessaging() {
-      const hasPermission = await checkNotificationPermissions();
-      if (!hasPermission) {
-        const granted = await requestNotificationPermissions();
-        setPermissionStatus(granted ? 'authorized' : 'denied');
-      } else {
-        setPermissionStatus('authorized');
-      }
-
-      const token = await getFcmToken();
-      if (token) {
-        setToken(token);
-        await registerFcmToken();
-        setRegistered(true);
-      }
-
-      tokenUnsubscribe = setupTokenRefreshListener(async (newToken) => {
-        setToken(newToken);
-        await registerFcmToken();
-      });
-
-      setupForegroundHandler((message) => {
-        console.log('Foreground message:', message);
-      });
-
-      setupBackgroundHandlers((message) => {
-        console.log('Notification opened:', message);
-      });
-    }
-
-    initMessaging();
-
-    return () => {
-      if (tokenUnsubscribe) {
-        tokenUnsubscribe();
-      }
-      setRegistered(false);
-    };
-  }, [status, setPermissionStatus, setToken, setRegistered]);
-
-  if (status === 'idle' || status === 'loading') {
+  if (status === "idle" || status === "loading") {
     return (
-      <View className='flex-1 items-center justify-center bg-background'>
-        <ActivityIndicator color={colors.vaykaePink} size='large' />
+      <View className="flex-1 items-center justify-center bg-background">
+        <ActivityIndicator color={colors.vaykaePink} size="large" />
       </View>
     );
   }
@@ -116,3 +59,9 @@ export default function RootLayout() {
     </ErrorBoundary>
   );
 }
+
+// TODO: Push notifications (Firebase Cloud Messaging) are deferred until
+// the feature is prioritized. This layout previously initialized FCM
+// token registration, notification permission checks, and foreground/
+// background message handlers. Re-add when the backend push notification
+// service and mobile FCM integration are ready.

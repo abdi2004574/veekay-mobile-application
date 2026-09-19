@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -6,25 +6,28 @@ import {
   Pressable,
   ScrollView,
   View,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { ArrowLeft } from 'lucide-react-native';
-import { screenBackgroundGradient, colors } from '../constants/colors';
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { ArrowLeft } from "lucide-react-native";
+import { screenBackgroundGradient, colors } from "../constants/colors";
 
 interface AuthScreenLayoutProps {
   children: ReactNode;
   showBack?: boolean;
 }
 
-export function AuthScreenLayout({ children, showBack = true }: AuthScreenLayoutProps) {
+export function AuthScreenLayout({
+  children,
+  showBack = true,
+}: AuthScreenLayoutProps) {
   return (
     <LinearGradient colors={screenBackgroundGradient} style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}
@@ -44,7 +47,7 @@ export function AuthScreenLayout({ children, showBack = true }: AuthScreenLayout
               <View className="flex-1 justify-center">
                 <View className="items-center mb-8">
                   <Image
-                    source={require('../../assets/images/logo.png')}
+                    source={require("../../assets/images/logo.png")}
                     style={{ width: 141, height: 114 }}
                     resizeMode="contain"
                   />

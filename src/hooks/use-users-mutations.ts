@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import * as usersApi from '../api/users';
-import { requireAccessToken } from '../utils/require-access-token';
-import { useToastStore } from '../stores/toast-store';
-import { friendlyErrorMessage } from '../utils/error-message';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as usersApi from "../api/users";
+import { requireAccessToken } from "../utils/require-access-token";
+import { useToastStore } from "../stores/toast-store";
+import { friendlyErrorMessage } from "../utils/error-message";
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
@@ -10,7 +10,7 @@ export function useUpdateProfile() {
   return useMutation({
     mutationFn: (input: usersApi.UpdateProfileInput) =>
       usersApi.updateProfile(input, requireAccessToken()),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['me'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["me"] }),
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
 }
@@ -21,7 +21,8 @@ export function useUpdatePrivacySettings() {
   return useMutation({
     mutationFn: (input: Parameters<typeof usersApi.updatePrivacySettings>[0]) =>
       usersApi.updatePrivacySettings(input, requireAccessToken()),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['privacy-settings'] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["privacy-settings"] }),
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
 }

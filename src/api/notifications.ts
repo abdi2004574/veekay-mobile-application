@@ -1,82 +1,95 @@
-import { apiFetch } from './client';
+import { apiFetch } from "./client";
 import type {
   NotificationListItem,
   NotificationPreferenceItem,
   PushDevice,
   UnreadCountResponse,
-} from './types';
+} from "./types";
 
 export function listNotifications(
   accessToken: string,
   options?: { type?: string; cursor?: string; limit?: number },
 ) {
   const params = new URLSearchParams();
-  if (options?.type) params.set('type', options.type);
-  if (options?.cursor) params.set('cursor', options.cursor);
-  if (options?.limit) params.set('limit', String(options.limit));
+  if (options?.type) params.set("type", options.type);
+  if (options?.cursor) params.set("cursor", options.cursor);
+  if (options?.limit) params.set("limit", String(options.limit));
 
   const query = params.toString();
   return apiFetch<{ items: NotificationListItem[]; nextCursor: string | null }>(
-    `/notifications${query ? `?${query}` : ''}`,
+    `/notifications${query ? `?${query}` : ""}`,
     { accessToken },
   );
 }
 
 export function getUnreadCount(accessToken: string) {
-  return apiFetch<UnreadCountResponse>('/notifications/unread-count', { accessToken });
+  return apiFetch<UnreadCountResponse>("/notifications/unread-count", {
+    accessToken,
+  });
 }
 
 export function markRead(accessToken: string, id: string) {
   return apiFetch<NotificationListItem>(`/notifications/${id}/read`, {
-    method: 'PATCH',
+    method: "PATCH",
     accessToken,
   });
 }
 
 export function markAllRead(accessToken: string) {
-  return apiFetch<{ count: number }>('/notifications/read-all', {
-    method: 'POST',
+  return apiFetch<{ count: number }>("/notifications/read-all", {
+    method: "POST",
     accessToken,
   });
 }
 
 export function deleteNotification(accessToken: string, id: string) {
   return apiFetch<void>(`/notifications/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
     accessToken,
   });
 }
 
 export function getPreferences(accessToken: string) {
-  return apiFetch<NotificationPreferenceItem[]>('/notifications/preferences', { accessToken });
+  return apiFetch<NotificationPreferenceItem[]>("/notifications/preferences", {
+    accessToken,
+  });
 }
 
 export function updatePreference(
   accessToken: string,
-  input: { type: string; inAppEnabled?: boolean; pushEnabled?: boolean; emailEnabled?: boolean },
+  input: {
+    type: string;
+    inAppEnabled?: boolean;
+    pushEnabled?: boolean;
+    emailEnabled?: boolean;
+  },
 ) {
-  return apiFetch<NotificationPreferenceItem>('/notifications/preferences', {
-    method: 'PATCH',
+  return apiFetch<NotificationPreferenceItem>("/notifications/preferences", {
+    method: "PATCH",
     body: input,
     accessToken,
   });
 }
 
-export function registerDevice(accessToken: string, fcmToken: string, platform: 'ios' | 'android' | 'web') {
-  return apiFetch<PushDevice>('/notifications/devices', {
-    method: 'POST',
+export function registerDevice(
+  accessToken: string,
+  fcmToken: string,
+  platform: "ios" | "android" | "web",
+) {
+  return apiFetch<PushDevice>("/notifications/devices", {
+    method: "POST",
     body: { fcmToken, platform },
     accessToken,
   });
 }
 
 export function listDevices(accessToken: string) {
-  return apiFetch<PushDevice[]>('/notifications/devices', { accessToken });
+  return apiFetch<PushDevice[]>("/notifications/devices", { accessToken });
 }
 
 export function unregisterDevice(accessToken: string, token: string) {
   return apiFetch<void>(`/notifications/devices/${encodeURIComponent(token)}`, {
-    method: 'DELETE',
+    method: "DELETE",
     accessToken,
   });
 }

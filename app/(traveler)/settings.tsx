@@ -1,7 +1,13 @@
-import { ReactNode } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router } from 'expo-router';
+import { ReactNode } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Link, router } from "expo-router";
 import {
   ArrowLeft,
   Bell,
@@ -12,16 +18,16 @@ import {
   Trash2,
   User,
   Wallet,
-} from 'lucide-react-native';
-import { SettingsRow } from '../../src/components/SettingsRow';
-import { colors } from '../../src/constants/colors';
-import { useAuthStore } from '../../src/stores/auth-store';
-import { useMe } from '../../src/hooks/use-users-queries';
-import { useNotificationPreferences } from '../../src/hooks/use-notifications-queries';
-import { useUpdateNotificationPreference } from '../../src/hooks/use-notifications-mutations';
-import { useDeactivateAccount } from '../../src/hooks/use-users-mutations';
-import { showInDevelopmentAlert } from '../../src/utils/in-development';
-import { showAlert } from '../../src/utils/show-alert';
+} from "lucide-react-native";
+import { SettingsRow } from "../../src/components/SettingsRow";
+import { colors } from "../../src/constants/colors";
+import { useAuthStore } from "../../src/stores/auth-store";
+import { useMe } from "../../src/hooks/use-users-queries";
+import { useNotificationPreferences } from "../../src/hooks/use-notifications-queries";
+import { useUpdateNotificationPreference } from "../../src/hooks/use-notifications-mutations";
+import { useDeactivateAccount } from "../../src/hooks/use-users-mutations";
+import { showInDevelopmentAlert } from "../../src/utils/in-development";
+import { showAlert } from "../../src/utils/show-alert";
 
 export default function SettingsScreen() {
   const logout = useAuthStore((s) => s.logout);
@@ -33,31 +39,31 @@ export default function SettingsScreen() {
   const handleEditProfile = () => {
     const p = me.data;
     router.push({
-      pathname: '/(traveler)/edit-profile',
+      pathname: "/(traveler)/edit-profile",
       params: {
-        email: p?.email ?? '',
-        displayName: p?.displayName ?? '',
-        username: p?.username ?? '',
-        bio: p?.bio ?? '',
-        location: p?.location ?? '',
-        phone: p?.phone ?? '',
-        gender: p?.gender ?? '',
-        dateOfBirth: p?.dateOfBirth ? p.dateOfBirth.slice(0, 10) : '',
-        destinationTypes: (p?.destinationTypes ?? []).join(','),
-        travelStyles: (p?.travelStyles ?? []).join(','),
+        email: p?.email ?? "",
+        displayName: p?.displayName ?? "",
+        username: p?.username ?? "",
+        bio: p?.bio ?? "",
+        location: p?.location ?? "",
+        phone: p?.phone ?? "",
+        gender: p?.gender ?? "",
+        dateOfBirth: p?.dateOfBirth ? p.dateOfBirth.slice(0, 10) : "",
+        destinationTypes: (p?.destinationTypes ?? []).join(","),
+        travelStyles: (p?.travelStyles ?? []).join(","),
       },
     });
   };
 
   const handleLogout = () => {
-    showAlert('Log Out?', 'You can log back in any time.', [
-      { text: 'Cancel', style: 'cancel' },
+    showAlert("Log Out?", "You can log back in any time.", [
+      { text: "Cancel", style: "cancel" },
       {
-        text: 'Log Out',
-        style: 'destructive',
+        text: "Log Out",
+        style: "destructive",
         onPress: async () => {
           await logout();
-          router.replace('/(auth)/welcome');
+          router.replace("/(auth)/welcome");
         },
       },
     ]);
@@ -65,18 +71,18 @@ export default function SettingsScreen() {
 
   const handleDeleteAccount = () => {
     showAlert(
-      'Delete Account?',
-      'This deactivates your account. This cannot be undone from the app - contact support to reactivate.',
+      "Delete Account?",
+      "This deactivates your account. This cannot be undone from the app - contact support to reactivate.",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Delete',
-          style: 'destructive',
+          text: "Delete",
+          style: "destructive",
           onPress: () => {
             deactivateAccount.mutate(undefined, {
               onSuccess: async () => {
                 await logout();
-                router.replace('/(auth)/welcome');
+                router.replace("/(auth)/welcome");
               },
             });
           },
@@ -86,7 +92,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <View
         className="flex-row items-center px-4 h-14"
         style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
@@ -100,30 +106,36 @@ export default function SettingsScreen() {
       <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 32 }}>
         <SectionLabel>Account</SectionLabel>
         <SectionCard>
-          <SettingsRow icon={User} label="Edit Profile" onPress={handleEditProfile} />
+          <SettingsRow
+            icon={User}
+            label="Edit Profile"
+            onPress={handleEditProfile}
+          />
           <Divider />
           <SettingsRow
             icon={Lock}
             label="Change Password"
-            onPress={() => router.push('/(traveler)/change-password')}
+            onPress={() => router.push("/(traveler)/change-password")}
           />
           <Divider />
           <SettingsRow
             icon={Shield}
             label="Privacy & Security"
-            onPress={() => router.push('/(traveler)/privacy-security')}
+            onPress={() => router.push("/(traveler)/privacy-security")}
           />
           <Divider />
-                    <SettingsRow
+          <SettingsRow
             icon={Wallet}
             label="Wallet"
-            onPress={() => router.push('/(traveler)/wallet')}
+            onPress={() => router.push("/(traveler)/wallet")}
           />
           <Divider />
           <SettingsRow
             icon={CreditCard}
             label="Payment Methods"
-            onPress={() => showInDevelopmentAlert('Payment methods aren’t available yet.')}
+            onPress={() =>
+              showInDevelopmentAlert("Payment methods aren’t available yet.")
+            }
           />
         </SectionCard>
 
@@ -138,27 +150,45 @@ export default function SettingsScreen() {
               <SettingsRow
                 icon={Bell}
                 label="Donation Alerts"
-                toggled={notificationPrefs.data?.find((p) => p.type === 'donation')?.inAppEnabled ?? true}
+                toggled={
+                  notificationPrefs.data?.find((p) => p.type === "donation")
+                    ?.inAppEnabled ?? true
+                }
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: 'donation', inAppEnabled: value })
+                  updateNotificationPreference.mutate({
+                    type: "donation",
+                    inAppEnabled: value,
+                  })
                 }
               />
               <Divider />
               <SettingsRow
                 icon={Bell}
                 label="Campaign Updates"
-                toggled={notificationPrefs.data?.find((p) => p.type === 'milestone')?.inAppEnabled ?? true}
+                toggled={
+                  notificationPrefs.data?.find((p) => p.type === "milestone")
+                    ?.inAppEnabled ?? true
+                }
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: 'milestone', inAppEnabled: value })
+                  updateNotificationPreference.mutate({
+                    type: "milestone",
+                    inAppEnabled: value,
+                  })
                 }
               />
               <Divider />
               <SettingsRow
                 icon={Bell}
                 label="Messages"
-                toggled={notificationPrefs.data?.find((p) => p.type === 'chat_message')?.inAppEnabled ?? true}
+                toggled={
+                  notificationPrefs.data?.find((p) => p.type === "chat_message")
+                    ?.inAppEnabled ?? true
+                }
                 onToggle={(value) =>
-                  updateNotificationPreference.mutate({ type: 'chat_message', inAppEnabled: value })
+                  updateNotificationPreference.mutate({
+                    type: "chat_message",
+                    inAppEnabled: value,
+                  })
                 }
               />
             </>
@@ -167,7 +197,12 @@ export default function SettingsScreen() {
 
         <SectionLabel destructive>Danger Zone</SectionLabel>
         <SectionCard>
-          <SettingsRow icon={LogOut} label="Log Out" destructive onPress={handleLogout} />
+          <SettingsRow
+            icon={LogOut}
+            label="Log Out"
+            destructive
+            onPress={handleLogout}
+          />
           <Divider />
           <SettingsRow
             icon={Trash2}
@@ -197,11 +232,19 @@ export default function SettingsScreen() {
   );
 }
 
-function SectionLabel({ children, destructive }: { children: ReactNode; destructive?: boolean }) {
+function SectionLabel({
+  children,
+  destructive,
+}: {
+  children: ReactNode;
+  destructive?: boolean;
+}) {
   return (
     <Text
       className="text-xs font-bold mb-3 mt-2"
-      style={{ color: destructive ? colors.destructive : colors.mutedForeground }}
+      style={{
+        color: destructive ? colors.destructive : colors.mutedForeground,
+      }}
     >
       {children}
     </Text>
@@ -212,7 +255,7 @@ function SectionCard({ children }: { children: ReactNode }) {
   return (
     <View
       className="rounded-2xl mb-6"
-      style={{ borderWidth: 1, borderColor: colors.border, overflow: 'hidden' }}
+      style={{ borderWidth: 1, borderColor: colors.border, overflow: "hidden" }}
     >
       {children}
     </View>
@@ -222,4 +265,3 @@ function SectionCard({ children }: { children: ReactNode }) {
 function Divider() {
   return <View style={{ height: 1, backgroundColor: colors.border }} />;
 }
-

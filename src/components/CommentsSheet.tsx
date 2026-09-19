@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -9,18 +9,18 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native';
-import { Heart, Send, X } from 'lucide-react-native';
-import { Avatar } from './Avatar';
-import { colors } from '../constants/colors';
-import { formatTimeAgo } from '../utils/format-time-ago';
-import { useComments } from '../hooks/use-feed-queries';
+} from "react-native";
+import { Heart, Send, X } from "lucide-react-native";
+import { Avatar } from "./Avatar";
+import { colors } from "../constants/colors";
+import { formatTimeAgo } from "../utils/format-time-ago";
+import { useComments } from "../hooks/use-feed-queries";
 import {
   useCreateComment,
   useLikeComment,
   useUnlikeComment,
-} from '../hooks/use-feed-mutations';
-import type { Comment } from '../api/types';
+} from "../hooks/use-feed-mutations";
+import type { Comment } from "../api/types";
 
 interface CommentsSheetProps {
   visible: boolean;
@@ -28,13 +28,17 @@ interface CommentsSheetProps {
   onClose: () => void;
 }
 
-function commentAuthorName(author: Comment['author']) {
+function commentAuthorName(author: Comment["author"]) {
   return author.displayName ?? `@${author.username}`;
 }
 
-export function CommentsSheet({ visible, postId, onClose }: CommentsSheetProps) {
-  const [text, setText] = useState('');
-  const { data, isLoading, isError, refetch } = useComments(postId ?? '');
+export function CommentsSheet({
+  visible,
+  postId,
+  onClose,
+}: CommentsSheetProps) {
+  const [text, setText] = useState("");
+  const { data, isLoading, isError, refetch } = useComments(postId ?? "");
   const createComment = useCreateComment();
   const likeComment = useLikeComment();
   const unlikeComment = useUnlikeComment();
@@ -45,21 +49,33 @@ export function CommentsSheet({ visible, postId, onClose }: CommentsSheetProps) 
     if (!text.trim() || !postId) return;
     createComment.mutate(
       { postId, text: text.trim() },
-      { onSuccess: () => setText('') },
+      { onSuccess: () => setText("") },
     );
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable className="flex-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onPress={onClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <Pressable
+        className="flex-1"
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        onPress={onClose}
+      >
         <View className="flex-1" />
         <Pressable
           onPress={(e) => e.stopPropagation()}
           className="bg-background rounded-t-3xl"
-          style={{ maxHeight: '85%' }}
+          style={{ maxHeight: "85%" }}
         >
           <View className="items-center pt-3 pb-2">
-            <View className="w-10 h-1 rounded-full" style={{ backgroundColor: colors.border }} />
+            <View
+              className="w-10 h-1 rounded-full"
+              style={{ backgroundColor: colors.border }}
+            />
           </View>
 
           <View
@@ -73,7 +89,7 @@ export function CommentsSheet({ visible, postId, onClose }: CommentsSheetProps) 
           </View>
 
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
             style={{ maxHeight: 420 }}
           >
             {isLoading ? (
@@ -82,19 +98,30 @@ export function CommentsSheet({ visible, postId, onClose }: CommentsSheetProps) 
               </View>
             ) : isError ? (
               <View className="py-12 items-center px-6">
-                <Text className="text-center mb-3" style={{ color: colors.mutedForeground }}>
+                <Text
+                  className="text-center mb-3"
+                  style={{ color: colors.mutedForeground }}
+                >
                   Couldn&apos;t load comments.
                 </Text>
                 <Pressable onPress={() => refetch()}>
-                  <Text style={{ color: colors.vaykaePink }} className="font-semibold">
+                  <Text
+                    style={{ color: colors.vaykaePink }}
+                    className="font-semibold"
+                  >
                     Try again
                   </Text>
                 </Pressable>
               </View>
             ) : comments.length === 0 ? (
               <View className="py-12 items-center">
-                <Text style={{ color: colors.mutedForeground }}>No comments yet</Text>
-                <Text className="text-sm mt-1" style={{ color: colors.mutedForeground }}>
+                <Text style={{ color: colors.mutedForeground }}>
+                  No comments yet
+                </Text>
+                <Text
+                  className="text-sm mt-1"
+                  style={{ color: colors.mutedForeground }}
+                >
                   Be the first to comment!
                 </Text>
               </View>
@@ -114,16 +141,24 @@ export function CommentsSheet({ visible, postId, onClose }: CommentsSheetProps) 
                         <Text className="font-medium text-sm text-foreground mb-1">
                           {commentAuthorName(item.author)}
                         </Text>
-                        <Text className="text-sm text-foreground">{item.text}</Text>
+                        <Text className="text-sm text-foreground">
+                          {item.text}
+                        </Text>
                       </View>
                       <View className="flex-row items-center gap-4 mt-1.5 px-2">
-                        <Text className="text-xs" style={{ color: colors.mutedForeground }}>
+                        <Text
+                          className="text-xs"
+                          style={{ color: colors.mutedForeground }}
+                        >
                           {formatTimeAgo(item.createdAt)}
                         </Text>
                         <Pressable
                           className="flex-row items-center gap-1"
                           onPress={() => {
-                            const payload = { commentId: item.id, postId: item.postId };
+                            const payload = {
+                              commentId: item.id,
+                              postId: item.postId,
+                            };
                             if (item.isLikedByMe) {
                               unlikeComment.mutate(payload);
                             } else {
@@ -134,13 +169,23 @@ export function CommentsSheet({ visible, postId, onClose }: CommentsSheetProps) 
                         >
                           <Heart
                             size={14}
-                            color={item.isLikedByMe ? colors.vaykaePink : colors.mutedForeground}
-                            fill={item.isLikedByMe ? colors.vaykaePink : 'transparent'}
+                            color={
+                              item.isLikedByMe
+                                ? colors.vaykaePink
+                                : colors.mutedForeground
+                            }
+                            fill={
+                              item.isLikedByMe
+                                ? colors.vaykaePink
+                                : "transparent"
+                            }
                           />
                           <Text
                             className="text-xs"
                             style={{
-                              color: item.isLikedByMe ? colors.vaykaePink : colors.mutedForeground,
+                              color: item.isLikedByMe
+                                ? colors.vaykaePink
+                                : colors.mutedForeground,
                             }}
                           >
                             {item.likesCount}
@@ -174,15 +219,22 @@ export function CommentsSheet({ visible, postId, onClose }: CommentsSheetProps) 
                   width: 40,
                   height: 40,
                   borderRadius: 20,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: text.trim() ? colors.vaykaePink : colors.disabledBackground,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: text.trim()
+                    ? colors.vaykaePink
+                    : colors.disabledBackground,
                 }}
               >
                 {createComment.isPending ? (
                   <ActivityIndicator size="small" color={colors.background} />
                 ) : (
-                  <Send size={18} color={text.trim() ? colors.background : colors.mutedForeground} />
+                  <Send
+                    size={18}
+                    color={
+                      text.trim() ? colors.background : colors.mutedForeground
+                    }
+                  />
                 )}
               </Pressable>
             </View>

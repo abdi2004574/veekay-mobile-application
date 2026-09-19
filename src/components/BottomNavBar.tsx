@@ -1,8 +1,8 @@
-import { Text, View, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import type { LucideIcon } from 'lucide-react-native';
-import { colors, vaykaeGradient } from '../constants/colors';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Text, View, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import type { LucideIcon } from "lucide-react-native";
+import { colors, vaykaeGradient } from "../constants/colors";
+import { LinearGradient } from "expo-linear-gradient";
 
 // Content height only — screens with a floating action button must also add
 // the device's own bottom safe-area inset (via useSafeAreaInsets) on top of
@@ -28,7 +28,7 @@ export function BottomNavBar({ items, active }: BottomNavBarProps) {
   return (
     <View
       style={{
-        position: 'absolute',
+        position: "absolute",
         bottom: 0,
         left: 0,
         right: 0,
@@ -37,19 +37,27 @@ export function BottomNavBar({ items, active }: BottomNavBarProps) {
         borderTopColor: colors.border,
       }}
     >
-      <SafeAreaView edges={['bottom']}>
-        <View className="flex-row items-center justify-around" style={{ height: 64 }}>
+      <SafeAreaView edges={["bottom"]}>
+        <View
+          className="flex-row items-center justify-around"
+          style={{ height: 64 }}
+        >
           {items.map((item) => {
             const Icon = item.icon;
             const isActive = item.key === active;
             const content = (
               <View className="items-center justify-center gap-1 px-4 py-2">
-                <Icon size={20} color={isActive ? colors.background : colors.mutedForeground} />
+                <Icon
+                  size={20}
+                  color={isActive ? colors.background : colors.mutedForeground}
+                />
                 <Text
                   style={{
                     fontSize: 11,
-                    fontWeight: '500',
-                    color: isActive ? colors.background : colors.mutedForeground,
+                    fontWeight: "500",
+                    color: isActive
+                      ? colors.background
+                      : colors.mutedForeground,
                   }}
                 >
                   {item.label}

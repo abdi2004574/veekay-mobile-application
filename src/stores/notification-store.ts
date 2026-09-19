@@ -1,6 +1,6 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-type PermissionStatus = 'prompt' | 'denied' | 'authorized' | 'provisional';
+type PermissionStatus = "prompt" | "denied" | "authorized" | "provisional";
 
 interface NotificationState {
   fcmToken: string | null;
@@ -15,9 +15,10 @@ interface NotificationState {
 export const useNotificationStore = create<NotificationState>((set) => ({
   fcmToken: null,
   isRegistered: false,
-  permissionStatus: 'prompt',
+  permissionStatus: "prompt",
   setToken: (token) => set({ fcmToken: token }),
   setRegistered: (registered) => set({ isRegistered: registered }),
   setPermissionStatus: (status) => set({ permissionStatus: status }),
-  reset: () => set({ fcmToken: null, isRegistered: false, permissionStatus: 'prompt' }),
+  reset: () =>
+    set({ fcmToken: null, isRegistered: false, permissionStatus: "prompt" }),
 }));

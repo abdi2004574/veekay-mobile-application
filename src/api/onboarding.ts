@@ -1,5 +1,5 @@
-import { apiFetch } from './client';
-import type { DestinationType, Gender, TravelStyle } from './types';
+import { apiFetch } from "./client";
+import type { DestinationType, Gender, TravelStyle } from "./types";
 
 export interface PreviousTripInput {
   mediaId: string;
@@ -22,9 +22,12 @@ export interface ProfileSetupInput {
   walletPaymentMethodId?: string;
 }
 
-export function completeProfileSetup(input: ProfileSetupInput, accessToken: string) {
-  return apiFetch<{ userId: string; badge: string }>('/me/profile-setup', {
-    method: 'POST',
+export function completeProfileSetup(
+  input: ProfileSetupInput,
+  accessToken: string,
+) {
+  return apiFetch<{ userId: string; badge: string }>("/me/profile-setup", {
+    method: "POST",
     body: input,
     accessToken,
   });

@@ -1,12 +1,19 @@
-import { useState } from 'react';
-import { ActivityIndicator, Modal, Pressable, ScrollView, Text, View } from 'react-native';
-import { Check, CheckCircle2, Circle, X } from 'lucide-react-native';
-import { Avatar } from './Avatar';
-import { colors } from '../constants/colors';
-import { useFriends } from '../hooks/use-friends-queries';
-import { useSharePost } from '../hooks/use-feed-mutations';
-import { showInDevelopmentAlert } from '../utils/in-development';
-import type { Post } from '../api/types';
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { Check, CheckCircle2, Circle, X } from "lucide-react-native";
+import { Avatar } from "./Avatar";
+import { colors } from "../constants/colors";
+import { useFriends } from "../hooks/use-friends-queries";
+import { useSharePost } from "../hooks/use-feed-mutations";
+import { showInDevelopmentAlert } from "../utils/in-development";
+import type { Post } from "../api/types";
 
 interface ShareSheetProps {
   visible: boolean;
@@ -43,8 +50,8 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
 
     if (selectedFriendIds.length > 0) {
       showInDevelopmentAlert(
-        'Sharing directly to a friend’s chat isn’t wired up yet.',
-        'Not available yet',
+        "Sharing directly to a friend’s chat isn’t wired up yet.",
+        "Not available yet",
         () => (shareOnProfile ? shareToProfile(finish) : finish()),
       );
       return;
@@ -55,37 +62,56 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
 
   const shareToProfile = (onDone: () => void) => {
     if (!post) return;
-    sharePost.mutate({ postId: post.id }, { onSuccess: onDone, onError: onDone });
+    sharePost.mutate(
+      { postId: post.id },
+      { onSuccess: onDone, onError: onDone },
+    );
   };
 
   const label = () => {
-    if (!canShare) return 'Select friends or profile';
+    if (!canShare) return "Select friends or profile";
     const parts: string[] = [];
     if (selectedFriendIds.length > 0) {
-      parts.push(`with ${selectedFriendIds.length} friend${selectedFriendIds.length > 1 ? 's' : ''}`);
+      parts.push(
+        `with ${selectedFriendIds.length} friend${selectedFriendIds.length > 1 ? "s" : ""}`,
+      );
     }
-    if (shareOnProfile) parts.push('on profile');
-    return `Share ${parts.join(' & ')}`;
+    if (shareOnProfile) parts.push("on profile");
+    return `Share ${parts.join(" & ")}`;
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable className="flex-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onPress={onClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <Pressable
+        className="flex-1"
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        onPress={onClose}
+      >
         <View className="flex-1" />
         <Pressable
           onPress={(e) => e.stopPropagation()}
           className="bg-background rounded-t-3xl"
-          style={{ maxHeight: '80%' }}
+          style={{ maxHeight: "80%" }}
         >
           <View className="items-center pt-3 pb-2">
-            <View className="w-10 h-1 rounded-full" style={{ backgroundColor: colors.border }} />
+            <View
+              className="w-10 h-1 rounded-full"
+              style={{ backgroundColor: colors.border }}
+            />
           </View>
 
           <View
             className="flex-row items-center justify-between px-4 py-3"
             style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
           >
-            <Text className="text-lg font-bold text-foreground">Share Post</Text>
+            <Text className="text-lg font-bold text-foreground">
+              Share Post
+            </Text>
             <Pressable onPress={onClose} hitSlop={8}>
               <X size={20} color={colors.foreground} />
             </Pressable>
@@ -93,13 +119,19 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
 
           <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
             <View className="px-4 pt-4">
-              <Text className="text-sm font-medium mb-3" style={{ color: colors.mutedForeground }}>
+              <Text
+                className="text-sm font-medium mb-3"
+                style={{ color: colors.mutedForeground }}
+              >
                 Share with Friends
               </Text>
               {isLoading ? (
                 <ActivityIndicator color={colors.vaykaePink} />
               ) : !friends || friends.length === 0 ? (
-                <Text className="text-sm mb-2" style={{ color: colors.mutedForeground }}>
+                <Text
+                  className="text-sm mb-2"
+                  style={{ color: colors.mutedForeground }}
+                >
                   Add friends to share posts with them directly.
                 </Text>
               ) : (
@@ -115,7 +147,7 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
                           className="items-center"
                           style={{ width: 70 }}
                         >
-                          <View style={{ position: 'relative' }}>
+                          <View style={{ position: "relative" }}>
                             <View
                               style={{
                                 borderRadius: 999,
@@ -129,15 +161,15 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
                             {isSelected && (
                               <View
                                 style={{
-                                  position: 'absolute',
+                                  position: "absolute",
                                   bottom: -2,
                                   right: -2,
                                   width: 22,
                                   height: 22,
                                   borderRadius: 11,
                                   backgroundColor: colors.vaykaePink,
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
+                                  alignItems: "center",
+                                  justifyContent: "center",
                                 }}
                               >
                                 <Check size={14} color={colors.background} />
@@ -147,7 +179,11 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
                           <Text
                             numberOfLines={1}
                             className="text-xs font-medium mt-2"
-                            style={{ color: isSelected ? colors.vaykaePink : colors.foreground }}
+                            style={{
+                              color: isSelected
+                                ? colors.vaykaePink
+                                : colors.foreground,
+                            }}
                           >
                             {name}
                           </Text>
@@ -165,8 +201,12 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
                 className="flex-row items-center gap-4 rounded-2xl px-4 py-4"
                 style={{
                   borderWidth: 2,
-                  borderColor: shareOnProfile ? colors.vaykaePink : colors.border,
-                  backgroundColor: shareOnProfile ? `${colors.vaykaePink}1A` : colors.inputBackground,
+                  borderColor: shareOnProfile
+                    ? colors.vaykaePink
+                    : colors.border,
+                  backgroundColor: shareOnProfile
+                    ? `${colors.vaykaePink}1A`
+                    : colors.inputBackground,
                 }}
               >
                 {shareOnProfile ? (
@@ -177,11 +217,18 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
                 <View className="flex-1">
                   <Text
                     className="font-bold"
-                    style={{ color: shareOnProfile ? colors.vaykaePink : colors.foreground }}
+                    style={{
+                      color: shareOnProfile
+                        ? colors.vaykaePink
+                        : colors.foreground,
+                    }}
                   >
                     Share on Your Profile
                   </Text>
-                  <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+                  <Text
+                    className="text-sm"
+                    style={{ color: colors.mutedForeground }}
+                  >
                     Post will appear on your timeline
                   </Text>
                 </View>
@@ -189,13 +236,18 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
             </View>
           </ScrollView>
 
-          <View className="px-4 py-4" style={{ borderTopWidth: 1, borderTopColor: colors.border }}>
+          <View
+            className="px-4 py-4"
+            style={{ borderTopWidth: 1, borderTopColor: colors.border }}
+          >
             <Pressable
               onPress={handleShare}
               disabled={!canShare || sharePost.isPending}
               className="h-12 rounded-full items-center justify-center"
               style={{
-                backgroundColor: canShare ? colors.vaykaePink : colors.disabledBackground,
+                backgroundColor: canShare
+                  ? colors.vaykaePink
+                  : colors.disabledBackground,
               }}
             >
               {sharePost.isPending ? (
@@ -203,7 +255,11 @@ export function ShareSheet({ visible, post, onClose }: ShareSheetProps) {
               ) : (
                 <Text
                   className="font-bold"
-                  style={{ color: canShare ? colors.background : colors.mutedForeground }}
+                  style={{
+                    color: canShare
+                      ? colors.background
+                      : colors.mutedForeground,
+                  }}
                 >
                   {label()}
                 </Text>

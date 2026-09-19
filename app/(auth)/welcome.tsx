@@ -1,21 +1,25 @@
-import { Image, Pressable, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { ArrowRight, Building2, User } from 'lucide-react-native';
-import { colors, screenBackgroundGradient, vaykaeGradient } from '../../src/constants/colors';
+import { Image, Pressable, Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { ArrowRight, Building2, User } from "lucide-react-native";
+import {
+  colors,
+  screenBackgroundGradient,
+  vaykaeGradient,
+} from "../../src/constants/colors";
 
 const userTypes = [
   {
-    id: 'traveler' as const,
-    title: 'Traveler',
-    description: 'Raise funds for your dream vacation and share your journey',
+    id: "traveler" as const,
+    title: "Traveler",
+    description: "Raise funds for your dream vacation and share your journey",
     icon: User,
   },
   {
-    id: 'agency' as const,
-    title: 'Travel Agency',
-    description: 'Connect with travelers and offer exclusive packages',
+    id: "agency" as const,
+    title: "Travel Agency",
+    description: "Connect with travelers and offer exclusive packages",
     icon: Building2,
   },
 ];
@@ -27,7 +31,7 @@ export default function Welcome() {
         <View className="flex-1 px-6">
           <View className="items-center pt-16 mb-8">
             <Image
-              source={require('../../assets/images/logo.png')}
+              source={require("../../assets/images/logo.png")}
               style={{ width: 141, height: 114 }}
               resizeMode="contain"
             />
@@ -60,8 +64,8 @@ export default function Welcome() {
                         width: 56,
                         height: 56,
                         borderRadius: 16,
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
                       <type.icon size={28} color="#ffffff" />

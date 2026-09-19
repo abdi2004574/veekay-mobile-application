@@ -1,27 +1,35 @@
-import { ReactNode, useState } from 'react';
-import { ActivityIndicator, Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Camera, User as UserIcon } from 'lucide-react-native';
-import { GradientButton } from '../../src/components/GradientButton';
-import { DestinationTypeChips } from '../../src/components/DestinationTypeChips';
-import { TravelStyleChips } from '../../src/components/TravelStyleChips';
-import { colors } from '../../src/constants/colors';
-import { useAuthStore } from '../../src/stores/auth-store';
-import { useUpdateProfile } from '../../src/hooks/use-users-mutations';
-import { useToastStore } from '../../src/stores/toast-store';
-import { pickAndUploadFromLibrary } from '../../src/utils/upload-image';
-import type { DestinationType, Gender, TravelStyle } from '../../src/api/types';
+import { ReactNode, useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router, useLocalSearchParams } from "expo-router";
+import { ArrowLeft, Camera, User as UserIcon } from "lucide-react-native";
+import { GradientButton } from "../../src/components/GradientButton";
+import { DestinationTypeChips } from "../../src/components/DestinationTypeChips";
+import { TravelStyleChips } from "../../src/components/TravelStyleChips";
+import { colors } from "../../src/constants/colors";
+import { useAuthStore } from "../../src/stores/auth-store";
+import { useUpdateProfile } from "../../src/hooks/use-users-mutations";
+import { useToastStore } from "../../src/stores/toast-store";
+import { pickAndUploadFromLibrary } from "../../src/utils/upload-image";
+import type { DestinationType, Gender, TravelStyle } from "../../src/api/types";
 
 const GENDER_OPTIONS: { value: Gender; label: string }[] = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-  { value: 'other', label: 'Other' },
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+  { value: "other", label: "Other" },
 ];
 const BIO_LIMIT = 200;
 
 function splitParam(value: string | undefined): string[] {
-  return value ? value.split(',').filter(Boolean) : [];
+  return value ? value.split(",").filter(Boolean) : [];
 }
 
 export default function EditProfileScreen() {
@@ -43,15 +51,15 @@ export default function EditProfileScreen() {
 
   const [photoMediaId, setPhotoMediaId] = useState<string>();
   const [photoUrl, setPhotoUrl] = useState<string>();
-  const [displayName, setDisplayName] = useState(params.displayName ?? '');
-  const [username, setUsername] = useState(params.username ?? '');
-  const [bio, setBio] = useState(params.bio ?? '');
-  const [location, setLocation] = useState(params.location ?? '');
-  const [phone, setPhone] = useState(params.phone ?? '');
+  const [displayName, setDisplayName] = useState(params.displayName ?? "");
+  const [username, setUsername] = useState(params.username ?? "");
+  const [bio, setBio] = useState(params.bio ?? "");
+  const [location, setLocation] = useState(params.location ?? "");
+  const [phone, setPhone] = useState(params.phone ?? "");
   const [gender, setGender] = useState<Gender | undefined>(
     (params.gender as Gender) || undefined,
   );
-  const [dateOfBirth, setDateOfBirth] = useState(params.dateOfBirth ?? '');
+  const [dateOfBirth, setDateOfBirth] = useState(params.dateOfBirth ?? "");
   const [destinationTypes, setDestinationTypes] = useState<DestinationType[]>(
     splitParam(params.destinationTypes) as DestinationType[],
   );
@@ -64,13 +72,18 @@ export default function EditProfileScreen() {
     if (!accessToken) return;
     setIsUploadingPhoto(true);
     try {
-      const uploaded = await pickAndUploadFromLibrary('profile_photo', accessToken);
+      const uploaded = await pickAndUploadFromLibrary(
+        "profile_photo",
+        accessToken,
+      );
       if (uploaded) {
         setPhotoMediaId(uploaded.mediaId);
         setPhotoUrl(uploaded.previewUri);
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Could not add that photo.');
+      showToast(
+        err instanceof Error ? err.message : "Could not add that photo.",
+      );
     } finally {
       setIsUploadingPhoto(false);
     }
@@ -104,7 +117,7 @@ export default function EditProfileScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <View
         className="flex-row items-center px-4 h-14"
         style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
@@ -112,7 +125,9 @@ export default function EditProfileScreen() {
         <Pressable onPress={() => router.back()} hitSlop={8}>
           <ArrowLeft size={20} color={colors.foreground} />
         </Pressable>
-        <Text className="text-lg font-bold text-foreground ml-3">Edit Profile</Text>
+        <Text className="text-lg font-bold text-foreground ml-3">
+          Edit Profile
+        </Text>
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 32 }}>
@@ -123,30 +138,34 @@ export default function EditProfileScreen() {
                 width: 96,
                 height: 96,
                 borderRadius: 48,
-                alignItems: 'center',
-                justifyContent: 'center',
+                alignItems: "center",
+                justifyContent: "center",
                 backgroundColor: colors.inputBackground,
-                overflow: 'hidden',
+                overflow: "hidden",
               }}
             >
               {isUploadingPhoto ? (
                 <ActivityIndicator color={colors.vaykaePink} />
               ) : photoUrl ? (
-                <Image source={{ uri: photoUrl }} style={{ width: 96, height: 96 }} resizeMode="cover" />
+                <Image
+                  source={{ uri: photoUrl }}
+                  style={{ width: 96, height: 96 }}
+                  resizeMode="cover"
+                />
               ) : (
                 <UserIcon size={40} color={colors.mutedForeground} />
               )}
             </View>
             <View
               style={{
-                position: 'absolute',
+                position: "absolute",
                 bottom: 0,
                 right: 0,
                 width: 32,
                 height: 32,
                 borderRadius: 16,
-                alignItems: 'center',
-                justifyContent: 'center',
+                alignItems: "center",
+                justifyContent: "center",
                 backgroundColor: colors.vaykaePink,
               }}
             >
@@ -169,7 +188,9 @@ export default function EditProfileScreen() {
           <Field label="Username">
             <TextInput
               value={username}
-              onChangeText={(v) => setUsername(v.toLowerCase().replace(/[^a-z0-9]/g, ''))}
+              onChangeText={(v) =>
+                setUsername(v.toLowerCase().replace(/[^a-z0-9]/g, ""))
+              }
               autoCapitalize="none"
               placeholderTextColor={colors.mutedForeground}
               className="h-12 rounded-2xl px-4 text-foreground"
@@ -182,7 +203,9 @@ export default function EditProfileScreen() {
               className="h-12 rounded-2xl px-4 justify-center"
               style={{ backgroundColor: colors.disabledBackground }}
             >
-              <Text style={{ color: colors.mutedForeground }}>{params.email}</Text>
+              <Text style={{ color: colors.mutedForeground }}>
+                {params.email}
+              </Text>
             </View>
           </Field>
 
@@ -221,16 +244,20 @@ export default function EditProfileScreen() {
                       flex: 1,
                       height: 44,
                       borderRadius: 12,
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      alignItems: "center",
+                      justifyContent: "center",
                       borderWidth: 2,
                       borderColor: selected ? colors.vaykaePink : colors.border,
-                      backgroundColor: selected ? colors.vaykaePink : colors.inputBackground,
+                      backgroundColor: selected
+                        ? colors.vaykaePink
+                        : colors.inputBackground,
                     }}
                   >
                     <Text
                       className="font-medium text-sm"
-                      style={{ color: selected ? colors.background : colors.foreground }}
+                      style={{
+                        color: selected ? colors.background : colors.foreground,
+                      }}
                     >
                       {opt.label}
                     </Text>
@@ -252,7 +279,9 @@ export default function EditProfileScreen() {
           </Field>
 
           <View>
-            <Text className="text-sm font-bold text-foreground mb-2">About</Text>
+            <Text className="text-sm font-bold text-foreground mb-2">
+              About
+            </Text>
             <TextInput
               value={bio}
               onChangeText={(v) => setBio(v.slice(0, BIO_LIMIT))}
@@ -260,26 +289,46 @@ export default function EditProfileScreen() {
               numberOfLines={4}
               placeholderTextColor={colors.mutedForeground}
               className="rounded-2xl px-4 py-3 text-foreground"
-              style={{ backgroundColor: colors.inputBackground, minHeight: 96, textAlignVertical: 'top' }}
+              style={{
+                backgroundColor: colors.inputBackground,
+                minHeight: 96,
+                textAlignVertical: "top",
+              }}
             />
-            <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
+            <Text
+              className="text-xs mt-1"
+              style={{ color: colors.mutedForeground }}
+            >
               {bio.length}/{BIO_LIMIT} characters
             </Text>
           </View>
 
           <View>
-            <Text className="text-sm font-bold text-foreground mb-3">Favorite Destinations</Text>
-            <DestinationTypeChips value={destinationTypes} onToggle={toggleDestinationType} />
+            <Text className="text-sm font-bold text-foreground mb-3">
+              Favorite Destinations
+            </Text>
+            <DestinationTypeChips
+              value={destinationTypes}
+              onToggle={toggleDestinationType}
+            />
           </View>
 
           <View>
-            <Text className="text-sm font-bold text-foreground mb-3">Travel Style</Text>
-            <TravelStyleChips value={travelStyles} onToggle={toggleTravelStyle} />
+            <Text className="text-sm font-bold text-foreground mb-3">
+              Travel Style
+            </Text>
+            <TravelStyleChips
+              value={travelStyles}
+              onToggle={toggleTravelStyle}
+            />
           </View>
         </View>
 
         <View className="mt-8">
-          <GradientButton onPress={handleSave} loading={updateProfile.isPending}>
+          <GradientButton
+            onPress={handleSave}
+            loading={updateProfile.isPending}
+          >
             Save Changes
           </GradientButton>
         </View>
@@ -288,13 +337,24 @@ export default function EditProfileScreen() {
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: ReactNode;
+}) {
   return (
     <View>
       <Text className="text-sm font-bold text-foreground mb-2">{label}</Text>
       {children}
       {hint && (
-        <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
+        <Text
+          className="text-xs mt-1"
+          style={{ color: colors.mutedForeground }}
+        >
           {hint}
         </Text>
       )}

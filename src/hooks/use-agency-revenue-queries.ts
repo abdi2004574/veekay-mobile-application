@@ -6,7 +6,8 @@ export function useRevenueLedger(cursor?: string, limit?: number) {
   const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: ["agency", "revenue", "ledger", cursor],
-    queryFn: () => agencyRevenueApi.getRevenueLedger(accessToken!, cursor, limit),
+    queryFn: () =>
+      agencyRevenueApi.getRevenueLedger(accessToken!, cursor, limit),
     enabled: !!accessToken,
   });
 }
@@ -15,7 +16,8 @@ export function useInfiniteRevenueLedger(limit = 20) {
   const accessToken = useAuthStore((s) => s.accessToken);
   return useInfiniteQuery({
     queryKey: ["agency", "revenue", "ledger", "infinite"],
-    queryFn: ({ pageParam }) => agencyRevenueApi.getRevenueLedger(accessToken!, pageParam, limit),
+    queryFn: ({ pageParam }) =>
+      agencyRevenueApi.getRevenueLedger(accessToken!, pageParam, limit),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     enabled: !!accessToken,

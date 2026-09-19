@@ -1,6 +1,6 @@
-import { Pressable, Switch, Text, View } from 'react-native';
-import { ChevronRight, type LucideIcon } from 'lucide-react-native';
-import { colors } from '../constants/colors';
+import { Pressable, Switch, Text, View } from "react-native";
+import { ChevronRight, type LucideIcon } from "lucide-react-native";
+import { colors } from "../constants/colors";
 
 interface SettingsRowProps {
   icon: LucideIcon;
@@ -44,13 +44,20 @@ export function SettingsRow({
           {label}
         </Text>
         {subtitle && (
-          <Text className="text-xs mt-0.5" style={{ color: colors.mutedForeground }}>
+          <Text
+            className="text-xs mt-0.5"
+            style={{ color: colors.mutedForeground }}
+          >
             {subtitle}
           </Text>
         )}
       </View>
       {isToggle ? (
-        <Switch value={toggled} onValueChange={onToggle} trackColor={{ true: colors.vaykaePink }} />
+        <Switch
+          value={toggled}
+          onValueChange={onToggle}
+          trackColor={{ true: colors.vaykaePink }}
+        />
       ) : onPress ? (
         <ChevronRight size={18} color={colors.mutedForeground} />
       ) : null}

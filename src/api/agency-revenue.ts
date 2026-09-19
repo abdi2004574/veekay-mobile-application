@@ -1,4 +1,4 @@
-import { apiFetch } from './client';
+import { apiFetch } from "./client";
 
 export interface RevenueLedgerItem {
   bookingId: string;
@@ -19,21 +19,27 @@ export interface RevenueLedgerResponse {
   hasMore: boolean;
 }
 
-export function getRevenueLedger(accessToken: string, cursor?: string, limit?: number) {
+export function getRevenueLedger(
+  accessToken: string,
+  cursor?: string,
+  limit?: number,
+) {
   const params: Record<string, string | number | undefined> = {};
   if (cursor) params.cursor = cursor;
   if (limit) params.limit = limit;
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
-    .map(([k, v]) => k + '=' + encodeURIComponent(String(v)))
-    .join('&');
-  const path = query ? '/agency/revenue/ledger?' + query : '/agency/revenue/ledger';
+    .map(([k, v]) => k + "=" + encodeURIComponent(String(v)))
+    .join("&");
+  const path = query
+    ? "/agency/revenue/ledger?" + query
+    : "/agency/revenue/ledger";
   return apiFetch<RevenueLedgerResponse>(path, { accessToken });
 }
 
 export function exportRevenueCsv(accessToken: string) {
-  return apiFetch<Blob>('/agency/revenue/export', {
-    method: 'GET',
+  return apiFetch<Blob>("/agency/revenue/export", {
+    method: "GET",
     accessToken,
   });
 }

@@ -1,8 +1,10 @@
-export type UserRole = 'traveler' | 'agency' | 'admin';
+export type UserRole = "traveler" | "agency" | "admin";
 
-export type DestinationType = 'beach' | 'mountain' | 'city' | 'adventure' | 'cruise';
-export type TravelStyle = 'luxury' | 'budget' | 'backpacking' | 'family' | 'solo' | 'group';
-export type Gender = 'male' | 'female' | 'other';
+export type DestinationType =
+  "beach" | "mountain" | "city" | "adventure" | "cruise";
+export type TravelStyle =
+  "luxury" | "budget" | "backpacking" | "family" | "solo" | "group";
+export type Gender = "male" | "female" | "other";
 
 export interface AuthUser {
   id: string;
@@ -20,14 +22,14 @@ export interface AuthResponse {
 }
 
 export type ApiErrorCode =
-  | 'UNAUTHORIZED'
-  | 'FORBIDDEN'
-  | 'NOT_FOUND'
-  | 'CONFLICT'
-  | 'VALIDATION_ERROR'
-  | 'BUSINESS_RULE'
-  | 'RATE_LIMITED'
-  | 'INTERNAL_ERROR';
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "NOT_FOUND"
+  | "CONFLICT"
+  | "VALIDATION_ERROR"
+  | "BUSINESS_RULE"
+  | "RATE_LIMITED"
+  | "INTERNAL_ERROR";
 
 export interface ApiErrorBody {
   success: false;
@@ -82,7 +84,7 @@ export interface Page<T> {
   nextCursor: string | null;
 }
 
-export type StoryTextSize = 'small' | 'medium' | 'large';
+export type StoryTextSize = "small" | "medium" | "large";
 
 export interface Story {
   id: string;
@@ -98,7 +100,7 @@ export interface Story {
   imageUrl: string | null;
 }
 
-export type FriendRequestStatus = 'pending' | 'accepted' | 'declined';
+export type FriendRequestStatus = "pending" | "accepted" | "declined";
 
 export interface FriendUser {
   id: string;
@@ -149,7 +151,7 @@ export interface MeProfile {
   campaignsCount: number;
 }
 
-export type ProfileVisibility = 'public' | 'friends' | 'private';
+export type ProfileVisibility = "public" | "friends" | "private";
 
 export interface NotificationListItem {
   id: string;
@@ -191,10 +193,10 @@ export interface PrivacySettings {
   readReceiptsEnabled: boolean;
 }
 
-export type ConversationType = 'direct' | 'group' | 'agency';
-export type ConversationParticipantRole = 'member' | 'admin';
-export type MessageType = 'text' | 'image' | 'document';
-export type MessageStatus = 'sent' | 'delivered' | 'read';
+export type ConversationType = "direct" | "group" | "agency";
+export type ConversationParticipantRole = "member" | "admin";
+export type MessageType = "text" | "image" | "document";
+export type MessageStatus = "sent" | "delivered" | "read";
 
 export interface ConversationSummary {
   id: string;
@@ -292,8 +294,8 @@ export interface MyReview {
   editableUntil: string;
 }
 
-export type CampaignPrivacy = 'public' | 'private';
-export type CampaignStatus = 'draft' | 'active' | 'completed';
+export type CampaignPrivacy = "public" | "private";
+export type CampaignStatus = "draft" | "active" | "completed";
 
 export interface CampaignPhoto {
   mediaId: string;
@@ -330,13 +332,9 @@ export interface CampaignDetail extends Campaign {
   creator: { id: string; username: string; displayName: string | null };
 }
 
-export type GroupMemberRole = 'admin' | 'member';
+export type GroupMemberRole = "admin" | "member";
 export type GroupExpenseCategory =
-  | 'transportation'
-  | 'accommodation'
-  | 'activities'
-  | 'food'
-  | 'other';
+  "transportation" | "accommodation" | "activities" | "food" | "other";
 
 export interface GroupMember {
   userId: string;
@@ -372,7 +370,7 @@ export interface GroupContribution {
   campaignId: string;
   memberUserId: string;
   amount: number;
-  type: 'manual' | 'donation';
+  type: "manual" | "donation";
   note: string | null;
   createdAt: string;
   member: GroupContributionAuthor;
@@ -400,8 +398,7 @@ export interface GroupTrip {
   photoUrl: string | null;
 }
 
-
-export type PackageStatus = 'active' | 'inactive' | 'archived';
+export type PackageStatus = "active" | "inactive" | "archived";
 
 export interface PackageMediaEntry {
   mediaId: string;
@@ -434,12 +431,12 @@ export interface Package {
 }
 
 export type TripRequestStatus =
-  | 'pending'
-  | 'in_discussion'
-  | 'confirmed'
-  | 'completed'
-  | 'declined'
-  | 'cancelled';
+  | "pending"
+  | "in_discussion"
+  | "confirmed"
+  | "completed"
+  | "declined"
+  | "cancelled";
 
 export interface TripRequestTraveler {
   id: string;
@@ -491,19 +488,19 @@ export interface SmartReplyTemplate {
   createdAt: string;
   updatedAt: string;
 }
-export type WalletTransactionDirection = 'credit' | 'debit';
+export type WalletTransactionDirection = "credit" | "debit";
 
 export type WalletTransactionType =
-  | 'donation_received'
-  | 'donation_fee'
-  | 'withdrawal'
-  | 'refund'
-  | 'commission'
-  | 'booking_payment';
+  | "donation_received"
+  | "donation_fee"
+  | "withdrawal"
+  | "refund"
+  | "commission"
+  | "booking_payment";
 
-export type WithdrawalStatus = 'requested' | 'approved' | 'rejected' | 'paid';
+export type WithdrawalStatus = "requested" | "approved" | "rejected" | "paid";
 
-export type FundingTrendRange = '7d' | '30d' | '90d';
+export type FundingTrendRange = "7d" | "30d" | "90d";
 
 export interface WalletAccount {
   id: string;
@@ -568,7 +565,7 @@ export interface DonateManualResponse {
   walletTransactionId: string;
 }
 
-export type AgencySubscriptionTier = 'basic' | 'premium' | 'featured';
+export type AgencySubscriptionTier = "basic" | "premium" | "featured";
 
 export interface SubscriptionStatusResponse {
   tier: AgencySubscriptionTier;

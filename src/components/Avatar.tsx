@@ -1,6 +1,6 @@
-import { Text, View } from 'react-native';
-import { colors, vaykaeGradient } from '../constants/colors';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Text, View } from "react-native";
+import { colors, vaykaeGradient } from "../constants/colors";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface AvatarProps {
   name: string;
@@ -10,7 +10,7 @@ interface AvatarProps {
 // No Storage module exists yet, so photoMediaId has no resolvable image URL —
 // initials are the honest fallback until real photo upload/serving lands.
 export function Avatar({ name, size = 40 }: AvatarProps) {
-  const initial = name.trim().charAt(0).toUpperCase() || '?';
+  const initial = name.trim().charAt(0).toUpperCase() || "?";
 
   return (
     <LinearGradient
@@ -21,13 +21,17 @@ export function Avatar({ name, size = 40 }: AvatarProps) {
         width: size,
         height: size,
         borderRadius: size / 2,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <View>
         <Text
-          style={{ color: colors.background, fontSize: size * 0.4, fontWeight: '600' }}
+          style={{
+            color: colors.background,
+            fontSize: size * 0.4,
+            fontWeight: "600",
+          }}
         >
           {initial}
         </Text>

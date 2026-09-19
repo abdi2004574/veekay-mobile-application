@@ -1,43 +1,53 @@
-import { apiFetch } from './client';
+import { apiFetch } from "./client";
 import type {
   ConversationDetail,
   ConversationSummary,
   Message,
   MessageType,
   Page,
-} from './types';
+} from "./types";
 
-function withQuery(path: string, params: Record<string, string | number | undefined>) {
+function withQuery(
+  path: string,
+  params: Record<string, string | number | undefined>,
+) {
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
     .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
-    .join('&');
+    .join("&");
   return query ? `${path}?${query}` : path;
 }
 
 export type CreateConversationInput =
-  | { type: 'direct'; participantId: string }
-  | { type: 'group'; title: string; participantIds: string[] }
-  | { type: 'agency'; agencyId: string };
+  | { type: "direct"; participantId: string }
+  | { type: "group"; title: string; participantIds: string[] }
+  | { type: "agency"; agencyId: string };
 
-export function createConversation(input: CreateConversationInput, accessToken: string) {
-  return apiFetch<ConversationSummary>('/conversations', {
-    method: 'POST',
+export function createConversation(
+  input: CreateConversationInput,
+  accessToken: string,
+) {
+  return apiFetch<ConversationSummary>("/conversations", {
+    method: "POST",
     body: input,
     accessToken,
   });
 }
 
 export function listConversations(accessToken: string) {
-  return apiFetch<ConversationSummary[]>('/conversations', { accessToken });
+  return apiFetch<ConversationSummary[]>("/conversations", { accessToken });
 }
 
 export function getUnreadCount(accessToken: string) {
-  return apiFetch<{ count: number }>('/conversations/unread-count', { accessToken });
+  return apiFetch<{ count: number }>("/conversations/unread-count", {
+    accessToken,
+  });
 }
 
 export function getConversation(conversationId: string, accessToken: string) {
-  return apiFetch<ConversationDetail>(`/conversations/${conversationId}`, { accessToken });
+  return apiFetch<ConversationDetail>(`/conversations/${conversationId}`, {
+    accessToken,
+  });
 }
 
 export function addParticipants(
@@ -46,7 +56,7 @@ export function addParticipants(
   accessToken: string,
 ) {
   return apiFetch<void>(`/conversations/${conversationId}/participants`, {
-    method: 'POST',
+    method: "POST",
     body: { userIds },
     accessToken,
   });
@@ -57,15 +67,21 @@ export function removeParticipant(
   userId: string,
   accessToken: string,
 ) {
-  return apiFetch<void>(`/conversations/${conversationId}/participants/${userId}`, {
-    method: 'DELETE',
-    accessToken,
-  });
+  return apiFetch<void>(
+    `/conversations/${conversationId}/participants/${userId}`,
+    {
+      method: "DELETE",
+      accessToken,
+    },
+  );
 }
 
-export function markConversationRead(conversationId: string, accessToken: string) {
+export function markConversationRead(
+  conversationId: string,
+  accessToken: string,
+) {
   return apiFetch<void>(`/conversations/${conversationId}/read`, {
-    method: 'POST',
+    method: "POST",
     accessToken,
   });
 }
@@ -76,7 +92,10 @@ export function listMessages(
   accessToken: string,
 ) {
   return apiFetch<Page<Message>>(
-    withQuery(`/conversations/${conversationId}/messages`, { cursor, limit: 30 }),
+    withQuery(`/conversations/${conversationId}/messages`, {
+      cursor,
+      limit: 30,
+    }),
     { accessToken },
   );
 }
@@ -94,7 +113,7 @@ export function sendMessage(
   accessToken: string,
 ) {
   return apiFetch<Message>(`/conversations/${conversationId}/messages`, {
-    method: 'POST',
+    method: "POST",
     body: input,
     accessToken,
   });

@@ -1,17 +1,17 @@
-import { apiFetch } from './client';
+import { apiFetch } from "./client";
 
 export type MediaPurpose =
-  | 'profile_photo'
-  | 'previous_trip_photo'
-  | 'post_media'
-  | 'story_media'
-  | 'agency_document'
-  | 'agency_logo'
-  | 'chat_image'
-  | 'chat_document'
-  | 'package_visual'
-  | 'campaign_photo'
-  | 'campaign_document';
+  | "profile_photo"
+  | "previous_trip_photo"
+  | "post_media"
+  | "story_media"
+  | "agency_document"
+  | "agency_logo"
+  | "chat_image"
+  | "chat_document"
+  | "package_visual"
+  | "campaign_photo"
+  | "campaign_document";
 
 export interface UploadUrlResponse {
   uploadUrl: string;
@@ -24,16 +24,16 @@ export function createUploadUrl(
   purpose: MediaPurpose,
   accessToken: string,
 ) {
-  return apiFetch<UploadUrlResponse>('/storage/upload-url', {
-    method: 'POST',
+  return apiFetch<UploadUrlResponse>("/storage/upload-url", {
+    method: "POST",
     body: { contentType, purpose },
     accessToken,
   });
 }
 
 export function confirmUpload(mediaId: string, accessToken: string) {
-  return apiFetch<{ id: string; status: string }>('/storage/confirm', {
-    method: 'POST',
+  return apiFetch<{ id: string; status: string }>("/storage/confirm", {
+    method: "POST",
     body: { mediaId },
     accessToken,
   });

@@ -11,11 +11,16 @@ export function useStaffList() {
   });
 }
 
-export function useStaffAuditLog(staffId: string, cursor?: string, limit?: number) {
+export function useStaffAuditLog(
+  staffId: string,
+  cursor?: string,
+  limit?: number,
+) {
   const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: ["agency", "staff", "audit", staffId, cursor],
-    queryFn: () => agencyStaffApi.getStaffAuditLog(accessToken!, staffId, cursor, limit),
+    queryFn: () =>
+      agencyStaffApi.getStaffAuditLog(accessToken!, staffId, cursor, limit),
     enabled: !!accessToken && !!staffId,
   });
 }

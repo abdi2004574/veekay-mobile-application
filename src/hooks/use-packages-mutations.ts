@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import * as packagesApi from '../api/packages';
-import { requireAccessToken } from '../utils/require-access-token';
-import { useToastStore } from '../stores/toast-store';
-import { friendlyErrorMessage } from '../utils/error-message';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as packagesApi from "../api/packages";
+import { requireAccessToken } from "../utils/require-access-token";
+import { useToastStore } from "../stores/toast-store";
+import { friendlyErrorMessage } from "../utils/error-message";
 
 export function useCreatePackage() {
   const queryClient = useQueryClient();
@@ -10,7 +10,8 @@ export function useCreatePackage() {
   return useMutation({
     mutationFn: (input: packagesApi.PackageInput) =>
       packagesApi.createPackage(input, requireAccessToken()),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['packages', 'mine'] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["packages", "mine"] }),
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
 }
@@ -27,8 +28,8 @@ export function useUpdatePackage() {
       input: Partial<packagesApi.PackageInput>;
     }) => packagesApi.updatePackage(packageId, input, requireAccessToken()),
     onSuccess: (_data, { packageId }) => {
-      queryClient.invalidateQueries({ queryKey: ['packages', 'mine'] });
-      queryClient.invalidateQueries({ queryKey: ['package', packageId] });
+      queryClient.invalidateQueries({ queryKey: ["packages", "mine"] });
+      queryClient.invalidateQueries({ queryKey: ["package", packageId] });
     },
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
@@ -41,8 +42,8 @@ export function useDeletePackage() {
     mutationFn: (packageId: string) =>
       packagesApi.deletePackage(packageId, requireAccessToken()),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['packages', 'mine'] });
-      showToast('Package deleted.');
+      queryClient.invalidateQueries({ queryKey: ["packages", "mine"] });
+      showToast("Package deleted.");
     },
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });

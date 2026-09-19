@@ -1,6 +1,6 @@
-import { apiFetch } from './client';
+import { apiFetch } from "./client";
 
-export type StaffPermission = 'owner' | 'admin' | 'support';
+export type StaffPermission = "owner" | "admin" | "support";
 
 export interface StaffMember {
   id: string;
@@ -22,7 +22,7 @@ export interface StaffListResponse {
 
 export interface CreateStaffInviteInput {
   email: string;
-  permission?: 'admin' | 'support';
+  permission?: "admin" | "support";
 }
 
 export interface UpdateStaffPermissionInput {
@@ -46,47 +46,61 @@ export interface StaffAuditLogResponse {
 }
 
 export function listStaff(accessToken: string) {
-  return apiFetch<StaffListResponse>('/agency/staff', { accessToken });
+  return apiFetch<StaffListResponse>("/agency/staff", { accessToken });
 }
 
-export function inviteStaff(input: CreateStaffInviteInput, accessToken: string) {
-  return apiFetch<StaffMember>('/agency/staff', {
-    method: 'POST',
+export function inviteStaff(
+  input: CreateStaffInviteInput,
+  accessToken: string,
+) {
+  return apiFetch<StaffMember>("/agency/staff", {
+    method: "POST",
     body: input,
     accessToken,
   });
 }
 
-export function updateStaffPermission(staffId: string, input: UpdateStaffPermissionInput, accessToken: string) {
-  return apiFetch<StaffMember>('/agency/staff/' + staffId + '/permission', {
-    method: 'PATCH',
+export function updateStaffPermission(
+  staffId: string,
+  input: UpdateStaffPermissionInput,
+  accessToken: string,
+) {
+  return apiFetch<StaffMember>("/agency/staff/" + staffId + "/permission", {
+    method: "PATCH",
     body: input,
     accessToken,
   });
 }
 
 export function removeStaff(staffId: string, accessToken: string) {
-  return apiFetch<void>('/agency/staff/' + staffId, {
-    method: 'DELETE',
+  return apiFetch<void>("/agency/staff/" + staffId, {
+    method: "DELETE",
     accessToken,
   });
 }
 
 export function resendStaffInvite(staffId: string, accessToken: string) {
-  return apiFetch<void>('/agency/staff/' + staffId + '/resend-invite', {
-    method: 'POST',
+  return apiFetch<void>("/agency/staff/" + staffId + "/resend-invite", {
+    method: "POST",
     accessToken,
   });
 }
 
-export function getStaffAuditLog(accessToken: string, staffId: string, cursor?: string, limit?: number) {
+export function getStaffAuditLog(
+  accessToken: string,
+  staffId: string,
+  cursor?: string,
+  limit?: number,
+) {
   const params: Record<string, string | number | undefined> = {};
   if (cursor) params.cursor = cursor;
   if (limit) params.limit = limit;
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
-    .map(([k, v]) => k + '=' + encodeURIComponent(String(v)))
-    .join('&');
-  const path = query ? '/agency/staff/' + staffId + '/audit?' + query : '/agency/staff/' + staffId + '/audit';
+    .map(([k, v]) => k + "=" + encodeURIComponent(String(v)))
+    .join("&");
+  const path = query
+    ? "/agency/staff/" + staffId + "/audit?" + query
+    : "/agency/staff/" + staffId + "/audit";
   return apiFetch<StaffAuditLogResponse>(path, { accessToken });
 }

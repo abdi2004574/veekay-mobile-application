@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import * as reviewsApi from '../api/reviews';
-import { requireAccessToken } from '../utils/require-access-token';
-import { useToastStore } from '../stores/toast-store';
-import { friendlyErrorMessage } from '../utils/error-message';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as reviewsApi from "../api/reviews";
+import { requireAccessToken } from "../utils/require-access-token";
+import { useToastStore } from "../stores/toast-store";
+import { friendlyErrorMessage } from "../utils/error-message";
 
 export function useCreateReview(agencyId: string) {
   const queryClient = useQueryClient();
@@ -11,9 +11,9 @@ export function useCreateReview(agencyId: string) {
     mutationFn: (input: reviewsApi.ReviewInput) =>
       reviewsApi.createReview(agencyId, input, requireAccessToken()),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['agency', agencyId] });
-      queryClient.invalidateQueries({ queryKey: ['agency-reviews', agencyId] });
-      queryClient.invalidateQueries({ queryKey: ['reviews', 'mine'] });
+      queryClient.invalidateQueries({ queryKey: ["agency", agencyId] });
+      queryClient.invalidateQueries({ queryKey: ["agency-reviews", agencyId] });
+      queryClient.invalidateQueries({ queryKey: ["reviews", "mine"] });
     },
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
@@ -23,12 +23,17 @@ export function useUpdateReview(agencyId: string) {
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: ({ reviewId, input }: { reviewId: string; input: Partial<reviewsApi.ReviewInput> }) =>
-      reviewsApi.updateReview(reviewId, input, requireAccessToken()),
+    mutationFn: ({
+      reviewId,
+      input,
+    }: {
+      reviewId: string;
+      input: Partial<reviewsApi.ReviewInput>;
+    }) => reviewsApi.updateReview(reviewId, input, requireAccessToken()),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['agency', agencyId] });
-      queryClient.invalidateQueries({ queryKey: ['agency-reviews', agencyId] });
-      queryClient.invalidateQueries({ queryKey: ['reviews', 'mine'] });
+      queryClient.invalidateQueries({ queryKey: ["agency", agencyId] });
+      queryClient.invalidateQueries({ queryKey: ["agency-reviews", agencyId] });
+      queryClient.invalidateQueries({ queryKey: ["reviews", "mine"] });
     },
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });
@@ -38,12 +43,13 @@ export function useDeleteReview() {
   const queryClient = useQueryClient();
   const showToast = useToastStore((s) => s.show);
   return useMutation({
-    mutationFn: (reviewId: string) => reviewsApi.deleteReview(reviewId, requireAccessToken()),
+    mutationFn: (reviewId: string) =>
+      reviewsApi.deleteReview(reviewId, requireAccessToken()),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['agency'] });
-      queryClient.invalidateQueries({ queryKey: ['agency-reviews'] });
-      queryClient.invalidateQueries({ queryKey: ['reviews', 'mine'] });
-      showToast('Review deleted.');
+      queryClient.invalidateQueries({ queryKey: ["agency"] });
+      queryClient.invalidateQueries({ queryKey: ["agency-reviews"] });
+      queryClient.invalidateQueries({ queryKey: ["reviews", "mine"] });
+      showToast("Review deleted.");
     },
     onError: (err) => showToast(friendlyErrorMessage(err)),
   });

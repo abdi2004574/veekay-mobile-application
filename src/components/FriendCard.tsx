@@ -1,11 +1,11 @@
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import { router } from 'expo-router';
-import { MessageCircle } from 'lucide-react-native';
-import { Avatar } from './Avatar';
-import { colors } from '../constants/colors';
-import { useCreateConversation } from '../hooks/use-chat-mutations';
-import { showAlert } from '../utils/show-alert';
-import type { FriendUser } from '../api/types';
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { router } from "expo-router";
+import { MessageCircle } from "lucide-react-native";
+import { Avatar } from "./Avatar";
+import { colors } from "../constants/colors";
+import { useCreateConversation } from "../hooks/use-chat-mutations";
+import { showAlert } from "../utils/show-alert";
+import type { FriendUser } from "../api/types";
 
 interface FriendCardProps {
   friend: FriendUser;
@@ -38,16 +38,19 @@ export function FriendCard({ friend, onRemove }: FriendCardProps) {
         disabled={createConversation.isPending}
         onPress={() =>
           createConversation.mutate(
-            { type: 'direct', participantId: friend.id },
-            { onSuccess: (conversation) => router.push(`/(traveler)/chat/${conversation.id}`) },
+            { type: "direct", participantId: friend.id },
+            {
+              onSuccess: (conversation) =>
+                router.push(`/(traveler)/chat/${conversation.id}`),
+            },
           )
         }
         style={{
           width: 40,
           height: 40,
           borderRadius: 20,
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: "center",
+          justifyContent: "center",
           backgroundColor: colors.inputBackground,
         }}
       >
@@ -62,13 +65,20 @@ export function FriendCard({ friend, onRemove }: FriendCardProps) {
           hitSlop={8}
           className="ml-2"
           onPress={() =>
-            showAlert('Remove friend?', `Remove ${name} from your friends?`, [
-              { text: 'Cancel', style: 'cancel' },
-              { text: 'Remove', style: 'destructive', onPress: () => onRemove(friend) },
+            showAlert("Remove friend?", `Remove ${name} from your friends?`, [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Remove",
+                style: "destructive",
+                onPress: () => onRemove(friend),
+              },
             ])
           }
         >
-          <Text className="text-xs font-medium" style={{ color: colors.destructive }}>
+          <Text
+            className="text-xs font-medium"
+            style={{ color: colors.destructive }}
+          >
             Remove
           </Text>
         </Pressable>

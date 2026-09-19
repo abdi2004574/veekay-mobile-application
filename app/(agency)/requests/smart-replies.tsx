@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -9,20 +9,20 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react-native';
-import { GradientButton } from '../../../src/components/GradientButton';
-import { colors } from '../../../src/constants/colors';
-import { useSmartReplyTemplates } from '../../../src/hooks/use-trip-requests-queries';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react-native";
+import { GradientButton } from "../../../src/components/GradientButton";
+import { colors } from "../../../src/constants/colors";
+import { useSmartReplyTemplates } from "../../../src/hooks/use-trip-requests-queries";
 import {
   useCreateSmartReplyTemplate,
   useDeleteSmartReplyTemplate,
   useUpdateSmartReplyTemplate,
-} from '../../../src/hooks/use-trip-requests-mutations';
-import { showAlert } from '../../../src/utils/show-alert';
-import type { SmartReplyTemplate } from '../../../src/api/types';
+} from "../../../src/hooks/use-trip-requests-mutations";
+import { showAlert } from "../../../src/utils/show-alert";
+import type { SmartReplyTemplate } from "../../../src/api/types";
 
 const TITLE_MAX = 100;
 const BODY_MAX = 2000;
@@ -36,20 +36,20 @@ export default function AgencySmartRepliesScreen() {
   const [editing, setEditing] = useState<SmartReplyTemplate | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
   const closeModal = () => {
     setEditing(null);
     setIsCreating(false);
-    setTitle('');
-    setBody('');
+    setTitle("");
+    setBody("");
   };
 
   const openCreate = () => {
     setEditing(null);
-    setTitle('');
-    setBody('');
+    setTitle("");
+    setBody("");
     setIsCreating(true);
   };
 
@@ -79,11 +79,11 @@ export default function AgencySmartRepliesScreen() {
   };
 
   const confirmDelete = (template: SmartReplyTemplate) => {
-    showAlert('Delete template?', 'This cannot be undone.', [
-      { text: 'Cancel', style: 'cancel' },
+    showAlert("Delete template?", "This cannot be undone.", [
+      { text: "Cancel", style: "cancel" },
       {
-        text: 'Delete',
-        style: 'destructive',
+        text: "Delete",
+        style: "destructive",
         onPress: () => deleteMutation.mutate(template.id),
       },
     ]);
@@ -91,12 +91,15 @@ export default function AgencySmartRepliesScreen() {
 
   const templates = templatesQuery.data ?? [];
   const showModal = isCreating || editing !== null;
-  const modalTitle = editing ? 'Edit Quick Reply' : 'New Quick Reply';
+  const modalTitle = editing ? "Edit Quick Reply" : "New Quick Reply";
   const saveDisabled =
-    !title.trim() || !body.trim() || createMutation.isPending || updateMutation.isPending;
+    !title.trim() ||
+    !body.trim() ||
+    createMutation.isPending ||
+    updateMutation.isPending;
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <View
         className="h-14 flex-row items-center justify-between px-4"
         style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
@@ -109,7 +112,9 @@ export default function AgencySmartRepliesScreen() {
         >
           <ArrowLeft size={24} color={colors.foreground} />
         </Pressable>
-        <Text className="text-lg font-semibold text-foreground">Quick Replies</Text>
+        <Text className="text-lg font-semibold text-foreground">
+          Quick Replies
+        </Text>
         <Pressable
           onPress={openCreate}
           hitSlop={8}
@@ -126,7 +131,10 @@ export default function AgencySmartRepliesScreen() {
         </View>
       ) : templatesQuery.isError ? (
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-center mb-3" style={{ color: colors.mutedForeground }}>
+          <Text
+            className="text-center mb-3"
+            style={{ color: colors.mutedForeground }}
+          >
             Couldn&apos;t load your templates.
           </Text>
           <Text
@@ -146,9 +154,12 @@ export default function AgencySmartRepliesScreen() {
             className="text-sm text-center mb-6"
             style={{ color: colors.mutedForeground }}
           >
-            Create reusable messages you can send to travelers from the chat composer.
+            Create reusable messages you can send to travelers from the chat
+            composer.
           </Text>
-          <GradientButton onPress={openCreate}>Create First Template</GradientButton>
+          <GradientButton onPress={openCreate}>
+            Create First Template
+          </GradientButton>
         </View>
       ) : (
         <ScrollView contentContainerStyle={{ paddingBottom: 48 }}>
@@ -201,12 +212,12 @@ export default function AgencySmartRepliesScreen() {
         <View
           style={{
             flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            justifyContent: 'flex-end',
+            backgroundColor: "rgba(0,0,0,0.4)",
+            justifyContent: "flex-end",
           }}
         >
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
             style={{
               backgroundColor: colors.background,
               borderTopLeftRadius: 24,
@@ -216,9 +227,14 @@ export default function AgencySmartRepliesScreen() {
               paddingBottom: 24,
             }}
           >
-            <Text className="text-lg font-semibold text-foreground mb-4">{modalTitle}</Text>
+            <Text className="text-lg font-semibold text-foreground mb-4">
+              {modalTitle}
+            </Text>
 
-            <Text className="text-sm mb-1" style={{ color: colors.mutedForeground }}>
+            <Text
+              className="text-sm mb-1"
+              style={{ color: colors.mutedForeground }}
+            >
               Title
             </Text>
             <TextInput
@@ -237,7 +253,10 @@ export default function AgencySmartRepliesScreen() {
               {title.length}/{TITLE_MAX}
             </Text>
 
-            <Text className="text-sm mb-1" style={{ color: colors.mutedForeground }}>
+            <Text
+              className="text-sm mb-1"
+              style={{ color: colors.mutedForeground }}
+            >
               Message
             </Text>
             <TextInput
@@ -249,7 +268,7 @@ export default function AgencySmartRepliesScreen() {
               style={{
                 backgroundColor: colors.inputBackground,
                 minHeight: 140,
-                textAlignVertical: 'top',
+                textAlignVertical: "top",
               }}
               multiline
               maxLength={BODY_MAX}

@@ -1,6 +1,6 @@
-import { useRef } from 'react';
-import { TextInput, View } from 'react-native';
-import { colors } from '../constants/colors';
+import { useRef } from "react";
+import { TextInput, View } from "react-native";
+import { colors } from "../constants/colors";
 
 const LENGTH = 6;
 
@@ -11,13 +11,13 @@ interface OtpInputProps {
 
 export function OtpInput({ value, onChange }: OtpInputProps) {
   const inputRefs = useRef<(TextInput | null)[]>([]);
-  const digits = Array.from({ length: LENGTH }, (_, i) => value[i] ?? '');
+  const digits = Array.from({ length: LENGTH }, (_, i) => value[i] ?? "");
 
   const handleChange = (index: number, text: string) => {
-    const digit = text.replace(/[^0-9]/g, '').slice(-1);
+    const digit = text.replace(/[^0-9]/g, "").slice(-1);
     const next = digits.slice();
     next[index] = digit;
-    onChange(next.join(''));
+    onChange(next.join(""));
 
     if (digit && index < LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
@@ -25,7 +25,7 @@ export function OtpInput({ value, onChange }: OtpInputProps) {
   };
 
   const handleKeyPress = (index: number, key: string) => {
-    if (key === 'Backspace' && !digits[index] && index > 0) {
+    if (key === "Backspace" && !digits[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
@@ -40,7 +40,9 @@ export function OtpInput({ value, onChange }: OtpInputProps) {
           }}
           value={digit}
           onChangeText={(text) => handleChange(index, text)}
-          onKeyPress={({ nativeEvent }) => handleKeyPress(index, nativeEvent.key)}
+          onKeyPress={({ nativeEvent }) =>
+            handleKeyPress(index, nativeEvent.key)
+          }
           keyboardType="number-pad"
           maxLength={1}
           className="w-12 h-14 text-center text-xl font-bold rounded-2xl border-2 border-border bg-input-background text-foreground"

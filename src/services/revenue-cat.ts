@@ -1,14 +1,15 @@
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 import Purchases, {
   type PurchasesConfiguration,
   type PurchasesOfferings,
   type PurchasesPackage,
   type CustomerInfo,
   type PurchasesEntitlementInfo,
+  type MakePurchaseResult,
   PURCHASES_ERROR_CODE,
-} from 'react-native-purchases';
+} from "react-native-purchases";
 
-export type AgencySubscriptionTier = 'basic' | 'premium' | 'featured';
+export type AgencySubscriptionTier = "basic" | "premium" | "featured";
 
 export interface AgencyOfferingPackage {
   readonly identifier: string;
@@ -52,27 +53,45 @@ export interface PurchaseResult {
   readonly customerInfo: AgencyCustomerInfo;
 }
 
+export interface DonationPurchaseResult {
+  readonly productIdentifier: string;
+  readonly customerInfo: AgencyCustomerInfo;
+}
+
+export const DONATION_PRODUCTS: ReadonlyArray<{
+  readonly label: string;
+  readonly productId: string;
+  readonly amount: number;
+}> = [
+  { label: "$5", productId: "donation_5", amount: 5 },
+  { label: "$10", productId: "donation_10", amount: 10 },
+  { label: "$25", productId: "donation_25", amount: 25 },
+  { label: "$50", productId: "donation_50", amount: 50 },
+  { label: "$100", productId: "donation_100", amount: 100 },
+];
+
 export class RevenueCatError extends Error {
   constructor(
     public readonly code: PURCHASES_ERROR_CODE | string,
     message: string,
   ) {
     super(message);
-    this.name = 'RevenueCatError';
+    this.name = "RevenueCatError";
   }
 }
 
-export type RevenueCatState = 'idle' | 'loading' | 'ready' | 'error' | 'unavailable';
+export type RevenueCatState =
+  "idle" | "loading" | "ready" | "error" | "unavailable";
 
 export function isRevenueCatAvailable(): boolean {
-  return Platform.OS !== 'web';
+  return Platform.OS !== "web";
 }
 
 function getApiKey(): string | undefined {
   const platformKey =
-    Platform.OS === 'ios'
+    Platform.OS === "ios"
       ? process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS
-      : Platform.OS === 'android'
+      : Platform.OS === "android"
         ? process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID
         : undefined;
   return platformKey;
@@ -92,7 +111,9 @@ function toAgencyPackage(pkg: PurchasesPackage): AgencyOfferingPackage {
   };
 }
 
-function toAgencyEntitlement(info: PurchasesEntitlementInfo): AgencyEntitlement {
+function toAgencyEntitlement(
+  info: PurchasesEntitlementInfo,
+): AgencyEntitlement {
   return {
     identifier: info.identifier,
     isActive: info.isActive,
@@ -105,7 +126,9 @@ function toAgencyEntitlement(info: PurchasesEntitlementInfo): AgencyEntitlement 
 }
 
 function toAgencyCustomerInfo(info: CustomerInfo): AgencyCustomerInfo {
-  const activeEntitlements = Object.values(info.entitlements.active).map(toAgencyEntitlement);
+  const activeEntitlements = Object.values(info.entitlements.active).map(
+    toAgencyEntitlement,
+  );
   return {
     activeEntitlements,
     activeSubscriptions: [...info.activeSubscriptions],
@@ -120,13 +143,13 @@ function toAgencyCustomerInfo(info: CustomerInfo): AgencyCustomerInfo {
 function wrapError(err: unknown): RevenueCatError {
   if (err instanceof RevenueCatError) return err;
   const code =
-    err && typeof err === 'object' && 'code' in err
+    err && typeof err === "object" && "code" in err
       ? (err as { code: string }).code
       : PURCHASES_ERROR_CODE.UNKNOWN_ERROR;
   const message =
-    err && typeof err === 'object' && 'message' in err
+    err && typeof err === "object" && "message" in err
       ? (err as { message: string }).message
-      : 'Unexpected RevenueCat error';
+      : "Unexpected RevenueCat error";
   return new RevenueCatError(code, message);
 }
 
@@ -134,7 +157,10 @@ let initialized = false;
 let configuredAppUserID: string | undefined;
 let configurationQueue: Promise<void> = Promise.resolve();
 
-async function configureCurrentSession(apiKey: string, appUserID?: string): Promise<void> {
+async function configureCurrentSession(
+  apiKey: string,
+  appUserID?: string,
+): Promise<void> {
   if (initialized && configuredAppUserID === appUserID) {
     return;
   }
@@ -171,12 +197,14 @@ export function configureRevenueCat(appUserID?: string): Promise<void> {
     return Promise.reject(
       new RevenueCatError(
         PURCHASES_ERROR_CODE.INVALID_CREDENTIALS_ERROR,
-        'RevenueCat API key not configured. Set EXPO_PUBLIC_REVENUECAT_API_KEY_IOS and _ANDROID in .env.',
+        "RevenueCat API key not configured. Set EXPO_PUBLIC_REVENUECAT_API_KEY_IOS and _ANDROID in .env.",
       ),
     );
   }
 
-  const operation = configurationQueue.then(() => configureCurrentSession(apiKey, appUserID));
+  const operation = configurationQueue.then(() =>
+    configureCurrentSession(apiKey, appUserID),
+  );
   configurationQueue = operation.catch(() => undefined);
   return operation;
 }
@@ -202,11 +230,13 @@ export async function loadOfferings(): Promise<AgencyOffering | null> {
   }
 }
 
-export async function purchasePackage(packageId: string): Promise<PurchaseResult> {
+export async function purchasePackage(
+  packageId: string,
+): Promise<PurchaseResult> {
   if (!isRevenueCatAvailable()) {
     throw new RevenueCatError(
       PURCHASES_ERROR_CODE.UNSUPPORTED_ERROR,
-      'RevenueCat is not available on this platform.',
+      "RevenueCat is not available on this platform.",
     );
   }
 
@@ -216,11 +246,13 @@ export async function purchasePackage(packageId: string): Promise<PurchaseResult
     if (!offering) {
       throw new RevenueCatError(
         PURCHASES_ERROR_CODE.UNKNOWN_ERROR,
-        'No offerings available from RevenueCat.',
+        "No offerings available from RevenueCat.",
       );
     }
 
-    const pkg = offering.availablePackages.find((p) => p.identifier === packageId);
+    const pkg = offering.availablePackages.find(
+      (p) => p.identifier === packageId,
+    );
     if (!pkg) {
       throw new RevenueCatError(
         PURCHASES_ERROR_CODE.PRODUCT_NOT_AVAILABLE_FOR_PURCHASE_ERROR,
@@ -242,7 +274,7 @@ export async function restorePurchases(): Promise<AgencyCustomerInfo> {
   if (!isRevenueCatAvailable()) {
     throw new RevenueCatError(
       PURCHASES_ERROR_CODE.UNSUPPORTED_ERROR,
-      'RevenueCat is not available on this platform.',
+      "RevenueCat is not available on this platform.",
     );
   }
 
@@ -258,7 +290,7 @@ export async function getCustomerInfo(): Promise<AgencyCustomerInfo> {
   if (!isRevenueCatAvailable()) {
     throw new RevenueCatError(
       PURCHASES_ERROR_CODE.UNSUPPORTED_ERROR,
-      'RevenueCat is not available on this platform.',
+      "RevenueCat is not available on this platform.",
     );
   }
 
@@ -282,9 +314,45 @@ export async function logOutRevenueCat(): Promise<void> {
   }
 }
 
+export async function setDonationCampaign(campaignId: string): Promise<void> {
+  if (!isRevenueCatAvailable()) return;
+  try {
+    await Purchases.setAttributes({
+      campaign_id: campaignId,
+    });
+  } catch (err) {
+    throw wrapError(err);
+  }
+}
+
+export async function purchaseDonation(
+  productId: string,
+  campaignId: string,
+): Promise<DonationPurchaseResult> {
+  if (!isRevenueCatAvailable()) {
+    throw new RevenueCatError(
+      PURCHASES_ERROR_CODE.UNSUPPORTED_ERROR,
+      "RevenueCat is not available on this platform.",
+    );
+  }
+
+  // Set subscriber attribute so webhook handler knows which campaign to credit
+  await setDonationCampaign(campaignId);
+
+  try {
+    const result: MakePurchaseResult = await Purchases.purchaseProduct(productId);
+    return {
+      productIdentifier: result.productIdentifier,
+      customerInfo: toAgencyCustomerInfo(result.customerInfo),
+    };
+  } catch (err) {
+    throw wrapError(err);
+  }
+}
+
 Purchases.addCustomerInfoUpdateListener((info: CustomerInfo) => {
   if (__DEV__) {
-    console.log('[RevenueCat] Customer info updated:', {
+    console.log("[RevenueCat] Customer info updated:", {
       activeEntitlements: Object.keys(info.entitlements.active),
       originalAppUserId: info.originalAppUserId,
     });
@@ -292,28 +360,27 @@ Purchases.addCustomerInfoUpdateListener((info: CustomerInfo) => {
 });
 
 export const TIER_PACKAGE_MAP: Record<string, AgencySubscriptionTier> = {
-  basic: 'basic',
-  premium: 'premium',
-  featured: 'featured',
-  agency_basic: 'basic',
-  agency_premium: 'premium',
-  agency_featured: 'featured',
-  'com.veakay.agency.basic': 'basic',
-  'com.veakay.agency.premium': 'premium',
-  'com.veakay.agency.featured': 'featured',
-  'prod-basic': 'basic',
-  'prod-premium': 'premium',
-  'prod-featured': 'featured',
+  basic: "basic",
+  premium: "premium",
+  featured: "featured",
+  agency_basic: "basic",
+  agency_premium: "premium",
+  agency_featured: "featured",
+  "com.veakay.agency.basic": "basic",
+  "com.veakay.agency.premium": "premium",
+  "com.veakay.agency.featured": "featured",
+  "prod-basic": "basic",
+  "prod-premium": "premium",
+  "prod-featured": "featured",
 };
 
 type PackageIdentifierSource =
-  | string
-  | Pick<AgencyOfferingPackage, 'identifier' | 'productIdentifier'>;
+  string | Pick<AgencyOfferingPackage, "identifier" | "productIdentifier">;
 
 export function mapPackageToTier(
   packageSource: PackageIdentifierSource,
 ): AgencySubscriptionTier | undefined {
-  if (typeof packageSource === 'string') {
+  if (typeof packageSource === "string") {
     return TIER_PACKAGE_MAP[packageSource];
   }
 
@@ -323,8 +390,14 @@ export function mapPackageToTier(
   );
 }
 
-export function mapEntitlementToTier(entitlementId: string): AgencySubscriptionTier | undefined {
-  if (entitlementId === 'basic' || entitlementId === 'premium' || entitlementId === 'featured') {
+export function mapEntitlementToTier(
+  entitlementId: string,
+): AgencySubscriptionTier | undefined {
+  if (
+    entitlementId === "basic" ||
+    entitlementId === "premium" ||
+    entitlementId === "featured"
+  ) {
     return entitlementId;
   }
   return undefined;

@@ -1,6 +1,6 @@
-import { Modal, Pressable, Text, View } from 'react-native';
-import { useAlertStore } from '../stores/alert-store';
-import { colors } from '../constants/colors';
+import { Modal, Pressable, Text, View } from "react-native";
+import { useAlertStore } from "../stores/alert-store";
+import { colors } from "../constants/colors";
 
 export function AlertHost() {
   const request = useAlertStore((s) => s.request);
@@ -14,13 +14,18 @@ export function AlertHost() {
   };
 
   return (
-    <Modal visible transparent animationType="fade" onRequestClose={() => hide()}>
+    <Modal
+      visible
+      transparent
+      animationType="fade"
+      onRequestClose={() => hide()}
+    >
       <View
         style={{
           flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'rgba(0,0,0,0.5)',
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(0,0,0,0.5)",
           padding: 32,
         }}
       >
@@ -28,7 +33,9 @@ export function AlertHost() {
           className="w-full rounded-2xl p-5"
           style={{ backgroundColor: colors.background, maxWidth: 340 }}
         >
-          <Text className="text-lg font-bold text-foreground mb-1">{request.title}</Text>
+          <Text className="text-lg font-bold text-foreground mb-1">
+            {request.title}
+          </Text>
           {!!request.message && (
             <Text className="mb-5" style={{ color: colors.mutedForeground }}>
               {request.message}
@@ -42,9 +49,9 @@ export function AlertHost() {
                 className="h-11 rounded-xl items-center justify-center"
                 style={{
                   backgroundColor:
-                    button.style === 'destructive'
+                    button.style === "destructive"
                       ? colors.destructive
-                      : button.style === 'cancel'
+                      : button.style === "cancel"
                         ? colors.inputBackground
                         : colors.vaykaePink,
                 }}
@@ -52,7 +59,10 @@ export function AlertHost() {
                 <Text
                   className="font-semibold"
                   style={{
-                    color: button.style === 'cancel' ? colors.foreground : colors.background,
+                    color:
+                      button.style === "cancel"
+                        ? colors.foreground
+                        : colors.background,
                   }}
                 >
                   {button.text}

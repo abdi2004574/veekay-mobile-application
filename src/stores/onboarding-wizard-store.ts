@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import type { DestinationType, Gender, TravelStyle } from '../api/types';
+import { create } from "zustand";
+import type { DestinationType, Gender, TravelStyle } from "../api/types";
 
 export interface PreviousTripDraft {
   mediaId: string;
@@ -40,29 +40,34 @@ const initialState = {
   previousTrips: [] as PreviousTripDraft[],
 };
 
-export const useOnboardingWizardStore = create<OnboardingWizardState>((set) => ({
-  ...initialState,
+export const useOnboardingWizardStore = create<OnboardingWizardState>(
+  (set) => ({
+    ...initialState,
 
-  setProfileFields: (fields) => set(fields),
+    setProfileFields: (fields) => set(fields),
 
-  toggleDestinationType: (value) =>
-    set((s) => ({
-      destinationTypes: s.destinationTypes.includes(value)
-        ? s.destinationTypes.filter((v) => v !== value)
-        : [...s.destinationTypes, value],
-    })),
+    toggleDestinationType: (value) =>
+      set((s) => ({
+        destinationTypes: s.destinationTypes.includes(value)
+          ? s.destinationTypes.filter((v) => v !== value)
+          : [...s.destinationTypes, value],
+      })),
 
-  toggleTravelStyle: (value) =>
-    set((s) => ({
-      travelStyles: s.travelStyles.includes(value)
-        ? s.travelStyles.filter((v) => v !== value)
-        : [...s.travelStyles, value],
-    })),
+    toggleTravelStyle: (value) =>
+      set((s) => ({
+        travelStyles: s.travelStyles.includes(value)
+          ? s.travelStyles.filter((v) => v !== value)
+          : [...s.travelStyles, value],
+      })),
 
-  addTrip: (trip) => set((s) => ({ previousTrips: [...s.previousTrips, trip] })),
+    addTrip: (trip) =>
+      set((s) => ({ previousTrips: [...s.previousTrips, trip] })),
 
-  removeTrip: (index) =>
-    set((s) => ({ previousTrips: s.previousTrips.filter((_, i) => i !== index) })),
+    removeTrip: (index) =>
+      set((s) => ({
+        previousTrips: s.previousTrips.filter((_, i) => i !== index),
+      })),
 
-  reset: () => set(initialState),
-}));
+    reset: () => set(initialState),
+  }),
+);

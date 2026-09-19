@@ -1,42 +1,48 @@
-import { useMemo } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, router } from 'expo-router';
-import { ArrowLeft, CheckCircle2, Settings } from 'lucide-react-native';
-import { Avatar } from '../../../src/components/Avatar';
-import { RequestStatusBadge } from '../../../src/components/RequestStatusBadge';
-import { GradientButton } from '../../../src/components/GradientButton';
-import { colors } from '../../../src/constants/colors';
-import { useTripRequest } from '../../../src/hooks/use-trip-requests-queries';
-import { useUpdateTripRequestStatus } from '../../../src/hooks/use-trip-requests-mutations';
-import { showAlert } from '../../../src/utils/show-alert';
-import type { TripRequestStatus } from '../../../src/api/types';
+import { useMemo } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useLocalSearchParams, router } from "expo-router";
+import { ArrowLeft, CheckCircle2, Settings } from "lucide-react-native";
+import { Avatar } from "../../../src/components/Avatar";
+import { RequestStatusBadge } from "../../../src/components/RequestStatusBadge";
+import { GradientButton } from "../../../src/components/GradientButton";
+import { colors } from "../../../src/constants/colors";
+import { useTripRequest } from "../../../src/hooks/use-trip-requests-queries";
+import { useUpdateTripRequestStatus } from "../../../src/hooks/use-trip-requests-mutations";
+import { showAlert } from "../../../src/utils/show-alert";
+import type { TripRequestStatus } from "../../../src/api/types";
 
 const ALLOWED_TRANSITIONS: Record<TripRequestStatus, TripRequestStatus[]> = {
-  pending: ['in_discussion', 'declined'],
-  in_discussion: ['confirmed', 'declined'],
-  confirmed: ['completed'],
+  pending: ["in_discussion", "declined"],
+  in_discussion: ["confirmed", "declined"],
+  confirmed: ["completed"],
   completed: [],
   declined: [],
   cancelled: [],
 };
 
 const STATUS_LABEL: Record<TripRequestStatus, string> = {
-  pending: 'Start Discussion',
-  in_discussion: 'Confirm Booking',
-  confirmed: 'Mark as Completed',
-  completed: 'Completed',
-  declined: 'Declined',
-  cancelled: 'Cancelled',
+  pending: "Start Discussion",
+  in_discussion: "Confirm Booking",
+  confirmed: "Mark as Completed",
+  completed: "Completed",
+  declined: "Declined",
+  cancelled: "Cancelled",
 };
 
 const STATUS_PROMPT_VERB: Record<TripRequestStatus, string> = {
-  pending: 'start the discussion',
-  in_discussion: 'confirm this booking',
-  confirmed: 'mark this booking as completed',
-  completed: 'mark as completed',
-  declined: 'decline this request',
-  cancelled: 'cancel this request',
+  pending: "start the discussion",
+  in_discussion: "confirm this booking",
+  confirmed: "mark this booking as completed",
+  completed: "mark as completed",
+  declined: "decline this request",
+  cancelled: "cancel this request",
 };
 
 function travelerDisplayName(name: string | null, username: string): string {
@@ -63,7 +69,7 @@ export default function AgencyRequestDetailScreen() {
       `${STATUS_LABEL[nextStatus]}?`,
       `Are you sure you want to ${STATUS_PROMPT_VERB[nextStatus]}?`,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
           text: STATUS_LABEL[nextStatus],
           onPress: () => updateStatus.mutate({ id, status: nextStatus }),
@@ -73,7 +79,7 @@ export default function AgencyRequestDetailScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <View
         className="h-14 flex-row items-center justify-between px-4"
         style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
@@ -86,9 +92,11 @@ export default function AgencyRequestDetailScreen() {
         >
           <ArrowLeft size={24} color={colors.foreground} />
         </Pressable>
-        <Text className="text-lg font-semibold text-foreground">Request Details</Text>
+        <Text className="text-lg font-semibold text-foreground">
+          Request Details
+        </Text>
         <Pressable
-          onPress={() => router.push('/(agency)/requests/smart-replies')}
+          onPress={() => router.push("/(agency)/requests/smart-replies")}
           hitSlop={8}
           accessibilityRole="button"
           accessibilityLabel="Quick replies"
@@ -103,7 +111,10 @@ export default function AgencyRequestDetailScreen() {
         </View>
       ) : tripRequestQuery.isError || !tripRequestQuery.data ? (
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-center mb-3" style={{ color: colors.mutedForeground }}>
+          <Text
+            className="text-center mb-3"
+            style={{ color: colors.mutedForeground }}
+          >
             Couldn&apos;t load this request.
           </Text>
           <Text
@@ -141,7 +152,9 @@ export default function AgencyRequestDetailScreen() {
                   </Text>
                   {tripRequestQuery.data.conversationId ? (
                     <Pressable
-                      onPress={() => goToChat(tripRequestQuery.data!.conversationId!)}
+                      onPress={() =>
+                        goToChat(tripRequestQuery.data!.conversationId!)
+                      }
                       hitSlop={8}
                     >
                       <Text
@@ -164,7 +177,10 @@ export default function AgencyRequestDetailScreen() {
                 Status
               </Text>
               <View>
-                <RequestStatusBadge status={tripRequestQuery.data.status} size="md" />
+                <RequestStatusBadge
+                  status={tripRequestQuery.data.status}
+                  size="md"
+                />
               </View>
             </View>
 
@@ -172,7 +188,9 @@ export default function AgencyRequestDetailScreen() {
               {tripRequestQuery.data.package && (
                 <Pressable
                   onPress={() =>
-                    router.push(`/(agency)/packages/${tripRequestQuery.data!.package!.id}`)
+                    router.push(
+                      `/(agency)/packages/${tripRequestQuery.data!.package!.id}`,
+                    )
                   }
                   className="p-4 rounded-2xl bg-card"
                   style={{ borderWidth: 1, borderColor: colors.border }}
@@ -190,7 +208,7 @@ export default function AgencyRequestDetailScreen() {
                     className="text-sm mt-1"
                     style={{ color: colors.mutedForeground }}
                   >
-                    {tripRequestQuery.data.package.basePrice.toLocaleString()}{' '}
+                    {tripRequestQuery.data.package.basePrice.toLocaleString()}{" "}
                     {tripRequestQuery.data.package.currency}
                   </Text>
                 </Pressable>
@@ -226,11 +244,12 @@ export default function AgencyRequestDetailScreen() {
                   </Text>
                 </Pressable>
               )}
-              {!tripRequestQuery.data.package && !tripRequestQuery.data.campaign && (
-                <Text style={{ color: colors.mutedForeground }}>
-                  No package or campaign attached.
-                </Text>
-              )}
+              {!tripRequestQuery.data.package &&
+                !tripRequestQuery.data.campaign && (
+                  <Text style={{ color: colors.mutedForeground }}>
+                    No package or campaign attached.
+                  </Text>
+                )}
             </View>
 
             <View className="mx-4 mt-6">
@@ -260,7 +279,7 @@ export default function AgencyRequestDetailScreen() {
 
           <View
             style={{
-              position: 'absolute',
+              position: "absolute",
               left: 0,
               right: 0,
               bottom: 0,
@@ -294,11 +313,11 @@ export default function AgencyRequestDetailScreen() {
                     </GradientButton>
                   </View>
                 )}
-                {legalNext.includes('in_discussion') && (
+                {legalNext.includes("in_discussion") && (
                   <View className="flex-row gap-3">
                     <View style={{ flex: 1 }}>
                       <GradientButton
-                        onPress={() => confirmTransition('in_discussion')}
+                        onPress={() => confirmTransition("in_discussion")}
                         loading={updateStatus.isPending}
                       >
                         Start Discussion
@@ -307,36 +326,37 @@ export default function AgencyRequestDetailScreen() {
                     <View style={{ flex: 1 }}>
                       <GradientButton
                         variant="outline"
-                        onPress={() => confirmTransition('declined')}
+                        onPress={() => confirmTransition("declined")}
                       >
                         Decline
                       </GradientButton>
                     </View>
                   </View>
                 )}
-                {legalNext.includes('confirmed') && legalNext.includes('declined') && (
-                  <View className="flex-row gap-3">
-                    <View style={{ flex: 1 }}>
-                      <GradientButton
-                        onPress={() => confirmTransition('confirmed')}
-                        loading={updateStatus.isPending}
-                      >
-                        Confirm Booking
-                      </GradientButton>
+                {legalNext.includes("confirmed") &&
+                  legalNext.includes("declined") && (
+                    <View className="flex-row gap-3">
+                      <View style={{ flex: 1 }}>
+                        <GradientButton
+                          onPress={() => confirmTransition("confirmed")}
+                          loading={updateStatus.isPending}
+                        >
+                          Confirm Booking
+                        </GradientButton>
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <GradientButton
+                          variant="outline"
+                          onPress={() => confirmTransition("declined")}
+                        >
+                          Decline
+                        </GradientButton>
+                      </View>
                     </View>
-                    <View style={{ flex: 1 }}>
-                      <GradientButton
-                        variant="outline"
-                        onPress={() => confirmTransition('declined')}
-                      >
-                        Decline
-                      </GradientButton>
-                    </View>
-                  </View>
-                )}
-                {legalNext.includes('completed') && (
+                  )}
+                {legalNext.includes("completed") && (
                   <GradientButton
-                    onPress={() => confirmTransition('completed')}
+                    onPress={() => confirmTransition("completed")}
                     loading={updateStatus.isPending}
                   >
                     Mark as Completed

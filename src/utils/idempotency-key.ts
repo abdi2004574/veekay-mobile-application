@@ -1,4 +1,4 @@
-import { randomUUID } from 'expo-crypto';
+import { randomUUID } from "expo-crypto";
 
 export function generateIdempotencyKey(): string {
   const uuid = randomUUID();

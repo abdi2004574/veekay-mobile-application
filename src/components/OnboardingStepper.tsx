@@ -1,9 +1,15 @@
-import { Text, View } from 'react-native';
-import { colors } from '../constants/colors';
+import { Text, View } from "react-native";
+import { colors } from "../constants/colors";
 
 const TOTAL_STEPS = 5;
 
-export function OnboardingStepper({ step, label }: { step: number; label: string }) {
+export function OnboardingStepper({
+  step,
+  label,
+}: {
+  step: number;
+  label: string;
+}) {
   return (
     <View className="mb-6">
       <View className="flex-row gap-2">
@@ -14,7 +20,8 @@ export function OnboardingStepper({ step, label }: { step: number; label: string
               flex: 1,
               height: 4,
               borderRadius: 4,
-              backgroundColor: s <= step ? colors.vaykaePink : colors.disabledBackground,
+              backgroundColor:
+                s <= step ? colors.vaykaePink : colors.disabledBackground,
             }}
           />
         ))}

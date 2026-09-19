@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -9,16 +9,25 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Image as ImageIcon, MapPin, Tag, X } from 'lucide-react-native';
-import { GradientButton } from '../../src/components/GradientButton';
-import { colors } from '../../src/constants/colors';
-import { useCreatePost, useUpdatePost } from '../../src/hooks/use-feed-mutations';
-import { useAuthStore } from '../../src/stores/auth-store';
-import { useToastStore } from '../../src/stores/toast-store';
-import { pickAndUploadFromLibrary } from '../../src/utils/upload-image';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router, useLocalSearchParams } from "expo-router";
+import {
+  ArrowLeft,
+  Image as ImageIcon,
+  MapPin,
+  Tag,
+  X,
+} from "lucide-react-native";
+import { GradientButton } from "../../src/components/GradientButton";
+import { colors } from "../../src/constants/colors";
+import {
+  useCreatePost,
+  useUpdatePost,
+} from "../../src/hooks/use-feed-mutations";
+import { useAuthStore } from "../../src/stores/auth-store";
+import { useToastStore } from "../../src/stores/toast-store";
+import { pickAndUploadFromLibrary } from "../../src/utils/upload-image";
 
 const TEXT_LIMIT = 2200;
 
@@ -33,14 +42,18 @@ export default function CreatePostScreen() {
   }>();
   const isEditing = !!params.editPostId;
 
-  const [text, setText] = useState(params.editText ?? '');
-  const [location, setLocation] = useState(params.editLocation ?? '');
-  const [tagInput, setTagInput] = useState('');
+  const [text, setText] = useState(params.editText ?? "");
+  const [location, setLocation] = useState(params.editLocation ?? "");
+  const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>(
-    params.editTags ? params.editTags.split(',').filter(Boolean) : [],
+    params.editTags ? params.editTags.split(",").filter(Boolean) : [],
   );
-  const [imageMediaId, setImageMediaId] = useState(params.editImageMediaId || undefined);
-  const [imagePreviewUri, setImagePreviewUri] = useState(params.editImageUrl || undefined);
+  const [imageMediaId, setImageMediaId] = useState(
+    params.editImageMediaId || undefined,
+  );
+  const [imagePreviewUri, setImagePreviewUri] = useState(
+    params.editImageUrl || undefined,
+  );
   const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const accessToken = useAuthStore((s) => s.accessToken);
@@ -54,20 +67,25 @@ export default function CreatePostScreen() {
     if (trimmed && !tags.includes(trimmed)) {
       setTags([...tags, trimmed]);
     }
-    setTagInput('');
+    setTagInput("");
   };
 
   const handleAddPhoto = async () => {
     if (!accessToken) return;
     setIsUploadingImage(true);
     try {
-      const uploaded = await pickAndUploadFromLibrary('post_media', accessToken);
+      const uploaded = await pickAndUploadFromLibrary(
+        "post_media",
+        accessToken,
+      );
       if (uploaded) {
         setImageMediaId(uploaded.mediaId);
         setImagePreviewUri(uploaded.previewUri);
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Could not add that photo.');
+      showToast(
+        err instanceof Error ? err.message : "Could not add that photo.",
+      );
     } finally {
       setIsUploadingImage(false);
     }
@@ -96,7 +114,7 @@ export default function CreatePostScreen() {
     <SafeAreaView className="flex-1 bg-background">
       <KeyboardAvoidingView
         className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View
           className="flex-row items-center justify-between px-4 h-14"
@@ -106,7 +124,7 @@ export default function CreatePostScreen() {
             <ArrowLeft size={20} color={colors.foreground} />
           </Pressable>
           <Text className="text-lg font-bold text-foreground">
-            {isEditing ? 'Edit Post' : 'Create Post'}
+            {isEditing ? "Edit Post" : "Create Post"}
           </Text>
           <View style={{ width: 20 }} />
         </View>
@@ -126,7 +144,7 @@ export default function CreatePostScreen() {
               borderColor: colors.border,
               backgroundColor: colors.inputBackground,
               minHeight: 140,
-              textAlignVertical: 'top',
+              textAlignVertical: "top",
             }}
           />
           <Text
@@ -136,8 +154,12 @@ export default function CreatePostScreen() {
             {text.length}/{TEXT_LIMIT}
           </Text>
 
-          <Text className="text-sm font-medium mb-2" style={{ color: colors.mutedForeground }}>
-            <MapPin size={14} color={colors.mutedForeground} /> Location (Optional)
+          <Text
+            className="text-sm font-medium mb-2"
+            style={{ color: colors.mutedForeground }}
+          >
+            <MapPin size={14} color={colors.mutedForeground} /> Location
+            (Optional)
           </Text>
           <TextInput
             value={location}
@@ -148,7 +170,10 @@ export default function CreatePostScreen() {
             style={{ backgroundColor: colors.inputBackground }}
           />
 
-          <Text className="text-sm font-medium mb-2" style={{ color: colors.mutedForeground }}>
+          <Text
+            className="text-sm font-medium mb-2"
+            style={{ color: colors.mutedForeground }}
+          >
             <Tag size={14} color={colors.mutedForeground} /> Tags (Optional)
           </Text>
           <View className="flex-row gap-2 mb-2">
@@ -179,8 +204,13 @@ export default function CreatePostScreen() {
                   className="flex-row items-center gap-1 rounded-full px-3 py-1.5"
                   style={{ backgroundColor: colors.inputBackground }}
                 >
-                  <Text className="text-sm font-medium text-foreground">#{tag}</Text>
-                  <Pressable onPress={() => setTags(tags.filter((t) => t !== tag))} hitSlop={4}>
+                  <Text className="text-sm font-medium text-foreground">
+                    #{tag}
+                  </Text>
+                  <Pressable
+                    onPress={() => setTags(tags.filter((t) => t !== tag))}
+                    hitSlop={4}
+                  >
                     <X size={12} color={colors.foreground} />
                   </Pressable>
                 </View>
@@ -189,10 +219,10 @@ export default function CreatePostScreen() {
           )}
 
           {imagePreviewUri ? (
-            <View className="mb-4" style={{ position: 'relative' }}>
+            <View className="mb-4" style={{ position: "relative" }}>
               <Image
                 source={{ uri: imagePreviewUri }}
-                style={{ width: '100%', height: 220, borderRadius: 16 }}
+                style={{ width: "100%", height: 220, borderRadius: 16 }}
                 resizeMode="cover"
               />
               <Pressable
@@ -201,15 +231,15 @@ export default function CreatePostScreen() {
                   setImagePreviewUri(undefined);
                 }}
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   top: 12,
                   right: 12,
                   width: 32,
                   height: 32,
                   borderRadius: 16,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,0.6)',
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(0,0,0,0.6)",
                 }}
               >
                 <X size={18} color="#fff" />
@@ -220,14 +250,21 @@ export default function CreatePostScreen() {
               onPress={handleAddPhoto}
               disabled={isUploadingImage}
               className="h-14 rounded-2xl items-center justify-center flex-row gap-2"
-              style={{ borderWidth: 2, borderColor: colors.border, borderStyle: 'dashed' }}
+              style={{
+                borderWidth: 2,
+                borderColor: colors.border,
+                borderStyle: "dashed",
+              }}
             >
               {isUploadingImage ? (
                 <ActivityIndicator color={colors.mutedForeground} />
               ) : (
                 <>
                   <ImageIcon size={20} color={colors.mutedForeground} />
-                  <Text className="font-medium" style={{ color: colors.mutedForeground }}>
+                  <Text
+                    className="font-medium"
+                    style={{ color: colors.mutedForeground }}
+                  >
                     Add Photo
                   </Text>
                 </>
@@ -237,8 +274,12 @@ export default function CreatePostScreen() {
         </ScrollView>
 
         <View className="px-4 pb-4">
-          <GradientButton onPress={handleSubmit} disabled={!text.trim()} loading={isPending}>
-            {isEditing ? 'Update Post' : 'Post'}
+          <GradientButton
+            onPress={handleSubmit}
+            disabled={!text.trim()}
+            loading={isPending}
+          >
+            {isEditing ? "Update Post" : "Post"}
           </GradientButton>
         </View>
       </KeyboardAvoidingView>

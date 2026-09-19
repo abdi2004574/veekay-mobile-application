@@ -1,4 +1,4 @@
-import { apiFetch } from './client';
+import { apiFetch } from "./client";
 import type {
   DestinationType,
   Gender,
@@ -7,10 +7,10 @@ import type {
   PublicProfile,
   TravelStyle,
   TravelerSearchResult,
-} from './types';
+} from "./types";
 
 export function getMe(accessToken: string) {
-  return apiFetch<MeProfile>('/me', { accessToken });
+  return apiFetch<MeProfile>("/me", { accessToken });
 }
 
 export interface UpdateProfileInput {
@@ -27,23 +27,30 @@ export interface UpdateProfileInput {
 }
 
 export function updateProfile(input: UpdateProfileInput, accessToken: string) {
-  return apiFetch<MeProfile>('/me/profile', { method: 'PATCH', body: input, accessToken });
+  return apiFetch<MeProfile>("/me/profile", {
+    method: "PATCH",
+    body: input,
+    accessToken,
+  });
 }
 
 export function getPrivacySettings(accessToken: string) {
-  return apiFetch<PrivacySettings>('/me/privacy-settings', { accessToken });
+  return apiFetch<PrivacySettings>("/me/privacy-settings", { accessToken });
 }
 
-export function updatePrivacySettings(input: Partial<PrivacySettings>, accessToken: string) {
-  return apiFetch<PrivacySettings>('/me/privacy-settings', {
-    method: 'PATCH',
+export function updatePrivacySettings(
+  input: Partial<PrivacySettings>,
+  accessToken: string,
+) {
+  return apiFetch<PrivacySettings>("/me/privacy-settings", {
+    method: "PATCH",
     body: input,
     accessToken,
   });
 }
 
 export function deactivateAccount(accessToken: string) {
-  return apiFetch<void>('/me', { method: 'DELETE', accessToken });
+  return apiFetch<void>("/me", { method: "DELETE", accessToken });
 }
 
 export function getUserProfile(userId: string, accessToken: string) {

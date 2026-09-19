@@ -1,19 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
-import { AuthScreenLayout } from '../../src/components/AuthScreenLayout';
-import { OtpInput } from '../../src/components/OtpInput';
-import { GradientButton } from '../../src/components/GradientButton';
-import { useResendOtp, useVerifyEmail } from '../../src/hooks/use-auth-mutations';
-import { useToastStore } from '../../src/stores/toast-store';
-import { friendlyErrorMessage } from '../../src/utils/error-message';
-import { colors } from '../../src/constants/colors';
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { AuthScreenLayout } from "../../src/components/AuthScreenLayout";
+import { OtpInput } from "../../src/components/OtpInput";
+import { GradientButton } from "../../src/components/GradientButton";
+import {
+  useResendOtp,
+  useVerifyEmail,
+} from "../../src/hooks/use-auth-mutations";
+import { useToastStore } from "../../src/stores/toast-store";
+import { friendlyErrorMessage } from "../../src/utils/error-message";
+import { colors } from "../../src/constants/colors";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
 export default function VerifyOtp() {
-  const { userId, email } = useLocalSearchParams<{ userId: string; email: string }>();
-  const [otp, setOtp] = useState('');
+  const { userId, email } = useLocalSearchParams<{
+    userId: string;
+    email: string;
+  }>();
+  const [otp, setOtp] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(RESEND_COOLDOWN_SECONDS);
   const showToast = useToastStore((s) => s.show);
 
@@ -30,25 +36,27 @@ export default function VerifyOtp() {
     verifyEmail.mutate(
       { userId, otp },
       {
-        onSuccess: () => router.replace('/'),
+        onSuccess: () => router.replace("/"),
         onError: (err) => showToast(friendlyErrorMessage(err)),
       },
     );
   };
 
   const handleResend = () => {
-    setOtp('');
+    setOtp("");
     resendOtp.mutate(
-      { email, type: 'email_verify' },
+      { email, type: "email_verify" },
       { onSuccess: () => setSecondsLeft(RESEND_COOLDOWN_SECONDS) },
     );
   };
 
   return (
     <AuthScreenLayout>
-      <Text className="text-[20px] text-foreground mb-2">Verify Your Email</Text>
+      <Text className="text-[20px] text-foreground mb-2">
+        Verify Your Email
+      </Text>
       <Text className="text-muted-foreground mb-8">
-        We sent a verification code to{' '}
+        We sent a verification code to{" "}
         <Text className="font-medium text-foreground">{email}</Text>
       </Text>
 
@@ -59,9 +67,9 @@ export default function VerifyOtp() {
       <View className="items-center mb-8">
         {secondsLeft > 0 ? (
           <Text className="text-muted-foreground">
-            Resend code in{' '}
+            Resend code in{" "}
             <Text className="font-medium text-foreground">
-              0:{secondsLeft.toString().padStart(2, '0')}
+              0:{secondsLeft.toString().padStart(2, "0")}
             </Text>
           </Text>
         ) : (

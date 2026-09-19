@@ -1,4 +1,4 @@
-import { apiFetch } from './client';
+import { apiFetch } from "./client";
 import type {
   CreateWithdrawalInput,
   DonateManualInput,
@@ -7,19 +7,27 @@ import type {
   WalletTransactionsPage,
   WithdrawalRequest,
   WithdrawalsPage,
-} from './types';
-export type { CreateWithdrawalInput, DonateManualInput, WithdrawalRequest, DonateManualResponse } from './types';
+} from "./types";
+export type {
+  CreateWithdrawalInput,
+  DonateManualInput,
+  WithdrawalRequest,
+  DonateManualResponse,
+} from "./types";
 
-function withQuery(path: string, params: Record<string, string | number | undefined>) {
+function withQuery(
+  path: string,
+  params: Record<string, string | number | undefined>,
+) {
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
-    .map(([k, v]) => k + '=' + encodeURIComponent(String(v)))
-    .join('&');
-  return query ? path + '?' + query : path;
+    .map(([k, v]) => k + "=" + encodeURIComponent(String(v)))
+    .join("&");
+  return query ? path + "?" + query : path;
 }
 
 export function getMyWallet(accessToken: string) {
-  return apiFetch<WalletAccount>('/me/wallet', { accessToken });
+  return apiFetch<WalletAccount>("/me/wallet", { accessToken });
 }
 
 export function listTransactions(
@@ -27,7 +35,11 @@ export function listTransactions(
   filter: { type?: string; cursor?: string; limit?: number } = {},
 ) {
   return apiFetch<WalletTransactionsPage>(
-    withQuery('/me/wallet/transactions', { type: filter?.type, cursor: filter?.cursor, limit: filter?.limit }),
+    withQuery("/me/wallet/transactions", {
+      type: filter?.type,
+      cursor: filter?.cursor,
+      limit: filter?.limit,
+    }),
     { accessToken },
   );
 }
@@ -38,7 +50,7 @@ export function listMyWithdrawals(
   limit = 20,
 ) {
   return apiFetch<WithdrawalsPage>(
-    withQuery('/me/wallet/withdrawals', { cursor, limit }),
+    withQuery("/me/wallet/withdrawals", { cursor, limit }),
     { accessToken },
   );
 }
@@ -48,8 +60,8 @@ export function createWithdrawal(
   accessToken: string,
   idempotencyKey: string,
 ) {
-  return apiFetch<WithdrawalRequest>('/me/wallet/withdrawals', {
-    method: 'POST',
+  return apiFetch<WithdrawalRequest>("/me/wallet/withdrawals", {
+    method: "POST",
     body: input,
     accessToken,
     idempotencyKey,
@@ -57,7 +69,9 @@ export function createWithdrawal(
 }
 
 export function getWithdrawalDetail(id: string, accessToken: string) {
-  return apiFetch<WithdrawalRequest>('/me/wallet/withdrawals/' + id, { accessToken });
+  return apiFetch<WithdrawalRequest>("/me/wallet/withdrawals/" + id, {
+    accessToken,
+  });
 }
 
 export function donateManual(
@@ -66,10 +80,13 @@ export function donateManual(
   accessToken: string,
   idempotencyKey: string,
 ) {
-  return apiFetch<DonateManualResponse>('/campaigns/' + campaignId + '/donate-manual', {
-    method: 'POST',
-    body: input,
-    accessToken,
-    idempotencyKey,
-  });
+  return apiFetch<DonateManualResponse>(
+    "/campaigns/" + campaignId + "/donate-manual",
+    {
+      method: "POST",
+      body: input,
+      accessToken,
+      idempotencyKey,
+    },
+  );
 }

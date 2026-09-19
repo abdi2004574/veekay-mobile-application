@@ -1,8 +1,8 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface AlertButton {
   text: string;
-  style?: 'default' | 'cancel' | 'destructive';
+  style?: "default" | "cancel" | "destructive";
   onPress?: () => void;
 }
 
@@ -26,6 +26,12 @@ interface AlertState {
 export const useAlertStore = create<AlertState>((set) => ({
   request: null,
   show: (title, message, buttons) =>
-    set({ request: { title, message, buttons: buttons?.length ? buttons : [{ text: 'OK' }] } }),
+    set({
+      request: {
+        title,
+        message,
+        buttons: buttons?.length ? buttons : [{ text: "OK" }],
+      },
+    }),
   hide: () => set({ request: null }),
 }));

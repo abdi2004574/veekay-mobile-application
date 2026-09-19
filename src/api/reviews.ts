@@ -1,11 +1,14 @@
-import { apiFetch } from './client';
-import type { AgencyReview, MyReview, Page } from './types';
+import { apiFetch } from "./client";
+import type { AgencyReview, MyReview, Page } from "./types";
 
-function withQuery(path: string, params: Record<string, string | number | undefined>) {
+function withQuery(
+  path: string,
+  params: Record<string, string | number | undefined>,
+) {
   const query = Object.entries(params)
     .filter(([, v]) => v !== undefined)
     .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
-    .join('&');
+    .join("&");
   return query ? `${path}?${query}` : path;
 }
 
@@ -14,9 +17,13 @@ export interface ReviewInput {
   body?: string;
 }
 
-export function createReview(agencyId: string, input: ReviewInput, accessToken: string) {
+export function createReview(
+  agencyId: string,
+  input: ReviewInput,
+  accessToken: string,
+) {
   return apiFetch<AgencyReview>(`/agencies/${agencyId}/reviews`, {
-    method: 'POST',
+    method: "POST",
     body: input,
     accessToken,
   });
@@ -39,16 +46,19 @@ export function updateReview(
   accessToken: string,
 ) {
   return apiFetch<AgencyReview>(`/reviews/${reviewId}`, {
-    method: 'PATCH',
+    method: "PATCH",
     body: input,
     accessToken,
   });
 }
 
 export function deleteReview(reviewId: string, accessToken: string) {
-  return apiFetch<void>(`/reviews/${reviewId}`, { method: 'DELETE', accessToken });
+  return apiFetch<void>(`/reviews/${reviewId}`, {
+    method: "DELETE",
+    accessToken,
+  });
 }
 
 export function listMyReviews(accessToken: string) {
-  return apiFetch<MyReview[]>('/reviews/mine', { accessToken });
+  return apiFetch<MyReview[]>("/reviews/mine", { accessToken });
 }
